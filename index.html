@@ -162,6 +162,23 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .post-dialog-actions .post-save{background:#17232d;color:white;border-color:#17232d}
 @media(max-width:920px){.posts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.posts-grid{grid-template-columns:1fr}.post-cover{height:125px}}
+
+/* Tipografia da seção 02: seletores compactos e N / I / S independentes. */
+#artSection .two-col select{font-size:12px;padding:9px 10px}
+#artSection .two-col .field>label{font-size:11px}
+.art-type-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-top:10px;padding:9px 10px;background:#fbfcfd;border:1px solid #e5eaee;border-radius:10px}
+.art-type-group{display:flex;align-items:center;gap:5px;min-width:0}
+.art-type-caption{font-size:10px;color:#6c7983;margin-right:3px;font-weight:700}
+.art-type-button{border:1px solid #dce3e8;background:#fff;color:#24333f;border-radius:7px;width:31px;height:31px;display:inline-flex;align-items:center;justify-content:center;font:700 13px Arial,sans-serif;cursor:pointer;padding:0;transition:background .15s,color .15s}
+.art-type-button:hover:not(:disabled){background:#edf2f5}
+.art-type-button[aria-pressed="true"]{background:#17232d;color:#fff;border-color:#17232d}
+.art-type-button[aria-pressed="true"]:hover:not(:disabled){background:#344857}
+.art-type-button:focus-visible{outline:2px solid #779cb3;outline-offset:2px}
+.art-type-button:disabled{opacity:.45;cursor:not-allowed}
+.art-type-value{font-size:12px;font-weight:700;color:#263541;min-width:45px;text-align:center;font-variant-numeric:tabular-nums}
+.art-type-italic{font-style:italic}
+.art-type-underline{text-decoration:underline;text-underline-offset:2px}
+@media(max-width:440px){.art-type-toolbar{padding:8px}.art-type-button{width:29px;height:30px}.art-type-caption{font-size:10px}}
 </style>
 </head>
 <body>
@@ -197,9 +214,37 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
           <div class="fields">
             <div class="field"><div class="section-label"><label for="titleText">Título</label><span class="helper">Manchete principal</span></div><textarea id="titleText">Metadados, vigilância e o controle invisível na internet</textarea></div>
             <div class="two-col"><div class="field"><label for="titleFont">Fonte do título</label><select id="titleFont"><option value="Georgia">Georgia · Clássica</option><option value="Times New Roman">Times New Roman · Editorial</option><option value="Palatino Linotype">Palatino · Elegante</option><option value="Arial">Arial · Moderna</option><option value="Trebuchet MS">Trebuchet · Humanista</option><option value="Impact">Impact · Forte</option></select></div><div class="field"><label for="titleColor">Cor do título</label><div class="color-field"><input id="titleColor" type="color" value="#ffffff"><span id="titleHex">#FFFFFF</span></div></div></div>
+            <div class="art-type-toolbar" aria-label="Formatação de título">
+              <div class="art-type-group" aria-label="Tamanho da fonte de título">
+                <span class="art-type-caption">Tamanho</span>
+                <button type="button" class="art-type-button" id="titleSizeDown" aria-label="Diminuir tamanho de título" title="Diminuir tamanho">−</button>
+                <output class="art-type-value" id="titleSizeValue" aria-live="polite">80 px</output>
+                <button type="button" class="art-type-button" id="titleSizeUp" aria-label="Aumentar tamanho de título" title="Aumentar tamanho">+</button>
+              </div>
+              <div class="art-type-group" aria-label="Estilo de título">
+                <span class="art-type-caption">Estilo</span>
+                <button type="button" class="art-type-button" id="titleBold" aria-pressed="true" aria-label="Negrito no título" title="Negrito">N</button>
+                <button type="button" class="art-type-button art-type-italic" id="titleItalic" aria-pressed="false" aria-label="Itálico no título" title="Itálico">I</button>
+                <button type="button" class="art-type-button art-type-underline" id="titleUnderline" aria-pressed="false" aria-label="Sublinhado no título" title="Sublinhado">S</button>
+              </div>
+            </div>
             <div class="divider" style="margin:2px 0"></div>
             <div class="field"><div class="section-label"><label for="subtitleText">Subtítulo</label><span class="helper">Texto de apoio</span></div><textarea id="subtitleText">Como os dados do dia a dia alimentam sistemas de rastreamento e manipulação de comportamento.</textarea></div>
             <div class="two-col"><div class="field"><label for="subtitleFont">Fonte do subtítulo</label><select id="subtitleFont"><option value="Arial">Arial · Minimalista</option><option value="Trebuchet MS">Trebuchet · Suave</option><option value="Georgia">Georgia · Clássica</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana · Legível</option><option value="Courier New">Courier · Monoespaçada</option></select></div><div class="field"><label for="subtitleColor">Cor do subtítulo</label><div class="color-field"><input id="subtitleColor" type="color" value="#ffffff"><span id="subtitleHex">#FFFFFF</span></div></div></div>
+            <div class="art-type-toolbar" aria-label="Formatação de subtítulo">
+              <div class="art-type-group" aria-label="Tamanho da fonte de subtítulo">
+                <span class="art-type-caption">Tamanho</span>
+                <button type="button" class="art-type-button" id="subtitleSizeDown" aria-label="Diminuir tamanho de subtítulo" title="Diminuir tamanho">−</button>
+                <output class="art-type-value" id="subtitleSizeValue" aria-live="polite">35 px</output>
+                <button type="button" class="art-type-button" id="subtitleSizeUp" aria-label="Aumentar tamanho de subtítulo" title="Aumentar tamanho">+</button>
+              </div>
+              <div class="art-type-group" aria-label="Estilo de subtítulo">
+                <span class="art-type-caption">Estilo</span>
+                <button type="button" class="art-type-button" id="subtitleBold" aria-pressed="false" aria-label="Negrito no subtítulo" title="Negrito">N</button>
+                <button type="button" class="art-type-button art-type-italic" id="subtitleItalic" aria-pressed="false" aria-label="Itálico no subtítulo" title="Itálico">I</button>
+                <button type="button" class="art-type-button art-type-underline" id="subtitleUnderline" aria-pressed="false" aria-label="Sublinhado no subtítulo" title="Sublinhado">S</button>
+              </div>
+            </div>
           </div>
 
           <!-- Agora as opções avançadas vivem DENTRO de Texto da arte -->
@@ -372,6 +417,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   // A foto exportada ganha somente altura, para minimizar o recorte lateral da grade 3:4.
   const PHOTO_H = 1350, PHOTO_TOP = PHOTO_H - H;
   let image = null, offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
+  // O estilo é individual para título e subtítulo. N padrão no título preserva o desenho antigo.
+  const typeStyles = {
+    title: {size: 80, bold: true, italic: false, underline: false},
+    subtitle: {size: 35, bold: false, italic: false, underline: false}
+  };
 
   function updateAndDraw() {
     byId('darkValue').textContent = byId('darkness').value + '%';
@@ -384,11 +434,18 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     byId('titleHex').textContent = byId('titleColor').value.toUpperCase();
     byId('subtitleHex').textContent = byId('subtitleColor').value.toUpperCase();
     byId('captionCount').textContent = byId('captionText').value.length + ' caracteres';
+    for (const part of ['title','subtitle']) {
+      const style = typeStyles[part];
+      byId(part+'SizeValue').textContent = style.size + ' px';
+      for (const [id, key] of [['Bold','bold'], ['Italic','italic'], ['Underline','underline']]) {
+        byId(part+id).setAttribute('aria-pressed', String(style[key]));
+      }
+    }
     draw();
   }
 
-  function fontSpec(size, family, bold = false) {
-    return `${bold ? 'bold ' : ''}${size}px "${family}", serif`;
+  function fontSpec(size, family, bold = false, italic = false) {
+    return `${italic ? 'italic ' : ''}${bold ? 'bold ' : ''}${size}px "${family}", serif`;
   }
 
   function wrapText(value, maxWidth) {
@@ -412,12 +469,12 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     return lines;
   }
 
-  function fit(value, family, maxSize, minSize, maxWidth, maxHeight, bold) {
+  function fit(value, family, maxSize, minSize, maxWidth, maxHeight, bold, italic = false) {
     const clean = value.trim();
     if (!clean) return { lines: [], size: maxSize, step: 0, height: 0 };
     let best;
     for (let size = maxSize; size >= minSize; size -= 2) {
-      ctx.font = fontSpec(size, family, bold);
+      ctx.font = fontSpec(size, family, bold, italic);
       const lines = wrapText(clean, maxWidth);
       const step = size * 1.12;
       best = { lines, size, step, height: lines.length * step };
@@ -458,11 +515,13 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   function drawHeadlines(animation = null) {
     const title = byId('titleText').value;
     const subtitle = byId('subtitleText').value;
-    const sub = fit(subtitle, byId('subtitleFont').value, 35, 21, 875, 142, false);
+    const subtitleStyle = typeStyles.subtitle;
+    const titleStyle = typeStyles.title;
+    const sub = fit(subtitle, byId('subtitleFont').value, subtitleStyle.size, Math.min(16, subtitleStyle.size), 875, 142, subtitleStyle.bold, subtitleStyle.italic);
     const subY = 858 - sub.height;
     const titleBottom = sub.lines.length ? subY - 36 : 858;
     const titleSpace = Math.max(140, Math.min(430, titleBottom - 385));
-    const headline = fit(title, byId('titleFont').value, 80, 35, 908, titleSpace, true);
+    const headline = fit(title, byId('titleFont').value, titleStyle.size, Math.min(20, titleStyle.size), 908, titleSpace, titleStyle.bold, titleStyle.italic);
     const titleY = titleBottom - headline.height;
     const groupShift = Number(byId('bothVertical').value);
     const titleShift = Number(byId('titleVertical').value) + groupShift;
@@ -485,8 +544,14 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       }
       ctx.textBaseline = 'top';
       ctx.fillStyle = byId('titleColor').value;
-      ctx.font = fontSpec(headline.size, byId('titleFont').value, true);
-      headline.lines.forEach((line,i) => ctx.fillText(line,84,titleY+titleShift+i*headline.step));
+      ctx.font = fontSpec(headline.size, byId('titleFont').value, titleStyle.bold, titleStyle.italic);
+      headline.lines.forEach((line,i) => {
+        const y = titleY + titleShift + i * headline.step;
+        ctx.fillText(line, 84, y);
+        if (titleStyle.underline && line) {
+          ctx.fillRect(84, y + headline.size * 1.02, ctx.measureText(line).width, Math.max(1.5, headline.size / 25));
+        }
+      });
       ctx.restore();
     }
 
@@ -501,8 +566,14 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       ctx.textBaseline = 'top';
       ctx.fillStyle = byId('subtitleColor').value;
       ctx.fillRect(84, subY + subtitleShift + 2, 5, Math.max(25, sub.height - 2));
-      ctx.font = fontSpec(sub.size, byId('subtitleFont').value);
-      sub.lines.forEach((line,i) => ctx.fillText(line,118,subY+subtitleShift+i*sub.step));
+      ctx.font = fontSpec(sub.size, byId('subtitleFont').value, subtitleStyle.bold, subtitleStyle.italic);
+      sub.lines.forEach((line,i) => {
+        const y = subY + subtitleShift + i * sub.step;
+        ctx.fillText(line, 118, y);
+        if (subtitleStyle.underline && line) {
+          ctx.fillRect(118, y + sub.size * 1.02, ctx.measureText(line).width, Math.max(1.5, sub.size / 25));
+        }
+      });
       ctx.restore();
     }
   }
@@ -628,6 +699,24 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   canvas.addEventListener('pointerup',stop);canvas.addEventListener('pointercancel',stop);
 
   ['titleText','subtitleText','titleFont','subtitleFont','titleColor','subtitleColor','darkness','zoom','vertical','captionText','titleVertical','subtitleVertical','bothVertical'].forEach(id=>byId(id).addEventListener('input',updateAndDraw));
+  // Controles de tamanho e N / I / S, independentes para cada campo.
+  for (const part of ['title','subtitle']) {
+    const style = typeStyles[part];
+    const bounds = part === 'title' ? [20, 120] : [14, 70];
+    const changeSize = delta => {
+      style.size = Math.max(bounds[0], Math.min(bounds[1], style.size + delta));
+      updateAndDraw();
+    };
+    byId(part+'SizeDown').addEventListener('click', () => changeSize(-2));
+    byId(part+'SizeUp').addEventListener('click', () => changeSize(2));
+    for (const [id, key] of [['Bold','bold'], ['Italic','italic'], ['Underline','underline']]) {
+      byId(part+id).addEventListener('click', () => {
+        style[key] = !style[key];
+        updateAndDraw();
+      });
+    }
+  }
+
   byId('resetPositions').addEventListener('click', () => {
     ['titleVertical','subtitleVertical','bothVertical'].forEach(id => byId(id).value = '0');
     updateAndDraw();
@@ -668,6 +757,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     videoButton.classList.toggle('recording',active);
     byId('publishBtn').disabled=active || postSending;
     document.querySelectorAll('.controls input,.controls textarea,.controls select,#videoSettings select').forEach(el=>el.disabled=active);
+    document.querySelectorAll('.art-type-button').forEach(el=>el.disabled=active);
     byId('videoProgress').setAttribute('aria-hidden',active?'false':'true');
   }
 
