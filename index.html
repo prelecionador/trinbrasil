@@ -212,7 +212,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         </summary>
         <div class="panel-body">
           <div class="fields">
-            <div class="field"><div class="section-label"><label for="titleText">Título</label><span class="helper">Manchete principal</span></div><textarea id="titleText">Metadados, vigilância e o controle invisível na internet</textarea></div>
+            <div class="field"><div class="section-label"><label for="titleText">Título</label><span class="helper">Manchete principal</span></div><textarea id="titleText">Título, do post da imagem</textarea></div>
             <div class="two-col"><div class="field"><label for="titleFont">Fonte do título</label><select id="titleFont"><option value="Georgia">Georgia · Clássica</option><option value="Times New Roman">Times New Roman · Editorial</option><option value="Palatino Linotype">Palatino · Elegante</option><option value="Arial">Arial · Moderna</option><option value="Trebuchet MS">Trebuchet · Humanista</option><option value="Impact">Impact · Forte</option></select></div><div class="field"><label for="titleColor">Cor do título</label><div class="color-field"><input id="titleColor" type="color" value="#ffffff"><span id="titleHex">#FFFFFF</span></div></div></div>
             <div class="art-type-toolbar" aria-label="Formatação de título">
               <div class="art-type-group" aria-label="Tamanho da fonte de título">
@@ -312,8 +312,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
               <input class="site-input" id="siteTags" name="siteTags" type="text" maxlength="200" placeholder="Ex.: tecnologia, internet, dados">
             </div>
             <div class="field">
-              <label for="siteAuthor">Nome de quem posta</label>
-              <input class="site-input" id="siteAuthor" name="siteAuthor" type="text" maxlength="90" placeholder="Ex.: Equipe TRIN" autocomplete="name">
+              <label for="siteAuthor">Membro Equipe</label>
+              <input class="site-input" id="siteAuthor" name="siteAuthor" type="text" maxlength="90" placeholder="Ex.: Nome" autocomplete="name">
             </div>
             <label class="site-checkbox" for="siteFeatured"><input id="siteFeatured" name="siteFeatured" type="checkbox" checked> Destacar na página inicial</label>
             <button class="btn site-soon" id="publishSiteBtn" type="button" disabled title="Integração com o site ainda não implementada">Postar no site · Em breve</button>
@@ -359,7 +359,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         </div>
         <div class="publish-secret">
           <label for="postPassword">Senha local de publicação</label>
-          <input id="postPassword" type="password" autocomplete="off" placeholder="Senha definida no arquivo .env">
+          <input id="postPassword" type="password" autocomplete="off" placeholder="Senha definida">
         </div>
         <div class="publish-actions">
           <button class="btn publish-main" type="button" id="publishBtn">Publicar no Instagram</button>
@@ -412,11 +412,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const byId = id => document.getElementById(id);
   const canvas = byId('postCanvas');
   const ctx = canvas.getContext('2d');
-  const W = 1080, H = 1350, FOOTER_Y = 974;
+  const W = 1050, H = 1050, FOOTER_Y = 974;
   // A imagem, o vídeo e a prévia continuam em 1080 × 1080.
   // Somente o TEXTO ganha uma margem horizontal segura para a grade do Instagram.
   // Nada é espelhado, redimensionado ou acrescentado à fotografia.
-  const TEXT_LEFT = 170, SUBTITLE_LEFT = 204;
+  const TEXT_LEFT = 120, SUBTITLE_LEFT = 154;
   let image = null, offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
   // O estilo é individual para título e subtítulo. N padrão no título preserva o desenho antigo.
   const typeStyles = {
