@@ -325,7 +325,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     <aside class="preview-panel" aria-labelledby="previewHeading">
       <div class="preview-header"><h2 id="previewHeading">Pré-visualização</h2><span>Instagram · 1:1</span></div>
       <div class="preview-frame"><canvas id="postCanvas" width="1080" height="1080" aria-label="Prévia da postagem TRIN"></canvas></div>
-      <p class="preview-caption">Prévia original · Foto exportada em 1080 × 1350 px · Arraste para reposicionar</p>
+      <p class="preview-caption">Prévia original · Foto exportada em 1080 × 1080 px · Arraste para reposicionar</p>
       <details class="export-tools" id="exportTools">
         <summary>Baixar PNG, vídeo e personalizar transições</summary>
         <div class="export-tools-body">
@@ -354,7 +354,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         <h3 id="publishTitle">◎ Publicar no Instagram</h3>
         <p>Conta de destino: <strong>@trinbrasil</strong>. O servidor envia a arte final e a legenda externa à API oficial da Meta. Vídeos de 9 segundos são publicados como vídeo e aparecem no feed.</p>
         <div class="publish-choice" role="group" aria-label="Escolha o tipo de postagem">
-          <label><input type="radio" name="publishKind" value="photo" checked> Foto (1080 × 1350)</label>
+          <label><input type="radio" name="publishKind" value="photo" checked> Foto (1080 × 1080)</label>
           <label><input type="radio" name="publishKind" value="video"> Vídeo (9 segundos)</label>
         </div>
         <div class="publish-secret">
@@ -415,7 +415,6 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const W = 1080, H = 1080, FOOTER_Y = 974;
   // A arte original e o vídeo continuam exatamente 1080 x 1080.
   // A foto exportada ganha somente altura, para minimizar o recorte lateral da grade 3:4.
-  const PHOTO_H = 1350, PHOTO_TOP = PHOTO_H - H;
   let image = null, offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
   // O estilo é individual para título e subtítulo. N padrão no título preserva o desenho antigo.
   const typeStyles = {
@@ -627,39 +626,12 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     drawBackground();drawHeadlines();drawAccent();drawFooter();
   }
 
-  // A FOTO continua em 1080 x 1350. O vídeo e o editor permanecem em 1080 x 1080.
-  // Completa o espaço superior sem refletir, girar ou duplicar a fotografia.
-  // Preserva a arte original inteira (com as posições do título e do rodapé).
+  // Exportação restaurada: exatamente o canvas original (1080 x 1080).
+  // Sem faixas adicionais, reflexos, estiramentos ou cópias da fotografia.
+  // O PNG e o JPG publicados no Instagram usam a mesma arte da prévia.
   function photoExportCanvas() {
     draw();
-    const output = document.createElement('canvas');
-    output.width = W;
-    output.height = PHOTO_H;
-    const g = output.getContext('2d');
-    if (!g) throw new Error('Não foi possível preparar a fotografia para exportação.');
-    g.fillStyle = '#162934';
-    g.fillRect(0, 0, W, PHOTO_H);
-    if (image) {
-      const scale = Math.max(W / image.width, FOOTER_Y / image.height) * (+byId('zoom').value / 100);
-      const dw = image.width * scale, dh = image.height * scale;
-      const x = (W - dw) / 2 + offsetX;
-      const y = (FOOTER_Y - dh) / 2 + (+byId('vertical').value) + offsetY;
-      g.save();
-      g.beginPath();
-      g.rect(0, 0, W, PHOTO_TOP);
-      g.clip();
-      // Se faltarem pixels acima da foto, prolonga somente a sua borda superior.
-      // Não há reflexo de pessoas, objetos nem textos.
-      g.drawImage(image, 0, 0, image.width, 1, x, 0, dw, PHOTO_TOP);
-      // Onde a foto original possuir conteúdo acima do recorte, utiliza esse conteúdo real.
-      g.drawImage(image, x, y + PHOTO_TOP, dw, dh);
-      g.restore();
-    } else {
-      // Sem fotografia: continua a cor do topo da própria arte, sem duplicar elementos.
-      g.drawImage(canvas, 0, 0, W, 1, 0, 0, W, PHOTO_TOP);
-    }
-    g.drawImage(canvas, 0, PHOTO_TOP);
-    return output;
+    return canvas;
   }
 
   const clamp01 = x => Math.max(0,Math.min(1,x));
@@ -747,7 +719,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if (currentRecording) return;
     photoExportCanvas().toBlob(blob=>{
       if(!blob){alert('Não foi possível exportar o PNG.');return;}
-      saveBlob(blob,'TRIN-postagem-1080x1350.png');
+      saveBlob(blob,'TRIN-postagem-1080x1080.png');
     },'image/png');
   });
 
