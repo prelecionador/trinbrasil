@@ -413,8 +413,10 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const canvas = byId('postCanvas');
   const ctx = canvas.getContext('2d');
   const W = 1080, H = 1080, FOOTER_Y = 974;
-  // A arte original e o vídeo continuam exatamente 1080 x 1080.
-  // A foto exportada ganha somente altura, para minimizar o recorte lateral da grade 3:4.
+  // A imagem, o vídeo e a prévia continuam em 1080 × 1080.
+  // Somente o TEXTO ganha uma margem horizontal segura para a grade do Instagram.
+  // Nada é espelhado, redimensionado ou acrescentado à fotografia.
+  const TEXT_LEFT = 170, SUBTITLE_LEFT = 204;
   let image = null, offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
   // O estilo é individual para título e subtítulo. N padrão no título preserva o desenho antigo.
   const typeStyles = {
@@ -516,11 +518,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     const subtitle = byId('subtitleText').value;
     const subtitleStyle = typeStyles.subtitle;
     const titleStyle = typeStyles.title;
-    const sub = fit(subtitle, byId('subtitleFont').value, subtitleStyle.size, Math.min(16, subtitleStyle.size), 875, 142, subtitleStyle.bold, subtitleStyle.italic);
+    const sub = fit(subtitle, byId('subtitleFont').value, subtitleStyle.size, Math.min(16, subtitleStyle.size), 690, 142, subtitleStyle.bold, subtitleStyle.italic);
     const subY = 858 - sub.height;
     const titleBottom = sub.lines.length ? subY - 36 : 858;
     const titleSpace = Math.max(140, Math.min(430, titleBottom - 385));
-    const headline = fit(title, byId('titleFont').value, titleStyle.size, Math.min(20, titleStyle.size), 908, titleSpace, titleStyle.bold, titleStyle.italic);
+    const headline = fit(title, byId('titleFont').value, titleStyle.size, Math.min(20, titleStyle.size), 720, titleSpace, titleStyle.bold, titleStyle.italic);
     const titleY = titleBottom - headline.height;
     const groupShift = Number(byId('bothVertical').value);
     const titleShift = Number(byId('titleVertical').value) + groupShift;
@@ -537,18 +539,18 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       if (effect === 'up') ctx.translate(0, 45 * (1 - titleP));
       if (effect === 'zoom') {
         const scale = .90 + .10 * titleP;
-        ctx.translate(84, titleY + titleShift);
+        ctx.translate(TEXT_LEFT, titleY + titleShift);
         ctx.scale(scale, scale);
-        ctx.translate(-84, -(titleY + titleShift));
+        ctx.translate(-TEXT_LEFT, -(titleY + titleShift));
       }
       ctx.textBaseline = 'top';
       ctx.fillStyle = byId('titleColor').value;
       ctx.font = fontSpec(headline.size, byId('titleFont').value, titleStyle.bold, titleStyle.italic);
       headline.lines.forEach((line,i) => {
         const y = titleY + titleShift + i * headline.step;
-        ctx.fillText(line, 84, y);
+        ctx.fillText(line, TEXT_LEFT, y);
         if (titleStyle.underline && line) {
-          ctx.fillRect(84, y + headline.size * 1.02, ctx.measureText(line).width, Math.max(1.5, headline.size / 25));
+          ctx.fillRect(TEXT_LEFT, y + headline.size * 1.02, ctx.measureText(line).width, Math.max(1.5, headline.size / 25));
         }
       });
       ctx.restore();
@@ -558,19 +560,19 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     // A combinação de deslizamento e máscara progressiva revela o texto horizontalmente.
     if (subtitleP > 0 && sub.lines.length) {
       ctx.save();
-      const clipRight = 84 + subtitleP * (W - 84);
+      const clipRight = TEXT_LEFT + subtitleP * (W - TEXT_LEFT);
       ctx.beginPath(); ctx.rect(0, 0, clipRight, FOOTER_Y); ctx.clip();
       ctx.globalAlpha = subtitleP;
       ctx.translate(-110 * (1 - subtitleP), 0);
       ctx.textBaseline = 'top';
       ctx.fillStyle = byId('subtitleColor').value;
-      ctx.fillRect(84, subY + subtitleShift + 2, 5, Math.max(25, sub.height - 2));
+      ctx.fillRect(TEXT_LEFT, subY + subtitleShift + 2, 5, Math.max(25, sub.height - 2));
       ctx.font = fontSpec(sub.size, byId('subtitleFont').value, subtitleStyle.bold, subtitleStyle.italic);
       sub.lines.forEach((line,i) => {
         const y = subY + subtitleShift + i * sub.step;
-        ctx.fillText(line, 118, y);
+        ctx.fillText(line, SUBTITLE_LEFT, y);
         if (subtitleStyle.underline && line) {
-          ctx.fillRect(118, y + sub.size * 1.02, ctx.measureText(line).width, Math.max(1.5, sub.size / 25));
+          ctx.fillRect(SUBTITLE_LEFT, y + sub.size * 1.02, ctx.measureText(line).width, Math.max(1.5, sub.size / 25));
         }
       });
       ctx.restore();
