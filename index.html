@@ -627,9 +627,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     drawBackground();drawHeadlines();drawAccent();drawFooter();
   }
 
-  // Somente a dimensão final da FOTO muda: de 1080x1080 para 1080x1350.
-  // Os 270 px extras ficam no alto, estendendo a fotografia já desenhada.
-  // Nenhum texto, fonte, posição, rodapé ou frame do vídeo é redimensionado.
+  // A FOTO continua em 1080 x 1350. O vídeo e o editor permanecem em 1080 x 1080.
+  // Completa o espaço superior sem refletir, girar ou duplicar a fotografia.
+  // Preserva a arte original inteira (com as posições do título e do rodapé).
   function photoExportCanvas() {
     draw();
     const output = document.createElement('canvas');
@@ -637,12 +637,27 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     output.height = PHOTO_H;
     const g = output.getContext('2d');
     if (!g) throw new Error('Não foi possível preparar a fotografia para exportação.');
-    g.save();
-    // Reflexo suave da faixa superior para prolongar o fundo sem distorcer a arte.
-    g.translate(0, PHOTO_TOP);
-    g.scale(1, -1);
-    g.drawImage(canvas, 0, 0, W, PHOTO_TOP, 0, 0, W, PHOTO_TOP);
-    g.restore();
+    g.fillStyle = '#162934';
+    g.fillRect(0, 0, W, PHOTO_H);
+    if (image) {
+      const scale = Math.max(W / image.width, FOOTER_Y / image.height) * (+byId('zoom').value / 100);
+      const dw = image.width * scale, dh = image.height * scale;
+      const x = (W - dw) / 2 + offsetX;
+      const y = (FOOTER_Y - dh) / 2 + (+byId('vertical').value) + offsetY;
+      g.save();
+      g.beginPath();
+      g.rect(0, 0, W, PHOTO_TOP);
+      g.clip();
+      // Se faltarem pixels acima da foto, prolonga somente a sua borda superior.
+      // Não há reflexo de pessoas, objetos nem textos.
+      g.drawImage(image, 0, 0, image.width, 1, x, 0, dw, PHOTO_TOP);
+      // Onde a foto original possuir conteúdo acima do recorte, utiliza esse conteúdo real.
+      g.drawImage(image, x, y + PHOTO_TOP, dw, dh);
+      g.restore();
+    } else {
+      // Sem fotografia: continua a cor do topo da própria arte, sem duplicar elementos.
+      g.drawImage(canvas, 0, 0, W, 1, 0, 0, W, PHOTO_TOP);
+    }
     g.drawImage(canvas, 0, PHOTO_TOP);
     return output;
   }
