@@ -99,6 +99,25 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .publish-status.success{color:#117145}.publish-status.error{color:#aa3434}
 .publish-status a{color:inherit;text-decoration:underline;font-weight:700}
 @media(max-width:460px){.publish-choice{flex-direction:column}.publish-actions{grid-template-columns:1fr}}
+
+/* Seção 04: metadados para uma futura publicação no site */
+.site-fields{display:grid;gap:14px}
+.site-input{width:100%;border:1px solid #e0e5e9;border-radius:10px;padding:11px 12px;background:#fff;color:#27313b;font:inherit;font-size:13px;outline:0}
+.site-input:focus{border-color:#869ba9;box-shadow:0 0 0 3px #e9f0f4}
+.site-checkbox{display:flex;align-items:center;gap:9px;font-size:12px;color:#3d4854;cursor:pointer}
+.site-checkbox input{accent-color:#17232d}
+.site-soon{width:100%;background:#edf1f4;color:#63717b;border:1px solid #dfe5ea;cursor:not-allowed;margin-top:2px}
+.site-soon-note{font-size:11px;color:#84919b;line-height:1.5;margin:0}
+/* Downloads e transições juntos, dentro de um único menu recolhido */
+.export-tools{width:min(100%,430px);margin:0 auto 12px;border:1px solid #e6eaee;background:#fbfcfd;border-radius:11px;overflow:hidden}
+.export-tools > summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;font-weight:700;font-size:12px;color:#485762;cursor:pointer}
+.export-tools > summary::-webkit-details-marker{display:none}
+.export-tools > summary:after{content:'⌄';font-size:19px;line-height:1;color:#667581}
+.export-tools[open] > summary:after{content:'⌃'}
+.export-tools[open] > summary{border-bottom:1px solid #e6eaee}
+.export-tools-body{padding:13px}
+.export-tools .export-actions{width:100%}
+.export-tools .video-settings{width:100%;margin:12px auto 0}
 </style>
 </head>
 <body>
@@ -178,23 +197,63 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
           <p class="caption-note">Essa legenda é enviada à API do Instagram com a foto ou o vídeo. Ela não aparece dentro da arte.</p>
         </div>
       </details>
+
+      <!-- 04: metadados destinados ao futuro site; ainda não envia nada. -->
+      <details class="panel collapsible-panel" id="siteSection" open>
+        <summary aria-label="Abrir ou fechar configurações de site">
+          <span class="panel-heading"><span class="step">04</span><span><strong class="section-title">Site</strong><small>Informações complementares da publicação.</small></span></span>
+          <span class="collapsible-chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="panel-body">
+          <div class="site-fields">
+            <div class="field">
+              <label for="siteCategory">Categoria</label>
+              <select id="siteCategory" name="siteCategory">
+                <option value="noticias">Notícias</option>
+                <option value="tecnologia">Tecnologia</option>
+                <option value="ciencia">Ciência</option>
+                <option value="sociedade">Sociedade</option>
+                <option value="cultura">Cultura</option>
+                <option value="opiniao">Opinião</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="siteTags">Tags</label>
+              <input class="site-input" id="siteTags" name="siteTags" type="text" maxlength="200" placeholder="Ex.: tecnologia, internet, dados">
+            </div>
+            <div class="field">
+              <label for="siteSummary">Resumo para o site</label>
+              <textarea id="siteSummary" name="siteSummary" rows="3" maxlength="240" placeholder="Breve descrição para acompanhar a publicação..."></textarea>
+            </div>
+            <label class="site-checkbox" for="siteFeatured"><input id="siteFeatured" name="siteFeatured" type="checkbox"> Destacar na página inicial</label>
+            <button class="btn site-soon" id="publishSiteBtn" type="button" disabled title="Integração com o site ainda não implementada">Postar no site · Em breve</button>
+            <p class="site-soon-note">Esses campos ainda não são enviados a um site. O botão será ativado quando a integração estiver pronta.</p>
+          </div>
+        </div>
+      </details>
     </div>
     <aside class="preview-panel" aria-labelledby="previewHeading">
       <div class="preview-header"><h2 id="previewHeading">Pré-visualização</h2><span>Instagram · 1:1</span></div>
       <div class="preview-frame"><canvas id="postCanvas" width="1080" height="1080" aria-label="Prévia da postagem TRIN"></canvas></div>
-      <p class="preview-caption">1080 × 1080 px · Arraste a foto na prévia para reposicionar</p>
-      <div class="export-actions">
-        <button class="btn btn-primary" id="downloadBtn" type="button">↓ &nbsp; Baixar PNG</button>
-        <button class="btn btn-video" id="downloadVideoBtn" type="button">▶ &nbsp; Baixar vídeo · 9 s</button>
-      </div>
-      <details class="video-settings" id="videoSettings">
-        <summary>Personalizar transições do vídeo</summary>
-        <div class="settings-grid">
-          <div><label for="titleEntrance">Entrada do título</label>
-            <select id="titleEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="zoom">Aproximar (zoom)</option></select></div>
-          <div><label for="footerEntrance">Entrada do rodapé</label>
-            <select id="footerEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="right">Da direita para a esquerda</option></select></div>
-          <p class="video-fixed">Subtítulo: sempre entra da esquerda para a direita. Foto no início; todas as entradas terminam até 1,2 s. Depois, a arte fica parada até completar 9 s.</p>
+      <p class="preview-caption">Prévia original · Foto exportada em 1080 × 1350 px · Arraste para reposicionar</p>
+      <details class="export-tools" id="exportTools">
+        <summary>Baixar PNG, vídeo e personalizar transições</summary>
+        <div class="export-tools-body">
+          <div class="export-actions">
+            <button class="btn btn-primary" id="downloadBtn" type="button">↓ &nbsp; Baixar PNG</button>
+            <button class="btn btn-video" id="downloadVideoBtn" type="button">▶ &nbsp; Baixar vídeo · 9 s</button>
+          </div>
+          <details class="video-settings" id="videoSettings">
+            <summary>Personalizar transições do vídeo</summary>
+            <div class="settings-grid">
+              <div><label for="titleEntrance">Entrada do título</label>
+                <select id="titleEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="zoom">Aproximar (zoom)</option></select></div>
+              <div><label for="footerEntrance">Entrada do rodapé</label>
+                <select id="footerEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="right">Da direita para a esquerda</option></select></div>
+              <p class="video-fixed">Subtítulo: sempre entra da esquerda para a direita. Foto no início; todas as entradas terminam até 1,2 s. Depois, a arte fica parada até completar 9 s.</p>
+            </div>
+          </details>
         </div>
       </details>
       <div class="video-progress" id="videoProgress" aria-hidden="true">
@@ -206,7 +265,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         <h3 id="publishTitle">◎ Publicar no Instagram</h3>
         <p>Conta de destino: <strong>@trinbrasil</strong>. O servidor envia a arte final e a legenda externa à API oficial da Meta. Vídeos de 9 segundos são publicados como vídeo e aparecem no feed.</p>
         <div class="publish-choice" role="group" aria-label="Escolha o tipo de postagem">
-          <label><input type="radio" name="publishKind" value="photo" checked> Foto (1080 × 1080)</label>
+          <label><input type="radio" name="publishKind" value="photo" checked> Foto (1080 × 1350)</label>
           <label><input type="radio" name="publishKind" value="video"> Vídeo (9 segundos)</label>
         </div>
         <div class="publish-secret">
@@ -231,6 +290,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const canvas = byId('postCanvas');
   const ctx = canvas.getContext('2d');
   const W = 1080, H = 1080, FOOTER_Y = 974;
+  // A arte original e o vídeo continuam exatamente 1080 x 1080.
+  // A foto exportada ganha somente altura, para minimizar o recorte lateral da grade 3:4.
+  const PHOTO_H = 1350, PHOTO_TOP = PHOTO_H - H;
   let image = null, offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
 
   function updateAndDraw() {
@@ -416,6 +478,26 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     drawBackground();drawHeadlines();drawAccent();drawFooter();
   }
 
+  // Somente a dimensão final da FOTO muda: de 1080x1080 para 1080x1350.
+  // Os 270 px extras ficam no alto, estendendo a fotografia já desenhada.
+  // Nenhum texto, fonte, posição, rodapé ou frame do vídeo é redimensionado.
+  function photoExportCanvas() {
+    draw();
+    const output = document.createElement('canvas');
+    output.width = W;
+    output.height = PHOTO_H;
+    const g = output.getContext('2d');
+    if (!g) throw new Error('Não foi possível preparar a fotografia para exportação.');
+    g.save();
+    // Reflexo suave da faixa superior para prolongar o fundo sem distorcer a arte.
+    g.translate(0, PHOTO_TOP);
+    g.scale(1, -1);
+    g.drawImage(canvas, 0, 0, W, PHOTO_TOP, 0, 0, W, PHOTO_TOP);
+    g.restore();
+    g.drawImage(canvas, 0, PHOTO_TOP);
+    return output;
+  }
+
   const clamp01 = x => Math.max(0,Math.min(1,x));
   const easeOut = x => 1-Math.pow(1-clamp01(x),3);
   function enter(t,start,end) {return easeOut((t-start)/(end-start));}
@@ -481,9 +563,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   let currentRecording = null;
   byId('downloadBtn').addEventListener('click',()=>{
     if (currentRecording) return;
-    draw();canvas.toBlob(blob=>{
+    photoExportCanvas().toBlob(blob=>{
       if(!blob){alert('Não foi possível exportar o PNG.');return;}
-      saveBlob(blob,'TRIN-postagem.png');
+      saveBlob(blob,'TRIN-postagem-1080x1350.png');
     },'image/png');
   });
 
@@ -638,8 +720,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   });
   function canvasAsJpeg() {
     return new Promise((resolve,reject) => {
-      draw();
-      canvas.toBlob(b=>b?resolve(b):reject(new Error('Falha ao gerar JPG.')), 'image/jpeg', .90);
+      photoExportCanvas().toBlob(b=>b?resolve(b):reject(new Error('Falha ao gerar JPG.')), 'image/jpeg', .90);
     });
   }
   // Na Vercel os arquivos vão direto do navegador para Vercel Blob.
