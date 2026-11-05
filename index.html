@@ -136,6 +136,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .post-cover{height:145px;background:linear-gradient(140deg,#173341 0%,#29495a 52%,#0b1821 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .post-cover:before{content:'';position:absolute;width:190px;height:190px;border:1px solid #ffffff27;transform:rotate(32deg);left:-70px;top:-110px;border-radius:22px}
 .post-cover:after{content:'';position:absolute;bottom:0;left:0;right:0;height:5px;background:linear-gradient(to right,#00c84f 0 33.33%,#ffdf00 33.33% 66.66%,#0867ef 66.66% 100%)}
+.post-cover-top{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:1}
+.post-featured-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#ffffff14;border:1px solid #ffffff20;color:#f7fbfd;font-size:10px;font-weight:700;letter-spacing:.2px;backdrop-filter:blur(6px)}
+.post-featured-toggle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;border:1px solid #ffffff2b;background:#0e1c2599;color:#ffffff;cursor:pointer;font-size:16px;line-height:1;backdrop-filter:blur(6px);transition:transform .15s ease,background .15s ease,border-color .15s ease,color .15s ease}
+.post-featured-toggle:hover{transform:translateY(-1px);background:#142834cc}
+.post-featured-toggle.is-active{background:#fff1b8;color:#8a6200;border-color:#ffe07a}
 .post-cover-label{color:#fff;font:700 38px Georgia,serif;letter-spacing:-1.5px;opacity:.9}
 .post-card-body{padding:19px;display:flex;flex-direction:column;gap:11px;flex:1;min-width:0}
 .post-meta{color:#7f8b94;font-size:11px;letter-spacing:.2px}
@@ -250,11 +255,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
           <!-- Agora as opções avançadas vivem DENTRO de Texto da arte -->
           <details class="inline-advanced" id="advancedOptions">
             <summary aria-label="Abrir ou fechar opções avançadas do texto">
-              <span class="inline-advanced-label"><strong>Opções avançadas</strong><small>Ajustar posições verticais</small></span>
+              <span class="inline-advanced-label"><strong>Opções avançadas</strong><small>Ajustar posições e cor da linha</small></span>
               <span class="collapsible-chevron" aria-hidden="true"></span>
             </summary>
             <div class="advanced-content">
-              <p class="advanced-explain">Ajuste individualmente o título e o subtítulo ou mova os dois juntos. As alterações aparecem na prévia e no PNG.</p>
+              <p class="advanced-explain">Ajuste individualmente o título e o subtítulo, mova os dois juntos e altere a cor da linha lateral. As alterações aparecem na prévia e no PNG.</p>
               <div class="advanced-control">
                 <div class="range-row"><label for="titleVertical">Posição vertical do título</label><output id="titleVerticalValue" for="titleVertical">0 px</output></div>
                 <input type="range" id="titleVertical" min="-220" max="220" step="1" value="0">
@@ -269,6 +274,26 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
                 <div class="range-row"><label for="bothVertical">Posição vertical de ambos</label><output id="bothVerticalValue" for="bothVertical">0 px</output></div>
                 <input type="range" id="bothVertical" min="-220" max="220" step="1" value="0">
                 <p class="advanced-hint">Move os dois textos ao mesmo tempo</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="titleHorizontal">Posição horizontal do título</label><output id="titleHorizontalValue" for="titleHorizontal">0 px</output></div>
+                <input type="range" id="titleHorizontal" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Negativo vai para a esquerda · Positivo vai para a direita</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="subtitleHorizontal">Posição horizontal do subtítulo</label><output id="subtitleHorizontalValue" for="subtitleHorizontal">0 px</output></div>
+                <input type="range" id="subtitleHorizontal" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Move somente o subtítulo e a linha lateral</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="bothHorizontal">Posição horizontal de ambos</label><output id="bothHorizontalValue" for="bothHorizontal">0 px</output></div>
+                <input type="range" id="bothHorizontal" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Move os dois textos ao mesmo tempo</p>
+              </div>
+              <div class="advanced-control">
+                <div class="field-label">Cor da linha lateral</div>
+                <label class="color-field" for="lineColor"><input id="lineColor" type="color" value="#FFFFFF"><span id="lineHex">#FFFFFF</span></label>
+                <p class="advanced-hint">Essa cor altera a linha vertical ao lado do subtítulo.</p>
               </div>
               <button class="reset-positions" id="resetPositions" type="button">↺ Restaurar posições</button>
             </div>
@@ -416,7 +441,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   // A imagem, o vídeo e a prévia continuam em 1080 × 1080.
   // Somente o TEXTO ganha uma margem horizontal segura para a grade do Instagram.
   // Nada é espelhado, redimensionado ou acrescentado à fotografia.
-  const TEXT_LEFT = 120, SUBTITLE_LEFT = 154;
+  const TEXT_LEFT = 150, SUBTITLE_LEFT = 184;
   let image = null, offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
   // O estilo é individual para título e subtítulo. N padrão no título preserva o desenho antigo.
   const typeStyles = {
@@ -428,12 +453,13 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     byId('darkValue').textContent = byId('darkness').value + '%';
     byId('zoomValue').textContent = byId('zoom').value + '%';
     byId('verticalValue').textContent = byId('vertical').value;
-    ['titleVertical','subtitleVertical','bothVertical'].forEach(id => {
+    ['titleVertical','subtitleVertical','bothVertical','titleHorizontal','subtitleHorizontal','bothHorizontal'].forEach(id => {
       const n = Number(byId(id).value);
       byId(id+'Value').textContent = (n > 0 ? '+' : '') + n + ' px';
     });
     byId('titleHex').textContent = byId('titleColor').value.toUpperCase();
     byId('subtitleHex').textContent = byId('subtitleColor').value.toUpperCase();
+    byId('lineHex').textContent = byId('lineColor').value.toUpperCase();
     byId('captionCount').textContent = byId('captionText').value.length + ' caracteres';
     for (const part of ['title','subtitle']) {
       const style = typeStyles[part];
@@ -527,6 +553,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     const groupShift = Number(byId('bothVertical').value);
     const titleShift = Number(byId('titleVertical').value) + groupShift;
     const subtitleShift = Number(byId('subtitleVertical').value) + groupShift;
+    const groupHorizontal = Number(byId('bothHorizontal').value);
+    const titleX = TEXT_LEFT + Number(byId('titleHorizontal').value) + groupHorizontal;
+    const lineX = TEXT_LEFT + Number(byId('subtitleHorizontal').value) + groupHorizontal;
+    const subtitleX = SUBTITLE_LEFT + Number(byId('subtitleHorizontal').value) + groupHorizontal;
+    const lineColor = byId('lineColor').value;
 
     const titleP = animation ? animation.title : 1;
     const subtitleP = animation ? animation.subtitle : 1;
@@ -539,18 +570,18 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       if (effect === 'up') ctx.translate(0, 45 * (1 - titleP));
       if (effect === 'zoom') {
         const scale = .90 + .10 * titleP;
-        ctx.translate(TEXT_LEFT, titleY + titleShift);
+        ctx.translate(titleX, titleY + titleShift);
         ctx.scale(scale, scale);
-        ctx.translate(-TEXT_LEFT, -(titleY + titleShift));
+        ctx.translate(-titleX, -(titleY + titleShift));
       }
       ctx.textBaseline = 'top';
       ctx.fillStyle = byId('titleColor').value;
       ctx.font = fontSpec(headline.size, byId('titleFont').value, titleStyle.bold, titleStyle.italic);
       headline.lines.forEach((line,i) => {
         const y = titleY + titleShift + i * headline.step;
-        ctx.fillText(line, TEXT_LEFT, y);
+        ctx.fillText(line, titleX, y);
         if (titleStyle.underline && line) {
-          ctx.fillRect(TEXT_LEFT, y + headline.size * 1.02, ctx.measureText(line).width, Math.max(1.5, headline.size / 25));
+          ctx.fillRect(titleX, y + headline.size * 1.02, ctx.measureText(line).width, Math.max(1.5, headline.size / 25));
         }
       });
       ctx.restore();
@@ -560,19 +591,20 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     // A combinação de deslizamento e máscara progressiva revela o texto horizontalmente.
     if (subtitleP > 0 && sub.lines.length) {
       ctx.save();
-      const clipRight = TEXT_LEFT + subtitleP * (W - TEXT_LEFT);
+      const clipRight = Math.max(0, lineX) + subtitleP * (W - Math.max(0, lineX));
       ctx.beginPath(); ctx.rect(0, 0, clipRight, FOOTER_Y); ctx.clip();
       ctx.globalAlpha = subtitleP;
       ctx.translate(-110 * (1 - subtitleP), 0);
       ctx.textBaseline = 'top';
+      ctx.fillStyle = lineColor;
+      ctx.fillRect(lineX, subY + subtitleShift + 2, 5, Math.max(25, sub.height - 2));
       ctx.fillStyle = byId('subtitleColor').value;
-      ctx.fillRect(TEXT_LEFT, subY + subtitleShift + 2, 5, Math.max(25, sub.height - 2));
       ctx.font = fontSpec(sub.size, byId('subtitleFont').value, subtitleStyle.bold, subtitleStyle.italic);
       sub.lines.forEach((line,i) => {
         const y = subY + subtitleShift + i * sub.step;
-        ctx.fillText(line, SUBTITLE_LEFT, y);
+        ctx.fillText(line, subtitleX, y);
         if (subtitleStyle.underline && line) {
-          ctx.fillRect(SUBTITLE_LEFT, y + sub.size * 1.02, ctx.measureText(line).width, Math.max(1.5, sub.size / 25));
+          ctx.fillRect(subtitleX, y + sub.size * 1.02, ctx.measureText(line).width, Math.max(1.5, sub.size / 25));
         }
       });
       ctx.restore();
@@ -687,7 +719,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const stop=()=>{dragging=false;lastPointer=null;};
   canvas.addEventListener('pointerup',stop);canvas.addEventListener('pointercancel',stop);
 
-  ['titleText','subtitleText','titleFont','subtitleFont','titleColor','subtitleColor','darkness','zoom','vertical','captionText','titleVertical','subtitleVertical','bothVertical'].forEach(id=>byId(id).addEventListener('input',updateAndDraw));
+  ['titleText','subtitleText','titleFont','subtitleFont','titleColor','subtitleColor','lineColor','darkness','zoom','vertical','captionText','titleVertical','subtitleVertical','bothVertical','titleHorizontal','subtitleHorizontal','bothHorizontal'].forEach(id=>byId(id).addEventListener('input',updateAndDraw));
   // Controles de tamanho e N / I / S, independentes para cada campo.
   for (const part of ['title','subtitle']) {
     const style = typeStyles[part];
@@ -707,7 +739,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   }
 
   byId('resetPositions').addEventListener('click', () => {
-    ['titleVertical','subtitleVertical','bothVertical'].forEach(id => byId(id).value = '0');
+    ['titleVertical','subtitleVertical','bothVertical','titleHorizontal','subtitleHorizontal','bothHorizontal'].forEach(id => byId(id).value = '0');
     updateAndDraw();
   });
   function saveBlob(blob,filename) {
@@ -942,9 +974,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   // Apenas a interface da segunda tela. O backend de publicação foi preservado.
   const STORAGE = 'trinpost-postagens-exemplo-v1';
   const initial = [
-    {id:'ex-01',category:'Tecnologia',author:'Equipe TRIN',title:'Como os metadados organizam a informação digital',content:'Metadados descrevem características dos conteúdos e ajudam sistemas a encontrar, classificar e apresentar informações. Neste exemplo, mostramos como essa organização aparece em plataformas digitais.'},
-    {id:'ex-02',category:'Ciência',author:'Redação TRIN',title:'O que muda com a expansão do IPv6?',content:'O IPv6 amplia o espaço de endereçamento da internet e traz novas possibilidades para conectar dispositivos. Conheça os conceitos principais e as diferenças em relação ao IPv4.'},
-    {id:'ex-03',category:'Sociedade',author:'Equipe TRIN',title:'A importância de verificar informações na internet',content:'Antes de compartilhar uma publicação, é útil conferir sua origem, comparar fontes e verificar a data. Pequenas ações ajudam a interpretar melhor notícias e conteúdos nas redes sociais.'}
+    {id:'ex-01',category:'Tecnologia',author:'Equipe TRIN',featured:true,title:'Como os metadados organizam a informação digital',content:'Metadados descrevem características dos conteúdos e ajudam sistemas a encontrar, classificar e apresentar informações. Neste exemplo, mostramos como essa organização aparece em plataformas digitais.'},
+    {id:'ex-02',category:'Ciência',author:'Redação TRIN',featured:true,title:'O que muda com a expansão do IPv6?',content:'O IPv6 amplia o espaço de endereçamento da internet e traz novas possibilidades para conectar dispositivos. Conheça os conceitos principais e as diferenças em relação ao IPv4.'},
+    {id:'ex-03',category:'Sociedade',author:'Equipe TRIN',featured:false,title:'A importância de verificar informações na internet',content:'Antes de compartilhar uma publicação, é útil conferir sua origem, comparar fontes e verificar a data. Pequenas ações ajudam a interpretar melhor notícias e conteúdos nas redes sociais.'}
   ];
   const byId = id => document.getElementById(id);
   const grid = byId('postsGrid');
@@ -955,8 +987,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   try {
     const stored = localStorage.getItem(STORAGE);
     const parsed = stored === null ? null : JSON.parse(stored);
-    posts = Array.isArray(parsed) ? parsed.filter(p => p && typeof p.id === 'string' && typeof p.title === 'string' && typeof p.content === 'string') : initial.map(p => ({...p}));
+    posts = Array.isArray(parsed) ? parsed.filter(p => p && typeof p.id === 'string' && typeof p.title === 'string' && typeof p.content === 'string').map(p => ({...p, featured: !!p.featured})) : initial.map(p => ({...p}));
   } catch { posts = initial.map(p => ({...p})); }
+  // Nunca permitir mais de dois destaques, inclusive ao recuperar dados locais antigos.
+  let featuredLoaded = 0;
+  posts.forEach(p => { p.featured = !!p.featured && featuredLoaded < 2; if (p.featured) featuredLoaded++; });
   const save = () => {try {localStorage.setItem(STORAGE, JSON.stringify(posts));} catch {} };
   const element = (tag, className, content) => {
     const node = document.createElement(tag);
@@ -975,6 +1010,28 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     posts.forEach(post => {
       const card = element('article','post-card');
       const cover = element('div','post-cover');
+      const coverTop = element('div','post-cover-top');
+      if (post.featured) {
+        coverTop.appendChild(element('span','post-featured-badge','★ Destaque'));
+      } else {
+        coverTop.appendChild(element('span','post-featured-badge','Postagem'));
+      }
+      const star = element('button','post-featured-toggle' + (post.featured ? ' is-active' : ''), post.featured ? '★' : '☆');
+      star.type = 'button';
+      star.title = post.featured ? 'Remover destaque' : 'Marcar como destaque';
+      star.setAttribute('aria-label', `${post.featured ? 'Remover destaque de' : 'Destacar'} ${post.title}`);
+      star.setAttribute('aria-pressed', String(!!post.featured));
+      star.addEventListener('click', () => {
+        const featuredCount = posts.filter(p => p.featured).length;
+        if (!post.featured && featuredCount >= 2) {
+          window.alert('Você só pode manter até 2 postagens destacadas ao mesmo tempo.');
+          return;
+        }
+        post.featured = !post.featured;
+        save(); render();
+      });
+      coverTop.appendChild(star);
+      cover.appendChild(coverTop);
       cover.appendChild(element('span','post-cover-label','TRIN'));
       card.appendChild(cover);
       const body = element('div','post-card-body');
