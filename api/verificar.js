@@ -1,5 +1,5 @@
 import { configured, auth, meta, IG_ID, noStore, responseError } from '../lib/common.js';
-export default async function handler(request) {
+export async function POST(request) {
   if (request.method !== 'POST') return noStore({error:'Método não permitido'},405);
   if (!auth(request.headers.get('x-trin-password'))) return noStore({error:'Senha incorreta'},401);
   if (!configured()) return noStore({error:'Variáveis de ambiente incompletas.'},503);

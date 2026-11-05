@@ -604,11 +604,21 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     byId('verifyBtn').disabled=active;
     byId('publishBtn').textContent=active?'Publicando…':'Publicar no Instagram';
   }
+  // Não tenta interpretar páginas HTML/mensagens de erro da Vercel como JSON.
+  async function readApiResponse(response, route) {
+    const raw = await response.text();
+    let result;
+    try { result = JSON.parse(raw); }
+    catch {
+      throw new Error(`Falha HTTP ${response.status} em ${route}. O servidor retornou texto, não JSON. Consulte Vercel → Logs e filtre por ${route}.`);
+    }
+    if (!response.ok) throw new Error(result.error || `Falha HTTP ${response.status} em ${route}.`);
+    return result;
+  }
   async function connectionStatus() {
     try {
       const response=await fetch('/api/status', {cache:'no-store'});
-      if (!response.ok) throw new Error('O servidor não respondeu.');
-      const result=await response.json();
+      const result=await readApiResponse(response, '/api/status');
       statusPublish(result.ready ? 'Vercel conectada. Selecione foto ou vídeo MP4 nativo e clique em Publicar.'
         : 'API encontrada, mas faltam variáveis no painel da Vercel: token, senha, ID ou Vercel Blob.',
         result.ready?'':'error');
@@ -622,8 +632,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     statusPublish('Verificando o token com a Meta…');
     try {
       const resp=await fetch('/api/verificar', {method:'POST',headers:{'X-TRIN-Password':password}});
-      const payload=await resp.json();
-      if (!resp.ok) throw new Error(payload.error || 'Erro de conexão.');
+      const payload=await readApiResponse(resp, '/api/verificar');
       statusPublish(`Conta confirmada pela Meta: @${payload.username || 'trinbrasil'}.`, 'success');
     } catch (err) {statusPublish(err.message,'error');}
   });
@@ -653,8 +662,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         headers: {'Content-Type':'application/json','X-TRIN-Password': password},
         body: JSON.stringify({type, caption, mediaUrl: uploaded.url})
       });
-      const result = await resp.json().catch(()=>({error:'O servidor retornou uma resposta inválida.'}));
-      if (!resp.ok || !result.ok) throw new Error(result.error || 'Não foi possível publicar.');
+      const result = await readApiResponse(resp, '/api/publicar');
+      if (!result.ok) throw new Error(result.error || 'Não foi possível publicar.');
       statusPublish('Publicação confirmada no @trinbrasil!', 'success');
       if (result.permalink && /^https:\/\/(www\.)?instagram\.com\//.test(result.permalink)) {
         publishStatus.appendChild(document.createTextNode(' '));

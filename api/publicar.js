@@ -11,7 +11,7 @@ async function waitContainer(id, seconds=210) {
   }
   throw new Error('A Meta ainda está processando a mídia. Publicação não confirmada.');
 }
-export default async function handler(request) {
+export async function POST(request) {
   if (request.method !== 'POST') return noStore({error:'Método não permitido'},405);
   if (!auth(request.headers.get('x-trin-password'))) return noStore({error:'Senha incorreta.'},401);
   if (!configured()) return noStore({error:'Variáveis de ambiente incompletas.'},503);

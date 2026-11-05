@@ -2,7 +2,7 @@ import { handleUpload } from '@vercel/blob/client';
 import { auth, configured, noStore, responseError } from '../lib/common.js';
 
 // O navegador solicita um token de upload; nunca disponibilizamos o token mestre do Blob.
-export default async function handler(request) {
+export async function POST(request) {
   if (request.method !== 'POST') return noStore({error:'Método não permitido'},405);
   if (!configured()) return noStore({error:'Configuração de publicação incompleta.'},503);
   try {

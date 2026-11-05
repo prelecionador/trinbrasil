@@ -35,3 +35,13 @@ Documentação
 - https://vercel.com/docs/vercel-blob/client-upload
 - https://vercel.com/docs/functions/limitations
 - https://vercel.com/docs/vercel-blob
+
+## Correção do erro Unexpected token 'A' (Vercel)
+
+Esta revisão usa assinaturas `GET(request)` e `POST(request)` para as funções da Vercel, conforme o padrão Web Handler. Antes, as funções usavam `export default handler(request)` e pressupunham que recebiam sempre um `Request` Web; dependendo da implantação, essa combinação pode falhar. Também foram aprimoradas as mensagens de erro quando o servidor devolve uma resposta diferente de JSON.
+
+**Como atualizar no GitHub:** substitua os arquivos `api/status.js`, `api/upload.js`, `api/verificar.js`, `api/publicar.js`, `src/client-blob.js` e `index.html` preservando a estrutura, faça commit e confirme o novo deployment na Vercel. Em caso de erro, abra **Vercel → Logs**, filtre o caminho `/api/upload` (ou a função que falhou) e consulte a causa original. Esta revisão não substitui a observação dos logs nem garante que o token da Meta esteja válido.
+
+**Testes:** abra `https://SEU-SITE.vercel.app/api/status` no navegador. O esperado é um JSON contendo `ok`, `ready` e verificações booleanas. Nenhuma senha ou token deve aparecer nessa resposta. Em seguida, use o botão **Verificar**, e só então publique uma foto de teste.
+
+**Atenção:** não coloque seu token ou senha no repositório; atualize as variáveis no painel da Vercel. Revogue o token e troque a senha anteriormente expostos.
