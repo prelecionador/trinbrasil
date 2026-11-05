@@ -104,6 +104,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .site-fields{display:grid;gap:14px}
 .site-input{width:100%;border:1px solid #e0e5e9;border-radius:10px;padding:11px 12px;background:#fff;color:#27313b;font:inherit;font-size:13px;outline:0}
 .site-input:focus{border-color:#869ba9;box-shadow:0 0 0 3px #e9f0f4}
+.site-article-text{display:block;min-height:240px;resize:vertical;line-height:1.65;white-space:pre-wrap}
 .site-checkbox{display:flex;align-items:center;gap:9px;font-size:12px;color:#3d4854;cursor:pointer}
 .site-checkbox input{accent-color:#17232d}
 .site-soon{width:100%;background:#edf1f4;color:#63717b;border:1px solid #dfe5ea;cursor:not-allowed;margin-top:2px}
@@ -379,6 +380,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
               <label for="siteAuthor">Membro Equipe</label>
               <input class="site-input" id="siteAuthor" name="siteAuthor" type="text" maxlength="90" placeholder="Ex.: Nome" autocomplete="name">
             </div>
+            <div class="field">
+              <label for="siteArticleText">Texto da matéria</label>
+              <textarea class="site-input site-article-text" id="siteArticleText" name="siteArticleText" maxlength="15000" rows="10" placeholder="Escreva a matéria completa. Separe os parágrafos com uma linha em branco."></textarea>
+              <p class="site-soon-note">Esse texto aparecerá abaixo da imagem na matéria do site. É independente do subtítulo da arte e da legenda do Instagram.</p>
+            </div>
             <label class="site-checkbox" for="siteFeatured"><input id="siteFeatured" name="siteFeatured" type="checkbox" checked> Destacar na página inicial</label>
             <button class="btn site-publish" id="publishSiteBtn" type="button">Postar no site</button>
             <p class="site-soon-note">Use a senha de publicação do painel à direita. A fotografia será salva separadamente da mídia do Instagram.</p>
@@ -488,7 +494,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       <textarea id="editPostSubtitle" maxlength="1200"></textarea>
     </div>
     <div class="post-dialog-field">
-      <label for="editPostContent">Conteúdo</label>
+      <label for="editPostContent">Texto da matéria</label>
       <textarea id="editPostContent" maxlength="15000" required></textarea>
     </div>
     <div class="post-dialog-field"><label for="editPostCategory">Categoria</label><input id="editPostCategory" maxlength="60"></div>
@@ -1060,7 +1066,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     const fields={
       action:'createPost',mediaUrl,type,
       title:byId('titleText').value.trim(), subtitle:byId('subtitleText').value.trim(),
-      content:byId('captionText').value.trim(), category:byId('siteCategory').selectedOptions[0].textContent.trim(),
+      content:byId('siteArticleText').value.trim(), category:byId('siteCategory').selectedOptions[0].textContent.trim(),
       author:byId('siteAuthor').value.trim()||'Equipe TRIN', tags:byId('siteTags').value.trim(),
       featured:byId('siteFeatured').checked,
     };
@@ -1078,6 +1084,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if(!password)return setSiteStatus('Digite a senha de publicação no painel do Instagram.',true);
     if(!image)return setSiteStatus('Selecione uma fotografia.',true);
     if(!byId('titleText').value.trim())return setSiteStatus('Escreva um título.',true);
+    if(!byId('siteArticleText').value.trim())return setSiteStatus('Escreva o texto da matéria na seção 04 — Site.',true);
     sendingToSite=true;siteButton.disabled=true;siteButton.textContent='Publicando...';
     const finish=()=>{sendingToSite=false;siteButton.disabled=false;siteButton.textContent='Postar no site';};
     const type=document.querySelector('input[name="publishKind"]:checked')?.value||'photo';
