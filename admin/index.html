@@ -104,7 +104,6 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .site-fields{display:grid;gap:14px}
 .site-input{width:100%;border:1px solid #e0e5e9;border-radius:10px;padding:11px 12px;background:#fff;color:#27313b;font:inherit;font-size:13px;outline:0}
 .site-input:focus{border-color:#869ba9;box-shadow:0 0 0 3px #e9f0f4}
-.site-article-text{display:block;min-height:240px;resize:vertical;line-height:1.65;white-space:pre-wrap}
 .site-checkbox{display:flex;align-items:center;gap:9px;font-size:12px;color:#3d4854;cursor:pointer}
 .site-checkbox input{accent-color:#17232d}
 .site-soon{width:100%;background:#edf1f4;color:#63717b;border:1px solid #dfe5ea;cursor:not-allowed;margin-top:2px}
@@ -380,11 +379,6 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
               <label for="siteAuthor">Membro Equipe</label>
               <input class="site-input" id="siteAuthor" name="siteAuthor" type="text" maxlength="90" placeholder="Ex.: Nome" autocomplete="name">
             </div>
-            <div class="field">
-              <label for="siteArticleText">Texto da matéria</label>
-              <textarea class="site-input site-article-text" id="siteArticleText" name="siteArticleText" maxlength="15000" rows="10" placeholder="Escreva a matéria completa. Separe os parágrafos com uma linha em branco."></textarea>
-              <p class="site-soon-note">Esse texto aparecerá abaixo da imagem na matéria do site. É independente do subtítulo da arte e da legenda do Instagram.</p>
-            </div>
             <label class="site-checkbox" for="siteFeatured"><input id="siteFeatured" name="siteFeatured" type="checkbox" checked> Destacar na página inicial</label>
             <button class="btn site-publish" id="publishSiteBtn" type="button">Postar no site</button>
             <p class="site-soon-note">Use a senha de publicação do painel à direita. A fotografia será salva separadamente da mídia do Instagram.</p>
@@ -476,6 +470,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       <div><label for="newMenuTitle">Título da página</label><input id="newMenuTitle" type="text" required maxlength="160" placeholder="Ex.: Nossas pesquisas"></div>
       <div><label for="newMenuSubtitle">Subtítulo</label><input id="newMenuSubtitle" type="text" maxlength="380"></div>
       <div><label for="newMenuText">Texto da página</label><textarea id="newMenuText" maxlength="12000" placeholder="Escreva o conteúdo desta seção..."></textarea></div>
+      <div><label for="newMenuImage">Imagem da página (opcional, JPG/PNG/WEBP)</label><input id="newMenuImage" type="file" accept="image/jpeg,image/png,image/webp"></div>
       <div class="page-panel-actions"><button type="submit" class="page-add-button">+ Adicionar menu</button></div>
     </div>
   </form>
@@ -494,8 +489,12 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       <textarea id="editPostSubtitle" maxlength="1200"></textarea>
     </div>
     <div class="post-dialog-field">
-      <label for="editPostContent">Texto da matéria</label>
-      <textarea id="editPostContent" maxlength="15000" required></textarea>
+      <label for="editPostCaption">Legenda</label>
+      <textarea id="editPostCaption" maxlength="2200"></textarea>
+    </div>
+    <div class="post-dialog-field">
+      <label for="editPostContent">Matéria (texto completo)</label>
+      <textarea id="editPostContent" maxlength="15000"></textarea>
     </div>
     <div class="post-dialog-field"><label for="editPostCategory">Categoria</label><input id="editPostCategory" maxlength="60"></div>
     <div class="post-dialog-field"><label for="editPostAuthor">Autor</label><input id="editPostAuthor" maxlength="100"></div>
@@ -1048,26 +1047,30 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     siteStatus.className='site-publish-status'+(error?' is-error':success?' is-success':'');
     siteStatus.replaceChildren(document.createTextNode(message));
   }
-  async function siteUpload(blob,type,password){
-    if(['localhost','127.0.0.1'].includes(location.hostname)){
-      const resp=await fetch('/api/site-upload',{method:'POST',headers:{'Content-Type':blob.type,'X-TRIN-Password':password},body:blob});
-      const value=await readApiResponse(resp,'/api/site-upload');
-      if(!value.url)throw new Error('Nenhuma URL de upload foi retornada.');
-      return value.url;
-    }
-    if(!window.trinDirectBlobUpload)throw new Error('Módulo de upload não disponível. Abra o projeto pela Vercel.');
-    const uploaded=await window.trinDirectBlobUpload(blob,type,password,pct=>setSiteStatus('Enviando imagem ao Vercel Blob... '+pct+'%'));
-    return uploaded.url;
+  // Publicação do PORTAL: imagem vai para o Apps Script/Drive, nunca ao Vercel Blob.
+  // O upload do Instagram (sendMedia) acima permanece exatamente como estava.
+  async function jpegParaBase64(blob) {
+    if (blob.type !== 'image/jpeg') throw new Error('A imagem do portal deve ser JPG.');
+    if (blob.size > 2.8 * 1024 * 1024) throw new Error('A imagem ultrapassou 2,8 MB. Escolha outra fotografia.');
+    return await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result).split(',')[1]);
+      reader.onerror=()=>reject(new Error('Não foi possível ler a imagem.'));
+      reader.readAsDataURL(blob);
+    });
   }
   async function createSitePost(blob,type,password){
-    if(type==='video' && blob.type!=='video/mp4')throw new Error('Para postar vídeo, o navegador deve gerar MP4/H.264. Se gerou WebM, escolha Foto.');
-    const mediaUrl=await siteUpload(blob,type,password);
-    setSiteStatus('Salvando publicação no site...');
+    if (type!=='photo') {
+      throw new Error('O armazenamento do portal via Apps Script aceita fotos JPG. Para vídeo, o botão Publicar no Instagram continua inalterado.');
+    }
+    setSiteStatus('Enviando a imagem para o Google Drive...');
+    const imagem={mime:'image/jpeg',base64:await jpegParaBase64(blob)};
+    setSiteStatus('Salvando a imagem no Drive e a notícia no Google Planilhas...');
     const fields={
-      action:'createPost',mediaUrl,type,
-      title:byId('titleText').value.trim(), subtitle:byId('subtitleText').value.trim(),
-      content:byId('siteArticleText').value.trim(), category:byId('siteCategory').selectedOptions[0].textContent.trim(),
-      author:byId('siteAuthor').value.trim()||'Equipe TRIN', tags:byId('siteTags').value.trim(),
+      action:'createPost',image:imagem,type:'photo',
+      title:byId('titleText').value.trim(),subtitle:byId('subtitleText').value.trim(),
+      content:byId('captionText').value.trim(),category:byId('siteCategory').selectedOptions[0].textContent.trim(),
+      author:byId('siteAuthor').value.trim()||'Equipe TRIN',tags:byId('siteTags').value.trim(),
       featured:byId('siteFeatured').checked,
     };
     const resp=await fetch('/api/site',{method:'POST',headers:{'Content-Type':'application/json','X-TRIN-Password':password},body:JSON.stringify(fields)});
@@ -1084,7 +1087,6 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if(!password)return setSiteStatus('Digite a senha de publicação no painel do Instagram.',true);
     if(!image)return setSiteStatus('Selecione uma fotografia.',true);
     if(!byId('titleText').value.trim())return setSiteStatus('Escreva um título.',true);
-    if(!byId('siteArticleText').value.trim())return setSiteStatus('Escreva o texto da matéria na seção 04 — Site.',true);
     sendingToSite=true;siteButton.disabled=true;siteButton.textContent='Publicando...';
     const finish=()=>{sendingToSite=false;siteButton.disabled=false;siteButton.textContent='Postar no site';};
     const type=document.querySelector('input[name="publishKind"]:checked')?.value||'photo';
@@ -1094,9 +1096,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         const blob=await canvasAsJpeg();
         await createSitePost(blob,'photo',password);finish();
       }else{
-        setSiteStatus('Gerando vídeo de 9 segundos...');
-        downloadVideo(blob=>{void createSitePost(blob,'video',password).catch(e=>setSiteStatus('Não foi publicado: '+e.message,true)).finally(finish);},
-          e=>{setSiteStatus('Falha: '+e,true);finish();});
+        setSiteStatus('A integração Google Drive do portal aceita somente fotos. O envio de vídeos ao Instagram continua disponível.',true);
+        finish();
       }
     }catch(e){setSiteStatus('Não foi publicado: '+e.message,true);finish();}
   });
@@ -1135,7 +1136,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   function setDialogFields(post){
     $('editPostTitle').value=post.title||'';
     $('editPostSubtitle').value=post.subtitle||'';
-    $('editPostContent').value=post.content||'';
+    $('editPostContent').value=post.article ?? post.content ?? '';
+    $('editPostCaption').value=post.caption||'';
     $('editPostCategory').value=post.category||'';
     $('editPostAuthor').value=post.author||'';
     $('editPostTags').value=post.tags||'';
@@ -1172,7 +1174,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       edit.addEventListener('click',()=>{editingId=post.id;setDialogFields(post);$('postEditorDialog').showModal();});
       const remove=element('button','post-delete','Excluir');remove.type='button';
       remove.addEventListener('click',async()=>{
-        if(!confirm('Deseja realmente excluir a postagem "'+post.title+'"? Esta ação não pode ser desfeita.'))return;
+        if(!confirm('Enviar a postagem "'+post.title+'" para a lixeira do Google Planilhas?'))return;
         try{if(demo){demos=demos.filter(p=>p.id!==post.id);saveDemos();}else{await api('DELETE',{id:post.id});await loadPosts();}renderPosts();}
         catch(e){alert('Falha ao excluir: '+e.message);}
       });
@@ -1182,7 +1184,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   async function loadPosts(){
     const data=await api('GET');
     posts=Array.isArray(data.posts)?data.posts:[];
-    demo=posts.length===0;
+    demo=false; // Banco vazio significa ausência de publicações, não dados de demonstração.
     renderPosts();
   }
   async function loadMenus(){
@@ -1199,6 +1201,34 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if(!multi)field.type='text';
     wrapper.append(lbl,field);return wrapper;
   }
+  async function menuImagemArquivo(file) {
+    if (!file) return null;
+    if (!['image/jpeg','image/png','image/webp'].includes(file.type)) throw new Error('Escolha uma imagem JPG, PNG ou WEBP.');
+    const bitmap=await createImageBitmap(file);
+    try {
+      const ratio=Math.min(1,1600/Math.max(bitmap.width,bitmap.height));
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.max(1,Math.round(bitmap.width*ratio));
+      canvas.height=Math.max(1,Math.round(bitmap.height*ratio));
+      canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
+      const jpeg=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Falha ao converter imagem.')),'image/jpeg',.82));
+      return {mime:'image/jpeg',base64:await jpegParaMenu(jpeg)};
+    }finally{bitmap.close();}
+  }
+  async function jpegParaMenu(file) {
+    if(file.size>2.8*1024*1024)throw new Error('Imagem de menu maior que 2,8 MB.');
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result).split(',')[1]);
+      reader.onerror=()=>reject(new Error('Falha ao ler a imagem.'));
+      reader.readAsDataURL(file);
+    });
+  }
+  async function uploadMenuImage(id,file) {
+    const image=await menuImagemArquivo(file);
+    if(!image)return;
+    await api('POST',{action:'uploadMenuImage',id,image});
+  }
   function renderMenus(){
     const list=$('menusPanelList');list.replaceChildren();
     if(!menus.length)list.appendChild(element('p','posts-empty','Ainda não existem menus. Adicione um abaixo.'));
@@ -1207,17 +1237,24 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       details.appendChild(element('summary','',m.name));
       const fields=element('div','page-panel-fields');
       fields.append(inputField('menuName-'+m.id,'Nome do menu',m.name,false,42),inputField('menuTitle-'+m.id,'Título',m.title,false,160),inputField('menuSubtitle-'+m.id,'Subtítulo',m.subtitle,false,380),inputField('menuText-'+m.id,'Texto',m.text,true,12000));
+      const imgWrap=element('div');const imgLabel=element('label','',m.image?'Substituir imagem da página':'Adicionar imagem da página (opcional)');
+      const imgInput=element('input');imgInput.type='file';imgInput.accept='image/jpeg,image/png,image/webp';
+      imgWrap.append(imgLabel,imgInput);
+      if(m.image){const preview=element('img');preview.src=m.image;preview.alt='Imagem atual de '+m.name;preview.loading='lazy';preview.style.cssText='max-width:190px;max-height:130px;display:block;object-fit:contain;margin:8px 0';imgWrap.append(preview);}
+      fields.append(imgWrap);
       const actions=element('div','page-panel-actions');
       const save=element('button','page-save','Salvar alterações');save.type='button';
       save.addEventListener('click',async()=>{
         const next=menus.map(x=>x.id===m.id?{...x,name:$('menuName-'+m.id).value.trim(),title:$('menuTitle-'+m.id).value.trim(),subtitle:$('menuSubtitle-'+m.id).value.trim(),text:$('menuText-'+m.id).value.trim()}:x);
         if(!next.find(x=>x.id===m.id).name||!next.find(x=>x.id===m.id).title)return notify('Nome e título são obrigatórios.',true);
-        try{const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;notify('Menu salvo e atualizado no site.');renderMenus();}
+        try{const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;
+          if(imgInput.files[0]){notify('Enviando imagem para o Google Drive...');await uploadMenuImage(m.id,imgInput.files[0]);await loadMenus();}
+          else renderMenus();notify('Menu salvo e atualizado no site.');}
         catch(e){notify(e.message,true);}
       });
       const remove=element('button','page-delete','Excluir menu');remove.type='button';
       remove.addEventListener('click',async()=>{
-        if(!confirm('Tem certeza que deseja excluir o menu "'+m.name+'" do site?'))return;
+        if(!confirm('Enviar o menu "'+m.name+'" para a lixeira do Google Planilhas?'))return;
         try{const data=await api('POST',{action:'saveMenus',menus:menus.filter(x=>x.id!==m.id)});menus=data.menus;notify('Menu excluído do site.');renderMenus();}
         catch(e){notify(e.message,true);}
       });
@@ -1229,14 +1266,16 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     const name=$('newMenuName').value.trim(),id=safeSlug(name);
     if(!id||id==='inicio'||menus.some(m=>m.id===id))return notify('Esse menu já existe ou possui nome inválido.',true);
     const next=[...menus,{id,name,title:$('newMenuTitle').value.trim(),subtitle:$('newMenuSubtitle').value.trim(),text:$('newMenuText').value.trim()}];
-    try{const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;renderMenus();$('addMenuForm').reset();notify('Novo menu adicionado ao site.');}
+    try{const file=$('newMenuImage').files[0];const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;
+      if(file){notify('Salvando imagem no Google Drive...');await uploadMenuImage(id,file);await loadMenus();}else renderMenus();
+      $('addMenuForm').reset();notify('Novo menu adicionado ao site.');}
     catch(e){notify(e.message,true);}
   });
   $('postEditForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const source=demo?demos:posts,post=source.find(x=>x.id===editingId);if(!post)return;
-    const payload={...post,title:$('editPostTitle').value.trim(),subtitle:$('editPostSubtitle').value.trim(),content:$('editPostContent').value.trim(),category:$('editPostCategory').value.trim(),author:$('editPostAuthor').value.trim(),tags:$('editPostTags').value.trim()};
-    if(!payload.title||!payload.content)return $('postEditForm').reportValidity();
+    const payload={...post,title:$('editPostTitle').value.trim(),subtitle:$('editPostSubtitle').value.trim(),content:$('editPostContent').value.trim(),caption:$('editPostCaption').value.trim(),category:$('editPostCategory').value.trim(),author:$('editPostAuthor').value.trim(),tags:$('editPostTags').value.trim()};
+    if(!payload.title)return $('postEditForm').reportValidity();
     try{
       if(demo){Object.assign(post,payload);saveDemos();}
       else{await api('PUT',payload);await loadPosts();}

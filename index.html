@@ -267,8 +267,10 @@
   function renderArtigos(){return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Publicações e leitura</span><h1>Artigos.</h1><p>Esta página reunirá artigos, análises e textos informativos, organizados por assunto.</p></div><div class="prose"><p>Em breve, você encontrará publicações completas, referências e materiais para aprofundar a leitura dos temas abordados no portal.</p></div><a class="back-btn" href="#/inicio">← Voltar ao início</a></div>`;}
   function renderManagedPage(menu){
     if(!menu)return renderNotFound();
-    if(menu.id==='recursos')return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Apoie o projeto</span><h1>${escapeHTML(menu.title)}</h1><p>${escapeHTML(menu.subtitle)}</p></div><div class="pix-support"><div class="pix-copy">${para(menu.text)}<ul class="pix-points"><li>Escaneie o QR Code com a câmera do app do banco.</li><li>Confira os dados da transferência antes de concluir.</li><li>Contribua com o valor que desejar.</li></ul><a class="pix-action" href="#/inicio">Voltar ao início <span aria-hidden="true">↗</span></a></div><div class="qr-card">${img('pixqr','QR Code Pix para apoiar o projeto TRIN')}<strong>APOIE VIA PIX</strong><span>Use o QR Code para fazer a contribuição de forma rápida e direta.</span></div></div></div>`;
-    return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">${escapeHTML(menu.name)}</span><h1>${escapeHTML(menu.title)}</h1><p>${escapeHTML(menu.subtitle)}</p></div><div class="prose">${para(menu.text)}</div><a class="back-btn" href="#/inicio">← Voltar ao início</a></div>`;
+    // As páginas institucionais têm imagem_url própria na aba Menu.
+    const cover=menu.image ? `<div style="max-width:900px;margin:18px auto 24px"><img src="${escapeHTML(menu.image)}" alt="${escapeHTML(menu.title)}" loading="lazy" style="display:block;max-height:550px;max-width:100%;width:100%;object-fit:contain;border-radius:8px"></div>` : '';
+    if(menu.id==='recursos')return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Apoie o projeto</span><h1>${escapeHTML(menu.title)}</h1><p>${escapeHTML(menu.subtitle)}</p></div>${cover}<div class="pix-support"><div class="pix-copy">${para(menu.text)}<ul class="pix-points"><li>Escaneie o QR Code com a câmera do app do banco.</li><li>Confira os dados da transferência antes de concluir.</li><li>Contribua com o valor que desejar.</li></ul><a class="pix-action" href="#/inicio">Voltar ao início <span aria-hidden="true">↗</span></a></div><div class="qr-card">${img('pixqr','QR Code Pix para apoiar o projeto TRIN')}<strong>APOIE VIA PIX</strong><span>Use o QR Code para fazer a contribuição de forma rápida e direta.</span></div></div></div>`;
+    return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">${escapeHTML(menu.name)}</span><h1>${escapeHTML(menu.title)}</h1><p>${escapeHTML(menu.subtitle)}</p></div>${cover}<div class="prose">${para(menu.text)}</div><a class="back-btn" href="#/inicio">← Voltar ao início</a></div>`;
   }
   function renderMateria(id){
     const p=ACTIVE_POSTS.find(x=>x.id===id);if(!p)return renderNotFound();
@@ -311,7 +313,8 @@
     const get=async url=>{const resp=await fetch(url,{cache:'no-store'});const data=await resp.json();if(!resp.ok||!data.ok)throw new Error(data.error||'API indisponível');return data;};
     try{
       const [posts,menus]=await Promise.all([get('/api/site'),get('/api/site?resource=menus')]);
-      if(Array.isArray(posts.posts) && posts.posts.length){ACTIVE_POSTS=posts.posts;LIVE=true;}
+      // Uma planilha vazia é um banco válido: não mostrar notícias de demonstração.
+      if(Array.isArray(posts.posts)){ACTIVE_POSTS=posts.posts;LIVE=true;}
       else {ACTIVE_POSTS=POSTS.slice();LIVE=false;}
       if(Array.isArray(menus.menus))MENUS=menus.menus;
       renderNav();render();
