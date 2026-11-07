@@ -475,10 +475,6 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     <h1>Postagens do site.</h1>
     <p>Gerencie as postagens publicadas, seus títulos, conteúdos e destaques.</p>
   </div>
-  <div class="subpage-credentials">
-    <label for="postsPassword">Senha de publicação para editar, destacar ou excluir</label>
-    <input id="postsPassword" type="password" autocomplete="off" placeholder="Digite sua senha para realizar alterações">
-  </div>
   <p id="postsPanelStatus" class="subpage-status" role="status" aria-live="polite"></p>
   <div class="posts-grid" id="postsGrid" aria-live="polite"></div>
   <p class="posts-note">As postagens publicadas ficam disponíveis no site. A remoção exige confirmação e não apaga a publicação do Instagram.</p>
@@ -494,10 +490,6 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     <h1>Painel da página.</h1>
   </div>
   <p class="page-panel-help">Clique em um menu para editar seu título, subtítulo e texto. As alterações feitas aqui são publicadas no site. A página inicial é fixa e não pode ser removida.</p>
-  <div class="subpage-credentials">
-    <label for="menusPassword">Senha de publicação para salvar, adicionar ou excluir</label>
-    <input id="menusPassword" type="password" autocomplete="off" placeholder="Digite sua senha para realizar alterações">
-  </div>
   <p id="menuPanelStatus" class="subpage-status page-panel-message" role="status" aria-live="polite"></p>
   <details class="page-panel-menu appearance-menu" id="appearanceMenu">
     <summary><span>Paleta de cores do site <small>Altera linhas e botões do portal público</small></span><span class="collapsible-chevron" aria-hidden="true"></span></summary>
@@ -1172,9 +1164,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const saveDemos=()=>{try{localStorage.setItem(demoStorage,JSON.stringify(demos))}catch{}};
   const element=(tag,className,content)=>{const n=document.createElement(tag);if(className)n.className=className;if(content!==undefined)n.textContent=content;return n;};
   function password(){
-    const field=location.hash==='#postagens' ? $('postsPassword') : location.hash==='#painel' ? $('menusPassword') : $('postPassword');
-    const value=field.value.trim();
-    if(!value)throw new Error('Digite a senha antes de realizar esta operação.');
+    // Senha única do editor principal, reutilizada nas subpáginas.
+    const value=$('postPassword').value.trim();
+    if(!value)throw new Error('Digite a senha no editor principal antes de realizar esta operação.');
     return value;
   }
   function setFeedback(el,message,kind=''){
