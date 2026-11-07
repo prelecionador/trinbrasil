@@ -208,9 +208,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .page-panel-menu{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden}
 .page-panel-menu>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 20px;font-weight:800;font-size:15px;cursor:pointer}
 .page-panel-menu>summary::-webkit-details-marker{display:none}
-.page-panel-menu>summary:after{content:'⌄';font-size:24px;line-height:1;color:#697681}
+.page-panel-menu>summary:after{content:none}
 .page-panel-menu[open]>summary{border-bottom:1px solid var(--line)}
-.page-panel-menu[open]>summary:after{content:'⌃'}
+.page-panel-menu[open]>summary .collapsible-chevron{transform:rotate(225deg);margin-top:5px}
 .page-panel-fields{padding:19px;display:grid;gap:13px}
 .page-panel-fields label{display:block;font-size:12px;font-weight:700;color:#42505d;margin-bottom:6px}
 .page-panel-fields input,.page-panel-fields textarea{width:100%;border:1px solid #dbe3e8;border-radius:9px;padding:11px;font-size:13px;background:#fff;color:#21313e;outline:none}
@@ -223,6 +223,29 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .page-add-menu h2{font-size:17px;margin:0 0 14px}
 .page-panel-message{font-size:12px;line-height:1.6;min-height:19px;color:#64727c;margin-top:12px}
 @media(max-width:600px){.page-panel-menu>summary{padding:15px}.page-panel-fields{padding:14px}}
+
+/* Ajustes do portal, sem interferir na exportação/publicação do Instagram. */
+#siteSection .site-article-input{min-height:175px;resize:vertical;line-height:1.55}
+.subpage-credentials{border:1px solid #dce5e9;background:#fff;border-radius:12px;padding:15px 18px;margin:0 0 10px;max-width:760px}
+.subpage-credentials label{display:block;font-size:12px;font-weight:700;color:#45545e;margin-bottom:8px}
+.subpage-credentials input{width:100%;max-width:500px;border:1px solid #dce5e9;border-radius:9px;padding:12px;background:#fff;color:#253540;font:inherit;font-size:13px}
+.subpage-status{font-size:12px;line-height:1.6;min-height:20px;margin:8px 0 20px;color:#60717e;white-space:pre-line;overflow-wrap:anywhere}
+.subpage-status.is-error,.page-panel-message.site-panel-error{color:#ad3940}
+.subpage-status.is-success,.page-panel-message.site-panel-success{color:#117145}
+#postDialogStatus{margin:0;min-height:0}
+.appearance-menu{max-width:760px;margin-bottom:17px}
+.appearance-menu>summary>span:first-child{display:flex;flex-direction:column;gap:5px}
+.appearance-menu>summary small{font-weight:400;color:#697681;font-size:11px}
+.appearance-menu>summary:after{content:none!important}
+.appearance-menu[open]>summary .collapsible-chevron{transform:rotate(225deg);margin-top:5px}
+.appearance-menu .appearance-controls{display:flex;gap:15px;align-items:end;flex-wrap:wrap}
+.appearance-menu .appearance-controls>div:first-child{flex:0 0 110px}
+.appearance-menu .appearance-controls>div:nth-child(2){flex:1;min-width:150px}
+.appearance-menu input[type=color]{height:42px;padding:3px;cursor:pointer}
+.appearance-example{display:flex;align-items:center;gap:20px;background:#fafafa;border-radius:10px;border:1px solid #e6ebee;padding:14px}
+.appearance-example span{height:5px;border-radius:3px;background:#89cff0;flex:1;min-width:45px}
+.appearance-example button{border:0;border-radius:8px;background:#89cff0;color:#192d37;font-size:12px;padding:11px 16px;opacity:1;white-space:nowrap}
+.appearance-fields .page-panel-message{margin:0}
 </style>
 </head>
 <body>
@@ -379,6 +402,10 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
               <label for="siteAuthor">Membro Equipe</label>
               <input class="site-input" id="siteAuthor" name="siteAuthor" type="text" maxlength="90" placeholder="Ex.: Nome" autocomplete="name">
             </div>
+            <div class="field">
+              <div class="section-label"><label for="siteArticle">Matéria (texto completo)</label><span class="helper">Conteúdo da notícia na aba ADMIN</span></div>
+              <textarea class="site-input site-article-input" id="siteArticle" name="siteArticle" maxlength="15000" placeholder="Escreva aqui a matéria completa que será publicada no site..."></textarea>
+            </div>
             <label class="site-checkbox" for="siteFeatured"><input id="siteFeatured" name="siteFeatured" type="checkbox" checked> Destacar na página inicial</label>
             <button class="btn site-publish" id="publishSiteBtn" type="button">Postar no site</button>
             <p class="site-soon-note">Use a senha de publicação do painel à direita. A fotografia será salva separadamente da mídia do Instagram.</p>
@@ -448,6 +475,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     <h1>Postagens do site.</h1>
     <p>Gerencie as postagens publicadas, seus títulos, conteúdos e destaques.</p>
   </div>
+  <div class="subpage-credentials">
+    <label for="postsPassword">Senha de publicação para editar, destacar ou excluir</label>
+    <input id="postsPassword" type="password" autocomplete="off" placeholder="Digite sua senha para realizar alterações">
+  </div>
+  <p id="postsPanelStatus" class="subpage-status" role="status" aria-live="polite"></p>
   <div class="posts-grid" id="postsGrid" aria-live="polite"></div>
   <p class="posts-note">As postagens publicadas ficam disponíveis no site. A remoção exige confirmação e não apaga a publicação do Instagram.</p>
 </section>
@@ -462,6 +494,23 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     <h1>Painel da página.</h1>
   </div>
   <p class="page-panel-help">Clique em um menu para editar seu título, subtítulo e texto. As alterações feitas aqui são publicadas no site. A página inicial é fixa e não pode ser removida.</p>
+  <div class="subpage-credentials">
+    <label for="menusPassword">Senha de publicação para salvar, adicionar ou excluir</label>
+    <input id="menusPassword" type="password" autocomplete="off" placeholder="Digite sua senha para realizar alterações">
+  </div>
+  <p id="menuPanelStatus" class="subpage-status page-panel-message" role="status" aria-live="polite"></p>
+  <details class="page-panel-menu appearance-menu" id="appearanceMenu">
+    <summary><span>Paleta de cores do site <small>Altera linhas e botões do portal público</small></span><span class="collapsible-chevron" aria-hidden="true"></span></summary>
+    <div class="page-panel-fields appearance-fields">
+      <div class="appearance-controls">
+        <div><label for="siteAccentPicker">Escolha uma cor</label><input type="color" id="siteAccentPicker" value="#89cff0" aria-label="Cor de destaque do site"></div>
+        <div><label for="siteAccentHex">Código hexadecimal</label><input type="text" id="siteAccentHex" value="#89CFF0" maxlength="7" spellcheck="false" placeholder="#89CFF0"></div>
+      </div>
+      <div class="appearance-example"><span id="accentLineExample"></span><button type="button" id="accentButtonExample" disabled>Exemplo de botão</button></div>
+      <div class="page-panel-actions"><button type="button" class="page-save" id="saveSiteAccent">Salvar cor</button><button type="button" id="resetSiteAccent">Redefinir padrão (#89CFF0)</button></div>
+      <p id="appearanceStatus" class="page-panel-message" role="status" aria-live="polite"></p>
+    </div>
+  </details>
   <div id="menusPanelList" class="page-panel-menulist" aria-live="polite"></div>
   <form id="addMenuForm" class="page-add-menu">
     <h2>Adicionar novo menu</h2>
@@ -472,9 +521,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       <div><label for="newMenuText">Texto da página</label><textarea id="newMenuText" maxlength="12000" placeholder="Escreva o conteúdo desta seção..."></textarea></div>
       <div><label for="newMenuImage">Imagem da página (opcional, JPG/PNG/WEBP)</label><input id="newMenuImage" type="file" accept="image/jpeg,image/png,image/webp"></div>
       <div class="page-panel-actions"><button type="submit" class="page-add-button">+ Adicionar menu</button></div>
+      <p id="newMenuStatus" class="page-panel-message" role="status" aria-live="polite"></p>
     </div>
   </form>
-  <p id="menuPanelStatus" class="page-panel-message" role="status" aria-live="polite"></p>
 </section>
 <dialog class="post-editor-dialog" id="postEditorDialog" aria-labelledby="postEditorTitle">
   <form class="post-dialog-form" id="postEditForm">
@@ -499,6 +548,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     <div class="post-dialog-field"><label for="editPostCategory">Categoria</label><input id="editPostCategory" maxlength="60"></div>
     <div class="post-dialog-field"><label for="editPostAuthor">Autor</label><input id="editPostAuthor" maxlength="100"></div>
     <div class="post-dialog-field"><label for="editPostTags">Tags</label><input id="editPostTags" maxlength="350"></div>
+    <p id="postDialogStatus" class="subpage-status" role="status" aria-live="polite"></p>
     <div class="post-dialog-actions">
       <button id="cancelPostEdit" type="button">Cancelar</button>
       <button class="post-save" type="submit">Salvar alterações</button>
@@ -1069,7 +1119,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     const fields={
       action:'createPost',image:imagem,type:'photo',
       title:byId('titleText').value.trim(),subtitle:byId('subtitleText').value.trim(),
-      content:byId('captionText').value.trim(),category:byId('siteCategory').selectedOptions[0].textContent.trim(),
+      content:byId('captionText').value.trim(),article:byId('siteArticle').value.trim(),category:byId('siteCategory').selectedOptions[0].textContent.trim(),
       author:byId('siteAuthor').value.trim()||'Equipe TRIN',tags:byId('siteTags').value.trim(),
       featured:byId('siteFeatured').checked,
     };
@@ -1121,7 +1171,22 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   let demos=readDemo();
   const saveDemos=()=>{try{localStorage.setItem(demoStorage,JSON.stringify(demos))}catch{}};
   const element=(tag,className,content)=>{const n=document.createElement(tag);if(className)n.className=className;if(content!==undefined)n.textContent=content;return n;};
-  function password(){const value=$('postPassword').value;if(!value)throw new Error('Digite a senha de publicação no painel à direita.');return value;}
+  function password(){
+    const field=location.hash==='#postagens' ? $('postsPassword') : location.hash==='#painel' ? $('menusPassword') : $('postPassword');
+    const value=field.value.trim();
+    if(!value)throw new Error('Digite a senha antes de realizar esta operação.');
+    return value;
+  }
+  function setFeedback(el,message,kind=''){
+    if(!el)return;
+    el.className=(el.id==='menuPanelStatus'||el.id==='newMenuStatus'||el.id==='appearanceStatus'?'page-panel-message':'subpage-status')+
+      (kind==='error'?' is-error site-panel-error':kind==='success'?' is-success site-panel-success':'');
+    el.textContent=message;
+  }
+  function notifyPosts(message,kind=''){setFeedback($('postsPanelStatus'),message,kind);}
+  function notifyDialog(message,kind=''){setFeedback($('postDialogStatus'),message,kind);}
+  function notifyLocal(el,message,kind=''){setFeedback(el,message,kind);}
+
   async function api(method='GET',body=null,resource=''){
     const opt={method,headers:{},cache:'no-store'};
     if(body){opt.headers['X-TRIN-Password']=password();opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body);}
@@ -1131,7 +1196,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if(!resp.ok||!value.ok)throw new Error(value.error||'Falha na API do site.');
     return value;
   }
-  function notify(message,isError=false){const el=$('menuPanelStatus');el.textContent=message;el.className='page-panel-message'+(isError?' site-panel-error':' site-panel-success');}
+  function notify(message,isError=false){setFeedback($('menuPanelStatus'),message,isError?'error':'success');}
   function safeSlug(name){return String(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,48);}
   function setDialogFields(post){
     $('editPostTitle').value=post.title||'';
@@ -1160,10 +1225,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       star.type='button';star.title=post.featured?'Remover destaque':'Destacar no site';star.setAttribute('aria-pressed',String(!!post.featured));
       star.setAttribute('aria-label',(post.featured?'Remover destaque de ':'Destacar ')+post.title);
       star.addEventListener('click',async()=>{
-        if(!post.featured&&source.filter(p=>p.featured).length>=2){alert('Só é possível destacar duas postagens. Desmarque outra estrela primeiro.');return;}
+        if(!post.featured&&source.filter(p=>p.featured).length>=2){notifyPosts('Só é possível destacar duas postagens. Desmarque outra estrela primeiro.','error');return;}
         const old=post.featured;post.featured=!old;
-        try{if(demo){saveDemos()}else{await api('PUT',{...post})}renderPosts();}
-        catch(e){post.featured=old;alert(e.message);}
+        notifyPosts('Atualizando destaque...');
+        try{if(demo){saveDemos()}else{await api('PUT',{...post})}renderPosts();notifyPosts('Destaque atualizado.','success');}
+        catch(e){post.featured=old;renderPosts();notifyPosts('Não foi possível atualizar: '+e.message,'error');}
       });
       top.appendChild(star);cover.appendChild(top);card.appendChild(cover);
       const body=element('div','post-card-body'),meta=element('div','post-meta');
@@ -1171,12 +1237,13 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       body.append(meta,element('h2','',post.title),element('p','post-text',post.content||post.subtitle||''));
       const actions=element('div','post-actions');
       const edit=element('button','post-edit','Editar');edit.type='button';
-      edit.addEventListener('click',()=>{editingId=post.id;setDialogFields(post);$('postEditorDialog').showModal();});
+      edit.addEventListener('click',()=>{editingId=post.id;setDialogFields(post);notifyDialog('');$('postEditorDialog').showModal();});
       const remove=element('button','post-delete','Excluir');remove.type='button';
       remove.addEventListener('click',async()=>{
         if(!confirm('Enviar a postagem "'+post.title+'" para a lixeira do Google Planilhas?'))return;
-        try{if(demo){demos=demos.filter(p=>p.id!==post.id);saveDemos();}else{await api('DELETE',{id:post.id});await loadPosts();}renderPosts();}
-        catch(e){alert('Falha ao excluir: '+e.message);}
+        notifyPosts('Excluindo postagem e enviando para Trash...');
+        try{if(demo){demos=demos.filter(p=>p.id!==post.id);saveDemos();}else{await api('DELETE',{id:post.id});await loadPosts();}renderPosts();notifyPosts('Postagem enviada para a lixeira.','success');}
+        catch(e){notifyPosts('Falha ao excluir: '+e.message,'error');}
       });
       actions.append(edit,remove);body.appendChild(actions);card.appendChild(body);grid.appendChild(card);
     }
@@ -1229,12 +1296,53 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if(!image)return;
     await api('POST',{action:'uploadMenuImage',id,image});
   }
+  const DEFAULT_ACCENT='#89CFF0';
+  const validHex=v=>/^#[0-9A-Fa-f]{6}$/.test(String(v||'').trim());
+  const themeColor=()=>String($('siteAccentHex').value||'').trim().toUpperCase();
+  function updateAppearancePreview(hex){
+    if(!validHex(hex))return;
+    $('siteAccentPicker').value=hex;
+    $('siteAccentHex').value=hex.toUpperCase();
+    $('accentLineExample').style.backgroundColor=hex;
+    $('accentButtonExample').style.backgroundColor=hex;
+    const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+    $('accentButtonExample').style.color=(r*.299+g*.587+b*.114)>155?'#192d37':'#ffffff';
+  }
+  async function loadAppearance(){
+    const data=await api('GET',null,'theme');
+    updateAppearancePreview(validHex(data.theme?.accent)?data.theme.accent:DEFAULT_ACCENT);
+  }
+  $('siteAccentPicker').addEventListener('input',e=>{
+    updateAppearancePreview(e.target.value);notifyLocal($('appearanceStatus'),'Prévia atualizada. Clique em Salvar cor para publicar.');
+  });
+  $('siteAccentHex').addEventListener('input',e=>{
+    const hex=e.target.value.trim();
+    if(validHex(hex))updateAppearancePreview(hex);
+  });
+  async function saveAppearance(hex){
+    if(!validHex(hex)){notifyLocal($('appearanceStatus'),'Informe uma cor válida no formato #RRGGBB.','error');return;}
+    const save=$('saveSiteAccent'),reset=$('resetSiteAccent');
+    save.disabled=true;reset.disabled=true;
+    notifyLocal($('appearanceStatus'),'Salvando paleta de cores...');
+    try{
+      const data=await api('POST',{action:'setTheme',accent:hex.toUpperCase()});
+      updateAppearancePreview(data.theme.accent);
+      notifyLocal($('appearanceStatus'),'Cor salva. O site público utilizará esta paleta.','success');
+      notify('Cor do portal atualizada.');
+    }catch(e){notifyLocal($('appearanceStatus'),'Não foi possível salvar: '+e.message,'error');notify('Não foi possível salvar a paleta: '+e.message,true);}
+    finally{save.disabled=false;reset.disabled=false;}
+  }
+  $('saveSiteAccent').addEventListener('click',()=>saveAppearance(themeColor()));
+  $('resetSiteAccent').addEventListener('click',()=>{
+    updateAppearancePreview(DEFAULT_ACCENT);
+    void saveAppearance(DEFAULT_ACCENT);
+  });
   function renderMenus(){
     const list=$('menusPanelList');list.replaceChildren();
     if(!menus.length)list.appendChild(element('p','posts-empty','Ainda não existem menus. Adicione um abaixo.'));
     for(const m of menus){
       const details=element('details','page-panel-menu');
-      details.appendChild(element('summary','',m.name));
+      const menuSummary=element('summary');menuSummary.append(element('span','',m.name),element('span','collapsible-chevron'));details.appendChild(menuSummary);
       const fields=element('div','page-panel-fields');
       fields.append(inputField('menuName-'+m.id,'Nome do menu',m.name,false,42),inputField('menuTitle-'+m.id,'Título',m.title,false,160),inputField('menuSubtitle-'+m.id,'Subtítulo',m.subtitle,false,380),inputField('menuText-'+m.id,'Texto',m.text,true,12000));
       const imgWrap=element('div');const imgLabel=element('label','',m.image?'Substituir imagem da página':'Adicionar imagem da página (opcional)');
@@ -1243,44 +1351,50 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       if(m.image){const preview=element('img');preview.src=m.image;preview.alt='Imagem atual de '+m.name;preview.loading='lazy';preview.style.cssText='max-width:190px;max-height:130px;display:block;object-fit:contain;margin:8px 0';imgWrap.append(preview);}
       fields.append(imgWrap);
       const actions=element('div','page-panel-actions');
+      const actionStatus=element('p','page-panel-message');actionStatus.setAttribute('role','status');actionStatus.setAttribute('aria-live','polite');
+      const report=(message,error=false)=>{notifyLocal(actionStatus,message,error?'error':'success');notify(message,error);};
       const save=element('button','page-save','Salvar alterações');save.type='button';
       save.addEventListener('click',async()=>{
         const next=menus.map(x=>x.id===m.id?{...x,name:$('menuName-'+m.id).value.trim(),title:$('menuTitle-'+m.id).value.trim(),subtitle:$('menuSubtitle-'+m.id).value.trim(),text:$('menuText-'+m.id).value.trim()}:x);
-        if(!next.find(x=>x.id===m.id).name||!next.find(x=>x.id===m.id).title)return notify('Nome e título são obrigatórios.',true);
+        if(!next.find(x=>x.id===m.id).name||!next.find(x=>x.id===m.id).title)return report('Nome e título são obrigatórios.',true);
+        report('Salvando alterações...');
         try{const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;
-          if(imgInput.files[0]){notify('Enviando imagem para o Google Drive...');await uploadMenuImage(m.id,imgInput.files[0]);await loadMenus();}
-          else renderMenus();notify('Menu salvo e atualizado no site.');}
-        catch(e){notify(e.message,true);}
+          if(imgInput.files[0]){report('Enviando imagem para o Google Drive...');await uploadMenuImage(m.id,imgInput.files[0]);await loadMenus();}
+          else renderMenus();report('Menu salvo e atualizado no site.');}
+        catch(e){report('Não foi possível salvar: '+e.message,true);}
       });
       const remove=element('button','page-delete','Excluir menu');remove.type='button';
       remove.addEventListener('click',async()=>{
         if(!confirm('Enviar o menu "'+m.name+'" para a lixeira do Google Planilhas?'))return;
+        report('Enviando menu para a lixeira...');
         try{const data=await api('POST',{action:'saveMenus',menus:menus.filter(x=>x.id!==m.id)});menus=data.menus;notify('Menu excluído do site.');renderMenus();}
-        catch(e){notify(e.message,true);}
+        catch(e){report('Não foi possível excluir: '+e.message,true);}
       });
-      actions.append(save,remove);fields.appendChild(actions);details.appendChild(fields);list.appendChild(details);
+      actions.append(save,remove);fields.append(actions,actionStatus);details.appendChild(fields);list.appendChild(details);
     }
   }
   $('addMenuForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const name=$('newMenuName').value.trim(),id=safeSlug(name);
-    if(!id||id==='inicio'||menus.some(m=>m.id===id))return notify('Esse menu já existe ou possui nome inválido.',true);
+    if(!id||id==='inicio'||id==='cor-portal'||menus.some(m=>m.id===id))return notify('Esse menu já existe ou possui nome inválido.',true);
     const next=[...menus,{id,name,title:$('newMenuTitle').value.trim(),subtitle:$('newMenuSubtitle').value.trim(),text:$('newMenuText').value.trim()}];
+    notifyLocal($('newMenuStatus'),'Adicionando menu...');
     try{const file=$('newMenuImage').files[0];const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;
-      if(file){notify('Salvando imagem no Google Drive...');await uploadMenuImage(id,file);await loadMenus();}else renderMenus();
-      $('addMenuForm').reset();notify('Novo menu adicionado ao site.');}
-    catch(e){notify(e.message,true);}
+      if(file){notifyLocal($('newMenuStatus'),'Salvando imagem no Google Drive...');await uploadMenuImage(id,file);await loadMenus();}else renderMenus();
+      $('addMenuForm').reset();notify('Novo menu adicionado ao site.');notifyLocal($('newMenuStatus'),'Novo menu adicionado ao site.','success');}
+    catch(e){notify('Falha ao adicionar menu: '+e.message,true);notifyLocal($('newMenuStatus'),'Falha ao adicionar menu: '+e.message,'error');}
   });
   $('postEditForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const source=demo?demos:posts,post=source.find(x=>x.id===editingId);if(!post)return;
     const payload={...post,title:$('editPostTitle').value.trim(),subtitle:$('editPostSubtitle').value.trim(),content:$('editPostContent').value.trim(),caption:$('editPostCaption').value.trim(),category:$('editPostCategory').value.trim(),author:$('editPostAuthor').value.trim(),tags:$('editPostTags').value.trim()};
     if(!payload.title)return $('postEditForm').reportValidity();
+    notifyDialog('Salvando alterações...');
     try{
       if(demo){Object.assign(post,payload);saveDemos();}
       else{await api('PUT',payload);await loadPosts();}
-      $('postEditorDialog').close();renderPosts();
-    }catch(error){alert('Não foi possível salvar: '+error.message);}
+      $('postEditorDialog').close();renderPosts();notifyPosts('Postagem atualizada.','success');
+    }catch(error){notifyDialog('Não foi possível salvar: '+error.message,'error');notifyPosts('Não foi possível salvar: '+error.message,'error');}
   });
   $('cancelPostEdit').addEventListener('click',()=>{$('postEditorDialog').close()});
   function syncView(){
@@ -1290,8 +1404,17 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     $('pagePanelView').hidden=page!=='painel';
     $('openPostsBtn').setAttribute('aria-expanded',String(page==='postagens'));
     $('openPagePanelBtn').setAttribute('aria-expanded',String(page==='painel'));
-    if(page==='postagens')loadPosts().catch(e=>$('postsGrid').replaceChildren(element('p','posts-empty','Erro ao carregar postagens: '+e.message)));
-    if(page==='painel')loadMenus().catch(e=>notify('Erro ao carregar menus: '+e.message,true));
+    if(page==='postagens'){
+      notifyPosts('Carregando publicações...');
+      loadPosts().then(()=>notifyPosts('Publicações carregadas.','success')).catch(e=>{
+        $('postsGrid').replaceChildren(element('p','posts-empty','Erro ao carregar postagens: '+e.message));
+        notifyPosts('Erro ao carregar postagens: '+e.message,'error');
+      });
+    }
+    if(page==='painel'){
+      notify('Carregando menus...');
+      Promise.all([loadMenus(),loadAppearance()]).then(()=>notify('Painel carregado.')).catch(e=>notify('Erro ao carregar painel: '+e.message,true));
+    }
     window.scrollTo(0,0);
   }
   $('openPostsBtn').addEventListener('click',()=>{location.hash='postagens';syncView()});

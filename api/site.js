@@ -1,6 +1,6 @@
 // Portal TRIN: Planilhas e Drive. O Instagram permanece na sua API separada.
 import { auth, noStore, responseError } from '../lib/common.js';
-import { loadPosts,loadMenus,createPost,savePost,removePost,saveMenus,saveMenuImage,storageReady } from '../lib/site-store.js';
+import { loadPosts,loadMenus,createPost,savePost,removePost,saveMenus,saveMenuImage,loadTheme,saveTheme,storageReady } from '../lib/site-store.js';
 const clean=(v,max)=>String(v??'').trim().slice(0,max);
 const validId=id=>typeof id==='string'&&/^[a-f0-9-]{36}$/i.test(id);
 const slug=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,48);
@@ -9,7 +9,7 @@ const fail=(e,status=400)=>noStore({ok:false,error:responseError(e)},status);
 const missing=()=>noStore({ok:false,error:'Configure GOOGLE_SCRIPT_URL e TRIN_API_SECRET na Vercel.'},503);
 function sanitizeMenu(m) {
   const id=slug(m.id||m.name);
-  if(!id||id==='inicio'||!/^[a-z][a-z0-9-]*$/.test(id))throw new Error('ID de menu inválido.');
+  if(!id||id==='inicio'||id==='cor-portal'||!/^[a-z][a-z0-9-]*$/.test(id))throw new Error('ID de menu inválido.');
   const name=clean(m.name,42),title=clean(m.title,160);
   if(!name||!title)throw new Error('Preencha nome e título do menu.');
   return {id,name,title,subtitle:clean(m.subtitle,380),text:clean(m.text,12000)};
@@ -43,6 +43,7 @@ export async function GET(request) {
   if(!storageReady())return missing();
   try{
     const url=new URL(request.url);
+    if(url.searchParams.get('resource')==='theme')return noStore({ok:true,theme:await loadTheme()});
     if(url.searchParams.get('resource')==='menus')return noStore({ok:true,menus:await loadMenus()});
     return noStore({ok:true,posts:await loadPosts()});
   }catch(e){return fail(e,502);}
@@ -58,12 +59,18 @@ export async function POST(request) {
       const now=new Date().toISOString();
       const post=parsePost(payload,{createdAt:now,caption:clean(payload.content,2200)});
       if(post.featured&&posts.filter(p=>p.featured).length>=2)return fail('São permitidos no máximo dois destaques.',409);
-      // Na inclusão não repetimos a legenda na coluna Matéria.
-      // O site apresenta a legenda até o texto editorial ser preenchido.
-      post.content='';post.article='';
+      // Legenda e matéria ocupam colunas diferentes da aba ADMIN.
+      // A matéria é opcional, mas quando fornecida já é salva na publicação inicial.
+      post.article=clean(payload.article,15000);
+      post.content=post.article || post.caption;
       const image=validateImage(payload.image);
       const created=await createPost(post,image);
       return noStore({ok:true,post:created},201);
+    }
+    if(payload.action==='setTheme'){
+      const accent=clean(payload.accent,10);
+      if(!/^#[0-9a-fA-F]{6}$/.test(accent))throw new Error('Cor hexadecimal inválida.');
+      return noStore({ok:true,theme:await saveTheme(accent)});
     }
     if(payload.action==='saveMenus'){
       if(!Array.isArray(payload.menus)||payload.menus.length>30)throw new Error('Lista de menus inválida (limite: 30).');

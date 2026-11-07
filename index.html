@@ -13,8 +13,9 @@
       --ink:#1e1e1c;
       --secondary:#5d5b55;
       --rule:#d6d2c7;
-      --accent:#c44922;
-      --accent-deep:#953012;
+      --accent:#89CFF0;
+      --accent-deep:#387FA1;
+      --accent-contrast:#172b38;
       --paper-dark:#e7e3d9;
       --max:1240px;
     }
@@ -116,6 +117,8 @@
     .pix-action:hover{background:var(--accent-deep)}
     .back-btn{display:inline-flex;margin-top:24px;padding:13px 20px;border:1px solid var(--ink);font-size:12px;text-transform:uppercase;letter-spacing:1.3px;font-weight:900}
     .back-btn:hover{background:var(--ink);color:white}
+    .courses-band,.pix-action,.support-btn{color:var(--accent-contrast,#172b38)}
+    .courses-band:hover,.pix-action:hover,.support-btn:hover{color:#fff}
     /* Rodapé: redes sociais e link de apoio. */
     .site-footer{margin-top:26px;background:#20211f;color:#f3f1eb;border-top:5px solid var(--accent);width:100%}
     .footer-main{padding:54px 0;display:grid;grid-template-columns:1.05fr 1.4fr auto;align-items:start;gap:48px}
@@ -309,7 +312,27 @@
     const nav=document.querySelector('.site-nav');
     nav.innerHTML=`<a href="#/inicio" data-nav="inicio">Início</a>`+MENUS.map(m=>`<a href="#/${['sobre','cursos','recursos','artigos'].includes(m.id)?m.id:'pagina/'+m.id}" data-nav="${escapeHTML(m.id)}">${escapeHTML(m.name)}</a>`).join('');
   }
+  const DEFAULT_ACCENT='#89CFF0';
+  function applyTheme(value){
+    const accent=/^#[0-9a-fA-F]{6}$/.test(String(value||''))?value:DEFAULT_ACCENT;
+    const n=parseInt(accent.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+    const darken=v=>Math.round(v*0.59).toString(16).padStart(2,'0');
+    const deep='#'+darken(r)+darken(g)+darken(b);
+    const contrast=(r*.299+g*.587+b*.114)>155?'#172b38':'#ffffff';
+    const root=document.documentElement.style;
+    root.setProperty('--accent',accent);
+    root.setProperty('--accent-deep',deep);
+    root.setProperty('--accent-contrast',contrast);
+  }
+  async function refreshTheme(){
+    try{
+      const response=await fetch('/api/site?resource=theme',{cache:'no-store'});
+      const data=await response.json();
+      if(response.ok&&data.ok)applyTheme(data.theme?.accent);
+    }catch(error){console.warn('Não foi possível carregar a cor do portal:',error.message);}
+  }
   async function refreshContent(){
+    void refreshTheme();
     const get=async url=>{const resp=await fetch(url,{cache:'no-store'});const data=await resp.json();if(!resp.ok||!data.ok)throw new Error(data.error||'API indisponível');return data;};
     try{
       const [posts,menus]=await Promise.all([get('/api/site'),get('/api/site?resource=menus')]);
