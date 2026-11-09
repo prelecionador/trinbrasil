@@ -22,7 +22,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:7px;padding:27px 15px;border:1.5px dashed #cdd7dc;border-radius:13px;background:#fbfcfd;cursor:pointer;transition:.2s}.dropzone:hover,.dropzone.dragover{background:#f0f7f4;border-color:#21ac70}.drop-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;background:#edf1f4;color:#273744;font-size:23px}.dropzone strong{font-size:13px}.dropzone small{font-size:11px;color:#7b8690}.dropzone input{display:none}.file-status{margin:12px 0 0;font-size:12px;color:#61717b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .divider{height:1px;background:var(--line);margin:17px 0}.range-row{display:grid;grid-template-columns:1fr auto;gap:10px;font-size:12px;font-weight:700}.range-row output{font-weight:400;color:#65717d}input[type=range]{width:100%;accent-color:#1c2932;cursor:pointer;margin:10px 0 0}
 .section-label{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}.section-label label{margin:0}.helper{color:#89929a;font-size:11px}.caption-panel{border-left:3px solid #e8edf0}.caption-note{font-size:11px;color:#71818c;margin:9px 0 0;line-height:1.5}
-.preview-panel{position:sticky;top:23px;padding:22px;background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 10px 40px rgba(20,30,40,.045)}.preview-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.preview-header h2{font-size:17px;margin:0}.preview-header span{font-size:11px;color:#65707c;border:1px solid #e6ebee;padding:7px 10px;border-radius:100px}.preview-frame{width:min(100%,430px);margin:0 auto;padding:9px;background:#f2f4f6;border-radius:13px;border:1px solid #e6eaed}.preview-frame canvas{display:block;width:100%;aspect-ratio:1;border-radius:5px;box-shadow:0 6px 15px rgba(0,0,0,.12);touch-action:none;cursor:grab}.preview-frame canvas:active{cursor:grabbing}.preview-caption{font-size:11px;text-align:center;color:#8a939c;margin:12px 0 19px}.btn{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:11px;padding:14px 16px;font-size:13px;font-weight:700;cursor:pointer}.btn-primary{width:min(100%,430px);margin:auto;background:#17232d;color:white}.btn-primary:hover{background:#2e4554}.tip{font-size:11px;line-height:1.6;color:#86919b;text-align:center;margin:15px 0 0}
+.preview-panel{position:sticky;top:23px;padding:22px;background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 10px 40px rgba(20,30,40,.045)}.preview-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.preview-header h2{font-size:17px;margin:0}.preview-ratio{font-size:11px;color:#4d5b68;border:1px solid #d9e2e6;padding:8px 11px;border-radius:100px;background:#fff;cursor:pointer;font-weight:700;white-space:nowrap}.preview-ratio:hover{background:#eef4f6;border-color:#a6b8c2}.preview-ratio:focus-visible{outline:2px solid #44799b;outline-offset:2px}.preview-frame{width:min(100%,430px);margin:0 auto;padding:9px;background:#f2f4f6;border-radius:13px;border:1px solid #e6eaed}.preview-frame canvas{display:block;width:100%;aspect-ratio:1;border-radius:5px;box-shadow:0 6px 15px rgba(0,0,0,.12);touch-action:none;cursor:grab}.preview-frame canvas:active{cursor:grabbing}.preview-panel.is-portrait .preview-frame{width:min(100%,345px)}.video-preview-controls{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;margin:-6px 0 14px}.video-preview-controls[hidden],.original-video-choice[hidden]{display:none}.video-preview-controls button{border:1px solid #dce4e8;background:white;color:#2d4350;padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer}.video-preview-controls span{font-size:11px;color:#83919b}.preview-caption{font-size:11px;text-align:center;color:#8a939c;margin:12px 0 19px}.btn{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:11px;padding:14px 16px;font-size:13px;font-weight:700;cursor:pointer}.btn-primary{width:min(100%,430px);margin:auto;background:#17232d;color:white}.btn-primary:hover{background:#2e4554}.tip{font-size:11px;line-height:1.6;color:#86919b;text-align:center;margin:15px 0 0}
 @media(max-width:880px){.workspace{grid-template-columns:1fr}.preview-panel{position:static;order:-1}.controls{order:2}.preview-frame,.btn-primary{max-width:400px}.shell{padding:25px 16px 55px}}
 @media(max-width:450px){.topbar{padding:14px 16px}.brand-tag{font-size:8px}.top-pill{font-size:10px;padding:7px}.panel{padding:17px}.preview-panel{padding:16px}.two-col{grid-template-columns:minmax(0,1fr) 100px}}
 
@@ -87,7 +87,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .publish-panel p{font-size:11px;line-height:1.55;color:#79848e;margin:0 0 14px}
 .publish-choice{display:flex;gap:9px;margin:10px 0 14px}
 .publish-choice label{flex:1;display:flex;align-items:center;gap:7px;border:1px solid #e1e7eb;border-radius:9px;padding:11px;font-size:12px;cursor:pointer}
-.publish-choice input{accent-color:#17232d}
+.publish-choice input{accent-color:#17232d}.original-video-choice{display:flex;align-items:flex-start;gap:8px;font-size:11px;line-height:1.5;color:#4e6170;background:#f5f8f9;border-radius:9px;padding:11px 12px;margin:-1px 0 14px;cursor:pointer}.original-video-choice input{accent-color:#17232d;margin-top:2px;flex-shrink:0}
 .publish-secret{display:grid;gap:6px;margin-bottom:12px}
 .publish-secret label{font-size:11px;font-weight:700;color:#4d5a65}
 .publish-secret input{width:100%;border:1px solid #e0e5e9;border-radius:9px;font:inherit;font-size:13px;padding:10px 12px;outline:0;background:#fff}
@@ -251,23 +251,23 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 <body>
 <header class="topbar"><div class="brand"><div class="brand-name">TRIN</div><div class="brand-tag">TARGETED INDIVIDUALS<br>BRASIL</div></div><nav class="top-actions" aria-label="Navegação principal"><button class="top-pill top-pill-link" type="button" id="openPostsBtn" aria-controls="postsView" aria-expanded="false">Estúdio de postagens <span aria-hidden="true">↗</span></button><button class="top-pill top-pill-link" type="button" id="openPagePanelBtn" aria-controls="pagePanelView" aria-expanded="false">Painel da página <span aria-hidden="true">↗</span></button></nav></header>
 <div class="shell" id="editorView">
-  <div class="intro"><p class="eyebrow">TRIN / EDITORIAL STUDIO</p><h1>Crie sua próxima publicação.</h1><p>Imagem, manchete e identidade visual em um só lugar.</p></div>
+  <div class="intro"><p class="eyebrow">TRIN / EDITORIAL STUDIO</p><h1>Crie sua próxima publicação.</h1><p>Foto, vídeo, manchete e identidade visual em um só lugar.</p></div>
   <main class="workspace">
     <div class="controls">
       <!-- Cada seção principal pode ser aberta ou fechada pela seta -->
       <details class="panel collapsible-panel" id="photoSection" open>
-        <summary aria-label="Abrir ou fechar Fotografia">
-          <span class="panel-heading"><span class="step">01</span><span><strong id="photoHeading" class="section-title">Fotografia</strong><small>Adicione a imagem que será o fundo da publicação.</small></span></span>
+        <summary aria-label="Abrir ou fechar Foto ou vídeo">
+          <span class="panel-heading"><span class="step">01</span><span><strong id="photoHeading" class="section-title">Foto ou vídeo</strong><small>Envie uma imagem ou vídeo para usar como fundo da publicação.</small></span></span>
           <span class="collapsible-chevron" aria-hidden="true"></span>
         </summary>
         <div class="panel-body">
-          <label class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Escolher ou arrastar imagem"><span class="drop-icon">＋</span><strong>Arraste uma foto ou clique para enviar</strong><small>JPG, PNG, WEBP ou GIF (primeiro quadro)</small><input id="photoInput" type="file" accept="image/*"></label>
-          <div class="file-status" id="fileStatus">Nenhuma fotografia selecionada</div>
+          <label class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Escolher ou arrastar uma foto ou vídeo"><span class="drop-icon">＋</span><strong>Arraste uma foto ou vídeo, ou clique para enviar</strong><small>JPG, PNG, WEBP, GIF, MP4 ou WebM</small><input id="photoInput" type="file" accept="image/*,video/mp4,video/webm"></label>
+          <div class="file-status" id="fileStatus">Nenhuma mídia selecionada</div>
           <div class="divider"></div>
           <div class="fields">
             <div><div class="range-row"><label for="darkness">Escurecimento inferior</label><output id="darkValue">88%</output></div><input type="range" min="0" max="100" value="88" id="darkness"></div>
-            <div><div class="range-row"><label for="zoom">Zoom da foto</label><output id="zoomValue">100%</output></div><input type="range" min="100" max="200" value="100" id="zoom"></div>
-            <div><div class="range-row"><label for="vertical">Posição vertical da foto</label><output id="verticalValue">0</output></div><input type="range" min="-250" max="250" value="0" id="vertical"></div>
+            <div><div class="range-row"><label for="zoom">Zoom da mídia</label><output id="zoomValue">100%</output></div><input type="range" min="100" max="200" value="100" id="zoom"></div>
+            <div><div class="range-row"><label for="vertical">Posição vertical da mídia</label><output id="verticalValue">0</output></div><input type="range" min="-250" max="250" value="0" id="vertical"></div>
           </div>
         </div>
       </details>
@@ -415,9 +415,10 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       </details>
     </div>
     <aside class="preview-panel" aria-labelledby="previewHeading">
-      <div class="preview-header"><h2 id="previewHeading">Pré-visualização</h2><span>Instagram · 1:1</span></div>
+      <div class="preview-header"><h2 id="previewHeading">Pré-visualização</h2><button id="ratioToggle" class="preview-ratio" type="button" aria-label="Formato Instagram 1:1. Clique para alternar para 9:16" title="Clique para alternar o formato">Instagram · 1:1 ↔</button></div>
       <div class="preview-frame"><canvas id="postCanvas" width="1080" height="1080" aria-label="Prévia da postagem TRIN"></canvas></div>
-      <p class="preview-caption">Prévia original · Foto exportada em 1080 × 1080 px · Arraste para reposicionar</p>
+      <p class="preview-caption" id="previewCaption">1080 × 1080 px · Arraste para reposicionar</p>
+      <div class="video-preview-controls" id="videoPreviewControls" hidden><button id="toggleVideoPlayback" type="button">❚❚ Pausar vídeo</button><span>Prévia de vídeo sem áudio</span></div>
       <details class="export-tools" id="exportTools">
         <summary>Baixar PNG, vídeo e personalizar transições</summary>
         <div class="export-tools-body">
@@ -432,7 +433,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
                 <select id="titleEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="zoom">Aproximar (zoom)</option></select></div>
               <div><label for="footerEntrance">Entrada do rodapé</label>
                 <select id="footerEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="right">Da direita para a esquerda</option></select></div>
-              <p class="video-fixed">Subtítulo: sempre entra da esquerda para a direita. Foto no início; todas as entradas terminam até 1,2 s. Depois, a arte fica parada até completar 9 s.</p>
+              <p class="video-fixed">Subtítulo: sempre entra da esquerda para a direita. Foto ou vídeo no início; todas as entradas terminam até 1,2 s. Depois, a arte fica parada até completar 9 s.</p>
             </div>
           </details>
         </div>
@@ -446,9 +447,10 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         <h3 id="publishTitle">◎ Publicar no Instagram</h3>
         <p>Conta de destino: <strong>@trinbrasil</strong>. O servidor envia a arte final e a legenda externa à API oficial da Meta. Vídeos de 9 segundos são publicados como vídeo e aparecem no feed.</p>
         <div class="publish-choice" role="group" aria-label="Escolha o tipo de postagem">
-          <label><input type="radio" name="publishKind" value="photo" checked> Foto (1080 × 1080)</label>
+          <label><input type="radio" name="publishKind" value="photo" checked> <span id="photoPublishLabel">Foto (1080 × 1080)</span></label>
           <label><input type="radio" name="publishKind" value="video"> Vídeo (9 segundos)</label>
         </div>
+        <label class="original-video-choice" id="originalVideoChoice" hidden><input id="publishOriginalVideo" type="checkbox" checked> Publicar vídeo original, mantendo áudio e duração (sem textos sobrepostos)</label>
         <div class="publish-secret">
           <label for="postPassword">Senha local de publicação</label>
           <input id="postPassword" type="password" autocomplete="off" placeholder="Senha definida">
@@ -459,7 +461,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         </div>
         <div id="publishStatus" class="publish-status" role="status" aria-live="polite">Verificando se o servidor está disponível…</div>
       </section>
-      <p class="tip">O PNG e o vídeo são gerados no próprio navegador, sem enviar sua foto a servidores. O vídeo será MP4 quando houver suporte; caso contrário, WebM.</p>
+      <p class="tip" id="mediaTip">A arte é gerada no navegador. Para publicar vídeos com textos aplicados, o navegador precisa gerar MP4; vídeos originais em MP4 preservam o áudio.</p>
     </aside>
   </main>
 </div>
@@ -555,12 +557,72 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const byId = id => document.getElementById(id);
   const canvas = byId('postCanvas');
   const ctx = canvas.getContext('2d');
-  const W = 1050, H = 1050, FOOTER_Y = 974;
-  // A imagem, o vídeo e a prévia continuam em 1080 × 1080.
-  // Somente o TEXTO ganha uma margem horizontal segura para a grade do Instagram.
-  // Nada é espelhado, redimensionado ou acrescentado à fotografia.
+  const W = 1080;
+  let H = 1080, FOOTER_Y = 1004;
+  // O editor usa o mesmo canvas para o formato quadrado e o vertical.
+  // Os elementos da arte permanecem próximos à base em ambos os formatos.
   const TEXT_LEFT = 150, SUBTITLE_LEFT = 184;
-  let image = null, offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
+  let image = null, sourceVideo = null, sourceVideoFile = null, sourceVideoUrl = null;
+  let offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
+  let previewFrameId = 0, fileSelectionId = 0;
+
+  function selectedKind() {
+    return document.querySelector('input[name="publishKind"]:checked')?.value || 'photo';
+  }
+  function hasMedia() { return !!(image || sourceVideo); }
+  function isPortrait() { return H === 1920; }
+  function refreshPublishOptions() {
+    const kind = selectedKind();
+    byId('originalVideoChoice').hidden = !(sourceVideo && kind === 'video');
+    byId('photoPublishLabel').textContent = `Foto (1080 × ${H})`;
+    if (sourceVideo) {
+      byId('mediaTip').textContent = 'Vídeo original: mantém formato, duração e áudio, mas não aplica os textos da prévia. Desmarque a opção acima para publicar uma edição no formato escolhido, de 9 segundos e sem áudio.';
+    } else {
+      byId('mediaTip').textContent = 'A arte é gerada no navegador. Vídeos editados são de 9 segundos, sem áudio, e exigem codificação MP4 para publicar no Instagram.';
+    }
+  }
+  function changeRatio() {
+    if (currentRecording || postSending) return;
+    H = H === 1080 ? 1920 : 1080;
+    FOOTER_Y = H - 76;
+    canvas.width = W;
+    canvas.height = H;
+    canvas.style.aspectRatio = isPortrait() ? '9 / 16' : '1';
+    byId('ratioToggle').textContent = `Instagram · ${isPortrait() ? '9:16' : '1:1'} ↔`;
+    byId('ratioToggle').setAttribute('aria-label', `Formato Instagram ${isPortrait() ? '9:16' : '1:1'}. Clique para alternar`);
+    byId('previewCaption').textContent = `1080 × ${H} px · Arraste para reposicionar`;
+    document.querySelector('.preview-panel').classList.toggle('is-portrait', isPortrait());
+    refreshPublishOptions();
+    draw();
+  }
+  byId('ratioToggle').addEventListener('click', changeRatio);
+  document.querySelectorAll('input[name="publishKind"]').forEach(radio => radio.addEventListener('change', refreshPublishOptions));
+
+  function startPreviewFrames() {
+    cancelAnimationFrame(previewFrameId);
+    const frame = () => {
+      if (!sourceVideo || sourceVideo.paused || currentRecording) return;
+      draw();
+      previewFrameId = requestAnimationFrame(frame);
+    };
+    if (sourceVideo && !sourceVideo.paused && !currentRecording) previewFrameId = requestAnimationFrame(frame);
+  }
+  function clearPreviousVideo() {
+    cancelAnimationFrame(previewFrameId);
+    if (sourceVideo) { sourceVideo.pause(); sourceVideo.removeAttribute('src'); sourceVideo.load(); }
+    if (sourceVideoUrl) URL.revokeObjectURL(sourceVideoUrl);
+    sourceVideo = null; sourceVideoFile = null; sourceVideoUrl = null;
+    byId('videoPreviewControls').hidden = true;
+    refreshPublishOptions();
+  }
+  byId('toggleVideoPlayback').addEventListener('click', async () => {
+    if (!sourceVideo) return;
+    if (sourceVideo.paused) {
+      try { await sourceVideo.play(); startPreviewFrames(); }
+      catch { byId('fileStatus').textContent = 'Não foi possível reproduzir o vídeo.'; }
+    } else { sourceVideo.pause(); cancelAnimationFrame(previewFrameId); draw(); }
+    byId('toggleVideoPlayback').textContent = sourceVideo.paused ? '▶ Reproduzir vídeo' : '❚❚ Pausar vídeo';
+  });
   // O estilo é individual para título e subtítulo. N padrão no título preserva o desenho antigo.
   const typeStyles = {
     title: {size: 80, bold: true, italic: false, underline: false},
@@ -631,14 +693,17 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   function drawBackground() {
     ctx.fillStyle = '#162934';
     ctx.fillRect(0, 0, W, FOOTER_Y);
-    if (image) {
-      const scale = Math.max(W / image.width, FOOTER_Y / image.height) * (+byId('zoom').value / 100);
-      const dw = image.width * scale, dh = image.height * scale;
+    const background = sourceVideo || image;
+    const iw = sourceVideo?.videoWidth || image?.width || 0;
+    const ih = sourceVideo?.videoHeight || image?.height || 0;
+    if (background && iw && ih) {
+      const scale = Math.max(W / iw, FOOTER_Y / ih) * (+byId('zoom').value / 100);
+      const dw = iw * scale, dh = ih * scale;
       const x = (W - dw) / 2 + offsetX;
       const y = (FOOTER_Y - dh) / 2 + (+byId('vertical').value) + offsetY;
       ctx.save();
       ctx.beginPath(); ctx.rect(0, 0, W, FOOTER_Y); ctx.clip();
-      ctx.drawImage(image, x, y, dw, dh);
+      ctx.drawImage(background, x, y, dw, dh);
       ctx.restore();
     } else {
       const gradient = ctx.createLinearGradient(0, 0, W, FOOTER_Y);
@@ -648,12 +713,13 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       ctx.beginPath();ctx.arc(730,270,280,0,Math.PI*2);ctx.fill();
     }
     const dark = +byId('darkness').value / 100;
-    const gradient = ctx.createLinearGradient(0, 210, 0, FOOTER_Y);
+    const gradientStart = Math.max(210, FOOTER_Y - 764);
+    const gradient = ctx.createLinearGradient(0, gradientStart, 0, FOOTER_Y);
     gradient.addColorStop(0, 'rgba(3,13,20,0)');
     gradient.addColorStop(.40, `rgba(3,13,20,${dark*.35})`);
     gradient.addColorStop(.75, `rgba(3,13,20,${dark*.82})`);
     gradient.addColorStop(1, `rgba(3,13,20,${Math.min(1,dark+.1)})`);
-    ctx.fillStyle = gradient; ctx.fillRect(0, 210, W, FOOTER_Y-210);
+    ctx.fillStyle = gradient; ctx.fillRect(0, gradientStart, W, FOOTER_Y-gradientStart);
   }
 
   // Argumento opcional para os quadros do vídeo. Na imagem PNG tudo fica na posição normal.
@@ -663,9 +729,10 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     const subtitleStyle = typeStyles.subtitle;
     const titleStyle = typeStyles.title;
     const sub = fit(subtitle, byId('subtitleFont').value, subtitleStyle.size, Math.min(16, subtitleStyle.size), 690, 142, subtitleStyle.bold, subtitleStyle.italic);
-    const subY = 858 - sub.height;
-    const titleBottom = sub.lines.length ? subY - 36 : 858;
-    const titleSpace = Math.max(140, Math.min(430, titleBottom - 385));
+    const subtitleBase = FOOTER_Y - 116;
+    const subY = subtitleBase - sub.height;
+    const titleBottom = sub.lines.length ? subY - 36 : subtitleBase;
+    const titleSpace = Math.max(140, Math.min(430, titleBottom - (FOOTER_Y - 589)));
     const headline = fit(title, byId('titleFont').value, titleStyle.size, Math.min(20, titleStyle.size), 720, titleSpace, titleStyle.bold, titleStyle.italic);
     const titleY = titleBottom - headline.height;
     const groupShift = Number(byId('bothVertical').value);
@@ -732,8 +799,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   function drawAccent(progress = 1) {
     if (progress <= 0) return;
     ctx.save();
-    ctx.beginPath();ctx.rect(84, 910, 912 * progress, 16);ctx.clip();
-    const y = 914, x = 84, length = 912, part = length / 3;
+    ctx.beginPath();ctx.rect(84, FOOTER_Y - 64, 912 * progress, 16);ctx.clip();
+    const y = FOOTER_Y - 60, x = 84, length = 912, part = length / 3;
     ['#00c84f','#ffdf00','#0867ef'].forEach((color,i) => {
       ctx.fillStyle = color;ctx.fillRect(x+part*i,y,part,8);
     });
@@ -761,7 +828,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     ctx.font = '17px Arial,sans-serif';const brandW=trackWidth(brand,2.1);
     const gap1=26, gap2=26, flagGap=19, flagWidth=78;
     const total=nameW+gap1+2+gap2+brandW+flagGap+flagWidth;
-    const sx=(W-total)/2, cy=1028;
+    const sx=(W-total)/2, cy=FOOTER_Y + 54;
     ctx.fillStyle='#fff';ctx.font='bold 42px Georgia,serif';ctx.fillText(word,sx,cy+13);
     const sep=sx+nameW+gap1;ctx.fillRect(sep,cy-19,2,36);
     const bx=sep+2+gap2;ctx.font='17px Arial,sans-serif';trackText(brand,bx,cy+7,2.1);
@@ -778,9 +845,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     drawBackground();drawHeadlines();drawAccent();drawFooter();
   }
 
-  // Exportação restaurada: exatamente o canvas original (1080 x 1080).
-  // Sem faixas adicionais, reflexos, estiramentos ou cópias da fotografia.
-  // O PNG e o JPG publicados no Instagram usam a mesma arte da prévia.
+  // Exporta no formato de prévia selecionado: 1080 × 1080 ou 1080 × 1920.
   function photoExportCanvas() {
     draw();
     return canvas;
@@ -806,28 +871,72 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     drawFooter(enter(t,.97,1.20), options.footerEffect);
   }
 
-  function setPhoto(file) {
-    if (!file || !file.type.startsWith('image/')) {
-      byId('fileStatus').textContent='Selecione um arquivo de imagem válido.'; return;
+  function setMedia(file) {
+    if (!file) return;
+    const isPhoto = file.type.startsWith('image/');
+    const isVideo = file.type === 'video/mp4' || file.type === 'video/webm';
+    if (!isPhoto && !isVideo) {
+      byId('fileStatus').textContent = 'Use uma foto (JPG/PNG/WEBP/GIF) ou vídeo (MP4/WebM).'; return;
     }
-    const url=URL.createObjectURL(file), img=new Image();
-    img.onload=()=>{image=img;offsetX=0;offsetY=0;byId('vertical').value=0;byId('zoom').value=100;byId('fileStatus').textContent='✓ '+file.name;URL.revokeObjectURL(url);updateAndDraw();};
-    img.onerror=()=>{URL.revokeObjectURL(url);byId('fileStatus').textContent='Não foi possível abrir esta imagem.';};
-    img.src=url;
+    if (currentRecording || postSending) {
+      byId('fileStatus').textContent = 'Conclua a gravação ou publicação antes de trocar a mídia.';return;
+    }
+    const token = ++fileSelectionId;
+    const url = URL.createObjectURL(file);
+    byId('fileStatus').textContent = 'Carregando '+file.name+'…';
+    if (isPhoto) {
+      const img = new Image();
+      img.onload = () => {
+        if (token !== fileSelectionId) {URL.revokeObjectURL(url);return;}
+        clearPreviousVideo(); image = img;
+        offsetX = 0; offsetY = 0;
+        byId('vertical').value = 0;byId('zoom').value = 100;
+        byId('fileStatus').textContent = '✓ Foto: '+file.name;
+        document.querySelector('input[name="publishKind"][value="photo"]').checked = true;
+        URL.revokeObjectURL(url);refreshPublishOptions();updateAndDraw();
+      };
+      img.onerror = () => {URL.revokeObjectURL(url);byId('fileStatus').textContent = 'Não foi possível abrir a foto.';};
+      img.src = url;
+      return;
+    }
+    const video = document.createElement('video');
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = 'auto';
+    video.onloadeddata = async () => {
+      if (token !== fileSelectionId) {video.removeAttribute('src');video.load();URL.revokeObjectURL(url);return;}
+      clearPreviousVideo(); image = null;
+      sourceVideo = video;sourceVideoFile = file;sourceVideoUrl = url;
+      offsetX=0;offsetY=0;byId('vertical').value=0;byId('zoom').value=100;
+      byId('videoPreviewControls').hidden = false;
+      byId('fileStatus').textContent = '✓ Vídeo: '+file.name+' ('+Math.round(video.duration||0)+' s)';
+      document.querySelector('input[name="publishKind"][value="video"]').checked = true;
+      byId('publishOriginalVideo').checked = file.type === 'video/mp4';
+      refreshPublishOptions();updateAndDraw();
+      try {await video.play(); startPreviewFrames();} catch {/* botão de reprodução disponível */}
+      byId('toggleVideoPlayback').textContent = video.paused ? '▶ Reproduzir vídeo' : '❚❚ Pausar vídeo';
+    };
+    video.onerror = () => {
+      if (token === fileSelectionId) byId('fileStatus').textContent = 'O navegador não conseguiu abrir esse vídeo. Tente MP4/H.264.';
+      URL.revokeObjectURL(url);
+    };
+    video.src = url;
+    video.load();
   }
 
-  byId('photoInput').addEventListener('change',e=>setPhoto(e.target.files[0]));
-  const zone=byId('dropzone');
+  byId('photoInput').addEventListener('change', e => {setMedia(e.target.files[0]);e.target.value='';});
+  const zone = byId('dropzone');
   zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();byId('photoInput').click();}});
   ['dragenter','dragover'].forEach(event=>zone.addEventListener(event,e=>{e.preventDefault();zone.classList.add('dragover');}));
   ['dragleave','drop'].forEach(event=>zone.addEventListener(event,e=>{e.preventDefault();zone.classList.remove('dragover');}));
-  zone.addEventListener('drop',e=>setPhoto(e.dataTransfer.files[0]));
-  // Também permite soltar a foto diretamente na prévia.
+  zone.addEventListener('drop', e=>setMedia(e.dataTransfer.files[0]));
+  // Também permite soltar a foto ou vídeo diretamente na prévia.
   canvas.addEventListener('dragover',e=>e.preventDefault());
-  canvas.addEventListener('drop',e=>{e.preventDefault();setPhoto(e.dataTransfer.files[0]);});
+  canvas.addEventListener('drop',e=>{e.preventDefault();setMedia(e.dataTransfer.files[0]);});
 
   // Reposicionamento opcional da fotografia, arrastando dentro da prévia.
-  canvas.addEventListener('pointerdown',e=>{if(!image)return;dragging=true;lastPointer={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointerdown',e=>{if(!hasMedia())return;dragging=true;lastPointer={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
   canvas.addEventListener('pointermove',e=>{
     if(!dragging||!lastPointer)return;
     const bounds=canvas.getBoundingClientRect(),factor=W/bounds.width;
@@ -871,7 +980,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if (currentRecording) return;
     photoExportCanvas().toBlob(blob=>{
       if(!blob){alert('Não foi possível exportar o PNG.');return;}
-      saveBlob(blob,'TRIN-postagem-1080x1080.png');
+      saveBlob(blob,'TRIN-postagem-1080x'+H+'.png');
     },'image/png');
   });
 
@@ -895,6 +1004,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     videoButton.textContent=active ? '×  Cancelar gravação' : '▶  Baixar vídeo · 9 s';
     videoButton.classList.toggle('recording',active);
     byId('publishBtn').disabled=active || postSending;
+    byId('ratioToggle').disabled=active;
+    if (active) {cancelAnimationFrame(previewFrameId);if(sourceVideo){sourceVideo.currentTime=0;sourceVideo.play().catch(()=>{});}}
+    else startPreviewFrames();
     document.querySelectorAll('.controls input,.controls textarea,.controls select,#videoSettings select').forEach(el=>el.disabled=active);
     document.querySelectorAll('.art-type-button').forEach(el=>el.disabled=active);
     byId('videoProgress').setAttribute('aria-hidden',active?'false':'true');
@@ -939,7 +1051,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       session.stream.getTracks().forEach(track=>track.stop());
       currentRecording=null;
       changeRecordingUI(false);
-      draw();
+      draw();startPreviewFrames();
       if (!session.cancelled && session.parts.length) {
         const type=session.parts[0].type || mimeType;
         const blob=new Blob(session.parts,{type});
@@ -1070,13 +1182,19 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     const caption=byId('captionText').value.trim();
     if (caption.length>2200) return statusPublish('A legenda ultrapassa o limite de 2.200 caracteres.', 'error');
     const type=document.querySelector('input[name="publishKind"]:checked').value;
-    if (!image) return statusPublish('Adicione uma fotografia antes de publicar.', 'error');
+    if (!hasMedia()) return statusPublish('Adicione uma foto ou um vídeo antes de publicar.', 'error');
+    if (type==='photo' && isPortrait()) return statusPublish('O Instagram não aceita foto 9:16 como publicação normal pelo endpoint de imagem. Escolha 1:1 ou publique como vídeo.', 'error');
     setPostSending(true);
     if (type==='photo') {
       try {const blob=await canvasAsJpeg(); await sendMedia(blob,type,password,caption);}
       catch(err) {setPostSending(false);statusPublish(err.message,'error');}
     } else {
-      statusPublish('Gerando vídeo de 9 segundos, sem baixar o arquivo…');
+      if (sourceVideo && byId('publishOriginalVideo').checked) {
+        if (sourceVideoFile.type !== 'video/mp4') {setPostSending(false);return statusPublish('Para publicar o vídeo original é necessário MP4. Envie MP4 ou desmarque Vídeo original para gerar uma edição.', 'error');}
+        if (sourceVideoFile.size > 50*1024*1024) {setPostSending(false);return statusPublish('Vídeo original acima de 50 MB. Use outro arquivo ou gere a edição de 9 segundos.', 'error');}
+        await sendMedia(sourceVideoFile,'video',password,caption);return;
+      }
+      statusPublish('Gerando edição de vídeo de 9 segundos com arte (sem áudio)…');
       downloadVideo(blob=>{void sendMedia(blob,type,password,caption);},
         error=>{setPostSending(false);statusPublish('Não foi publicado: '+error,'error');});
     }
@@ -1127,7 +1245,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if(sendingToSite||currentRecording)return;
     const password=byId('postPassword').value;
     if(!password)return setSiteStatus('Digite a senha de publicação no painel do Instagram.',true);
-    if(!image)return setSiteStatus('Selecione uma fotografia.',true);
+    if(!hasMedia())return setSiteStatus('Selecione uma foto ou vídeo.',true);
+    if(sourceVideo)return setSiteStatus('A publicação no site aceita apenas fotos no Google Drive. Para vídeo, use Publicar no Instagram.',true);
     if(!byId('titleText').value.trim())return setSiteStatus('Escreva um título.',true);
     sendingToSite=true;siteButton.disabled=true;siteButton.textContent='Publicando...';
     const finish=()=>{sendingToSite=false;siteButton.disabled=false;siteButton.textContent='Postar no site';};
@@ -1143,6 +1262,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       }
     }catch(e){setSiteStatus('Não foi publicado: '+e.message,true);finish();}
   });
+  refreshPublishOptions();
   updateAndDraw();
   void connectionStatus();
 })();
