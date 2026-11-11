@@ -246,10 +246,53 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .appearance-example span{height:5px;border-radius:3px;background:#89cff0;flex:1;min-width:45px}
 .appearance-example button{border:0;border-radius:8px;background:#89cff0;color:#192d37;font-size:12px;padding:11px 16px;opacity:1;white-space:nowrap}
 .appearance-fields .page-panel-message{margin:0}
+
+/* Editorial integrado: segue a tipografia, painéis e paleta TRIN existentes. */
+.top-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.editorial-view{max-width:1270px}
+.editorial-workspace{display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.14fr);gap:20px;align-items:start}
+.editorial-editor,.editorial-results{min-width:0}
+.editorial-editor .panel-heading{margin-bottom:22px}
+.editorial-editor label{font-weight:700;font-size:12px;color:#3d4854;display:block;margin-bottom:9px}
+.editorial-editor textarea{min-height:245px;line-height:1.65;font-size:14px}
+.editorial-editor input[type=password]{display:block;width:100%;padding:12px 14px;font:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;outline:none}
+.editorial-main-action,.editorial-send-all{border:0;border-radius:11px;padding:14px 18px;background:#17232d;color:white;font-size:13px;font-weight:700;cursor:pointer}
+.editorial-main-action{width:100%;margin-top:14px}
+.editorial-main-action:disabled{opacity:.55;cursor:wait}
+.editorial-main-action:hover:not(:disabled),.editorial-send-all:hover{background:#2e4554}
+.editorial-send-all{width:100%;margin:10px 0 0}
+.editorial-results h2{font-size:17px;letter-spacing:-.2px;margin:0 0 6px}
+.editorial-results h3{font-size:13px;margin:0 0 9px}
+.editorial-help{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 15px}
+.editorial-group{margin:0 0 24px}
+.editorial-group + .editorial-group{padding-top:18px;border-top:1px solid var(--line)}
+.editorial-options{display:grid;gap:10px}
+.editorial-option{border:1px solid #e2e8eb;background:#fff;border-radius:12px;padding:15px;transition:border-color .15s,background .15s}
+.editorial-option.selected{border-color:#99b3bd;background:#f5f9fa}
+.editorial-option-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.editorial-option-label{display:inline-flex;gap:9px;align-items:center;color:#586874;font-size:12px;font-weight:700;cursor:pointer}
+.editorial-option-label input{accent-color:#17232d;width:17px;height:17px;margin:0}
+.editorial-option-text{font-size:13px;line-height:1.65;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.editorial-titulos .editorial-option-text{font-size:17px;line-height:1.4;font-weight:700}
+.editorial-subtitulos .editorial-option-text{color:#42525f}
+.editorial-send-option,.editorial-send-article{padding:9px 13px;font-size:12px;font-weight:700;color:#263e4d;background:#fff;border:1px solid #d7e2e7;border-radius:9px;cursor:pointer}
+.editorial-send-option:hover,.editorial-send-article:hover{background:#eef4f6}
+.editorial-article{border-top:1px solid var(--line);padding-top:22px;margin-top:26px}
+.editorial-article-text{border:1px solid #e5ecef;background:#fbfcfd;padding:17px;border-radius:12px;white-space:pre-wrap;line-height:1.8;overflow-wrap:anywhere;font-size:13px;margin:12px 0}
+.editorial-article-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.editorial-sources{border-top:1px solid var(--line);margin-top:18px;padding-top:17px}
+.editorial-sources ul{margin:0;padding-left:19px;font-size:12px;line-height:1.7}
+.editorial-sources li{margin:0 0 7px;overflow-wrap:anywhere}
+.editorial-sources a{color:#32556b}
+.editorial-error{font-size:12px;color:#ad3940;margin-top:12px;line-height:1.65}
+.editorial-status{font-size:12px;line-height:1.6;color:#6b7480}
+.editorial-empty{display:flex;min-height:230px;align-items:center;justify-content:center;text-align:center;padding:20px;color:#71808c;line-height:1.6;font-size:13px}
+@media(max-width:850px){.editorial-workspace{grid-template-columns:minmax(0,1fr)}.editorial-editor textarea{min-height:160px}}
+@media(max-width:650px){.topbar{flex-wrap:wrap}.top-actions{width:100%}.top-pill-link{font-size:11px}.editorial-option-top{flex-wrap:wrap}}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="brand"><div class="brand-name">TRIN</div><div class="brand-tag">TARGETED INDIVIDUALS<br>BRASIL</div></div><nav class="top-actions" aria-label="Navegação principal"><button class="top-pill top-pill-link" type="button" id="openPostsBtn" aria-controls="postsView" aria-expanded="false">Estúdio de postagens <span aria-hidden="true">↗</span></button><button class="top-pill top-pill-link" type="button" id="openPagePanelBtn" aria-controls="pagePanelView" aria-expanded="false">Painel da página <span aria-hidden="true">↗</span></button></nav></header>
+<header class="topbar"><div class="brand"><div class="brand-name">TRIN</div><div class="brand-tag">TARGETED INDIVIDUALS<br>BRASIL</div></div><nav class="top-actions" aria-label="Navegação principal"><button class="top-pill top-pill-link" type="button" id="openPostsBtn" aria-controls="postsView" aria-expanded="false">Estúdio de postagens <span aria-hidden="true">↗</span></button><button class="top-pill top-pill-link" type="button" id="openPagePanelBtn" aria-controls="pagePanelView" aria-expanded="false">Painel da página <span aria-hidden="true">↗</span></button><button class="top-pill top-pill-link" type="button" id="openEditorialBtn" aria-controls="editorialView" aria-expanded="false">Editorial <span aria-hidden="true">↗</span></button></nav></header>
 <div class="shell" id="editorView">
   <div class="intro"><p class="eyebrow">TRIN / EDITORIAL STUDIO</p><h1>Crie sua próxima publicação.</h1><p>Foto, vídeo, manchete e identidade visual em um só lugar.</p></div>
   <main class="workspace">
@@ -519,6 +562,74 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     </div>
   </form>
 </section>
+
+<!-- Editorial: terceira opção da navegação do próprio painel TRIN. -->
+<section class="shell editorial-view" id="editorialView" aria-label="Editorial" hidden>
+  <div class="posts-navigation">
+    <button class="posts-back" id="backFromEditorialBtn" type="button">← Voltar ao Estúdio de postagens</button>
+    <span class="posts-count">TRIN / EDITORIAL</span>
+  </div>
+  <div class="posts-intro">
+    <p class="eyebrow">TRIN / EDITORIAL</p>
+    <h1>Editorial.</h1>
+    <p>Uma equipe jornalística inteira pra você.</p>
+  </div>
+  <div class="editorial-workspace">
+    <section class="panel editorial-editor" aria-label="Gerar conteúdo">
+      <div class="panel-heading"><span class="step">01</span><div><h2>Produção editorial</h2><p>Gemma 4 · Google AI Studio</p></div></div>
+      <form id="editorialForm">
+        <label for="editorialAssunto">Sua pergunta ou texto</label>
+        <textarea id="editorialAssunto" placeholder="Ex.: Como o computador encontra outro computador na Internet?" required></textarea>
+        <label for="editorialSenha" style="margin-top:16px">Senha de publicação</label>
+        <input id="editorialSenha" type="password" autocomplete="current-password" placeholder="A mesma senha do Estúdio" required>
+        <p class="editorial-help" style="margin:8px 0 0">A senha protege o acesso à IA. A chave do Google fica somente na Vercel.</p>
+        <button type="submit" id="editorialGerar" class="editorial-main-action">Gerar conteúdo e matéria</button>
+      </form>
+      <p class="editorial-error" id="editorialErro" role="alert" hidden></p>
+      <p class="editorial-help" style="margin-top:18px">Revise os textos e as fontes antes de publicar. O envio só preenche o formulário de postagem.</p>
+    </section>
+    <section class="panel editorial-results" aria-label="Opções geradas">
+      <div id="editorialEstadoVazio" class="editorial-empty"><p>Seus títulos, subtítulos, legendas e matéria aparecerão aqui.</p></div>
+      <div id="editorialResultado" aria-live="polite" hidden>
+        <div class="editorial-group editorial-titulos">
+          <h2>3 opções de título</h2>
+          <p class="editorial-help">Selecione uma opção ou envie diretamente ao estúdio.</p>
+          <div id="editorialOpcoesTitulos" class="editorial-options"></div>
+        </div>
+        <div class="editorial-group editorial-subtitulos">
+          <h2>3 opções de subtítulo</h2>
+          <p class="editorial-help">Escolha o subtítulo que preferir.</p>
+          <div id="editorialOpcoesSubtitulos" class="editorial-options"></div>
+        </div>
+        <div class="editorial-group editorial-legendas">
+          <h2>3 opções de legenda</h2>
+          <p class="editorial-help">Cada legenda inclui suas próprias hashtags.</p>
+          <div id="editorialOpcoesLegendas" class="editorial-options"></div>
+        </div>
+        <button type="button" class="editorial-send-all" id="editorialEnviarEscolhidos">Enviar selecionados para postagem</button>
+        <div class="editorial-article" aria-live="polite">
+          <h2>Matéria jornalística</h2>
+          <p class="editorial-help">Aproximadamente uma lauda, com abordagem crítica e fontes pesquisadas na web.</p>
+          <p id="editorialStatusMateria" class="editorial-status">Aguardando pesquisa...</p>
+          <div id="editorialConteudoMateria" hidden>
+            <p id="editorialTextoMateria" class="editorial-article-text"></p>
+            <div class="editorial-article-actions">
+              <button type="button" class="editorial-send-article" id="editorialEnviarMateria">Enviar matéria para postagem</button>
+              <button type="button" class="editorial-send-article" id="editorialEnviarMateriaFontes">Enviar matéria + fontes</button>
+            </div>
+            <div class="editorial-sources">
+              <h3>Fontes encontradas pela pesquisa</h3>
+              <ul id="editorialListaFontes"></ul>
+              <p id="editorialAvisoFontes" class="editorial-error" hidden></p>
+            </div>
+          </div>
+          <button type="button" class="editorial-send-article" id="editorialTentarMateria" hidden>Pesquisar e gerar matéria novamente</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
 <dialog class="post-editor-dialog" id="postEditorDialog" aria-labelledby="postEditorTitle">
   <form class="post-dialog-form" id="postEditForm">
     <h2 id="postEditorTitle">Editar postagem</h2>
@@ -1513,12 +1624,14 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   });
   $('cancelPostEdit').addEventListener('click',()=>{$('postEditorDialog').close()});
   function syncView(){
-    const page=location.hash==='#painel'?'painel':location.hash==='#postagens'?'postagens':'editor';
+    const page=location.hash==='#painel'?'painel':location.hash==='#postagens'?'postagens':location.hash==='#editorial'?'editorial':'editor';
     $('editorView').hidden=page!=='editor';
     $('postsView').hidden=page!=='postagens';
     $('pagePanelView').hidden=page!=='painel';
+    $('editorialView').hidden=page!=='editorial';
     $('openPostsBtn').setAttribute('aria-expanded',String(page==='postagens'));
     $('openPagePanelBtn').setAttribute('aria-expanded',String(page==='painel'));
+    $('openEditorialBtn').setAttribute('aria-expanded',String(page==='editorial'));
     if(page==='postagens'){
       notifyPosts('Carregando publicações...');
       loadPosts().then(()=>notifyPosts('Publicações carregadas.','success')).catch(e=>{
@@ -1534,6 +1647,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   }
   $('openPostsBtn').addEventListener('click',()=>{location.hash='postagens';syncView()});
   $('openPagePanelBtn').addEventListener('click',()=>{location.hash='painel';syncView()});
+  $('openEditorialBtn').addEventListener('click',()=>{location.hash='editorial';syncView()});
+  $('backFromEditorialBtn').addEventListener('click',()=>{location.hash='editor';syncView()});
   $('backToEditorBtn').addEventListener('click',()=>{location.hash='editor';syncView()});
   $('backFromPagePanelBtn').addEventListener('click',()=>{location.hash='editor';syncView()});
   window.addEventListener('hashchange',syncView);
@@ -1541,6 +1656,397 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   syncView();
 })();
 
+</script>
+<script>
+(() => {
+  'use strict';
+// API do Editorial: chave armazenada somente na Vercel (GEMINI_API_KEY).
+
+    const formulario = document.getElementById('editorialForm');
+    const botao = document.getElementById('editorialGerar');
+    const resultado = document.getElementById('editorialResultado');
+    const erro = document.getElementById('editorialErro');
+    const estadoVazio = document.getElementById('editorialEstadoVazio');
+    let opcoes = null;
+    let materia = '';
+    let fontesMateria = [];
+    const statusMateria = document.getElementById('editorialStatusMateria');
+    const conteudoMateria = document.getElementById('editorialConteudoMateria');
+    const textoMateria = document.getElementById('editorialTextoMateria');
+    const listaFontes = document.getElementById('editorialListaFontes');
+    const avisoFontes = document.getElementById('editorialAvisoFontes');
+    const tentarMateria = document.getElementById('editorialTentarMateria');
+
+    // Regras do Gemma: altere aqui o comportamento das três categorias.
+    const REGRAS = [
+      'Sua tarefa é criar EXATAMENTE 3 TÍTULOS, 3 SUBTÍTULOS e 3 LEGENDAS a partir do MESMO texto abaixo, sempre em português do Brasil.',
+      'As três opções de cada categoria precisam ser realmente diferentes em abordagem e linguagem. Faça apenas uma chamada e entregue as nove opções.',
+      '',
+      'REGRAS DOS TÍTULOS:',
+      'Cada título deve representar bem a ideia central e ser claro, interessante, crítico e direto.',
+      'O título não pode possuir partes do texto enviado e sim ser criado com sua lógica.',
+      'Mesmo se o texto for uma pergunta, NÃO a responda: crie títulos relacionados a ela.',
+      '',
+      'REGRAS DOS SUBTÍTULOS:',
+      'Crie subtítulos que complementem a ideia central e acrescentem uma perspectiva crítica, cultural (cult), conceitual e filosófica.',
+      'Os subtítulos devem provocar reflexão, apresentar ideias originais e ter profundidade sem serem incompreensíveis.',
+      'Evite clichês, frases genéricas, sensacionalismo e a repetição literal dos títulos. Cada subtítulo deve ter no máximo uma frase.',
+      'Cada subtítulo deve funcionar com qualquer um dos três títulos, para permitir combinação livre.',
+      '',
+      'REGRAS DAS LEGENDAS:',
+      'Escreva três legendas diferentes, cada uma com 3 a 5 frases, revoltantes, diretas e contundentes, com inconformismo, transformação e contestação de estruturas de poder.',
+      'A legenda não pode citar o texto sendo apenas algo pra gerar revolta no interlocutor.',
+      'A legenda precisa só pegar a ideia do texto e falar de maneira revolucionária e crítica, mas não sobre o texto.',
+      'O texto deve ter força crítica, provocar reflexão e despertar interesse, sem soar como propaganda vazia ou empilhar adjetivos.',
+      'A legenda não pode possuir partes do texto enviado e sim ser criada com sua lógica.',
+      'Fale do assunto de forma concreta: identifique os fatos, mecanismos, instituições, órgãos, empresas ou atores citados e explique o que está em jogo.',
+      'Não invente fatos, nomes, ações, culpados ou acusações. Não atribua responsabilidade ou intenção sem base no texto fornecido.',
+      'Quando a informação não sustentar uma acusação, formule a crítica como pergunta ou análise, sem tratar suspeitas como fatos.',
+      'Ao final de CADA legenda, em uma nova linha, inclua de 3 a 6 hashtags relevantes.',
+      'Nas hashtags, priorize o concreto: nomes de instituições, órgãos públicos, empresas, organizações e entidades efetivamente presentes no texto.',
+      'Depois, se couber, use hashtags de leis, projetos, tecnologias, lugares ou assuntos específicos.',
+      'Não invente nomes de organizações nem crie hashtags com nomes que não aparecem no texto. Se não houver entidades nomeadas, use hashtags temáticas específicas.',
+      'Cada legenda deve funcionar com qualquer um dos títulos e subtítulos, para permitir combinação livre.',
+      '',
+      'FORMATO OBRIGATÓRIO:',
+      'Retorne APENAS um objeto JSON válido, sem Markdown, sem bloco de código e sem comentário, com esta estrutura exata:',
+      '{"titulos":["Título 1","Título 2","Título 3"],"subtitulos":["Subtítulo 1","Subtítulo 2","Subtítulo 3"],"legendas":["Legenda 1\\n#Hashtag1 #Hashtag2 #Hashtag3","Legenda 2\\n#Hashtag1 #Hashtag2 #Hashtag3","Legenda 3\\n#Hashtag1 #Hashtag2 #Hashtag3"]}',
+      'Cada uma das três propriedades deve ser um array com EXATAMENTE 3 strings. Use escapes JSON válidos para quebras de linha.',
+      'Não inclua introdução, justificativa ou texto fora do JSON. Não responda à pergunta do usuário fora das nove opções.',
+      '',
+      'TEXTO DO USUÁRIO:'
+    ].join('\n');
+
+    function interpretarJSON(texto) {
+      const limpo = texto.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+      try {
+        return JSON.parse(limpo);
+      } catch {
+        const inicio = limpo.indexOf('{');
+        const fim = limpo.lastIndexOf('}');
+        if (inicio === -1 || fim <= inicio) {
+          throw new Error('A IA não retornou as nove opções no formato esperado. Tente novamente.');
+        }
+        try {
+          return JSON.parse(limpo.slice(inicio, fim + 1));
+        } catch {
+          throw new Error('A resposta veio incompleta ou fora do formato esperado. Tente gerar novamente.');
+        }
+      }
+    }
+
+    function validarOpcoes(dados) {
+      const campos = ['titulos', 'subtitulos', 'legendas'];
+      for (const campo of campos) {
+        if (!Array.isArray(dados?.[campo]) || dados[campo].length !== 3 ||
+            dados[campo].some(item => typeof item !== 'string' || !item.trim())) {
+          throw new Error('A IA não retornou três opções válidas de ' + campo + '. Tente novamente.');
+        }
+        dados[campo] = dados[campo].map(item => item.trim());
+      }
+      return dados;
+    }
+
+    function renderizarGrupo(campo, idAlvo) {
+      const alvo = document.getElementById(idAlvo);
+      alvo.replaceChildren();
+      opcoes[campo].forEach((texto, indice) => {
+        const cartao = document.createElement('div');
+        cartao.className = 'editorial-option' + (indice === 0 ? ' selected' : '');
+
+        const cabecalho = document.createElement('div');
+        cabecalho.className = 'editorial-option-top';
+        const rotulo = document.createElement('label');
+        rotulo.className = 'editorial-option-label';
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = campo;
+        radio.value = String(indice);
+        radio.checked = indice === 0;
+        radio.addEventListener('change', () => {
+          alvo.querySelectorAll('.editorial-option').forEach(el => el.classList.remove('selected'));
+          cartao.classList.add('selected');
+        });
+        const identificacao = document.createElement('span');
+        identificacao.textContent = 'Opção ' + (indice + 1);
+        rotulo.append(radio, identificacao);
+
+        const enviar = document.createElement('button');
+        enviar.type = 'button';
+        enviar.className = 'editorial-send-option';
+        enviar.textContent = 'Enviar';
+        enviar.setAttribute('aria-label', 'Enviar opção ' + (indice + 1) + ' de ' + campo + ' para postagem');
+        enviar.addEventListener('click', () => {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change', { bubbles: true }));
+          enviarParaPostagem();
+        });
+
+        cabecalho.append(rotulo, enviar);
+        const conteudo = document.createElement('p');
+        conteudo.className = 'editorial-option-text';
+        conteudo.textContent = texto;
+        cartao.append(cabecalho, conteudo);
+        alvo.appendChild(cartao);
+      });
+    }
+
+    // A matéria tem pesquisa Google separada para preservar o formato JSON das nove opções.
+    // O resultado da pesquisa também devolve os endereços reais das fontes consultadas.
+    const REGRAS_MATERIA = [
+      'Você é um jornalista investigativo e analista social. Escreva em português brasileiro.',
+      'PESQUISA OBRIGATÓRIA: utilize a ferramenta Google Search disponibilizada nesta solicitação.',
+      'Busque fontes atuais e verificáveis sobre o assunto, preferencialmente documentos oficiais,',
+      'estudos científicos, dados públicos e veículos jornalísticos de credibilidade. Priorize as',
+      'publicações mais recentes pertinentes e, quando possível, cruze duas fontes independentes.',
+      'Considere as datas de publicação e dos acontecimentos; jamais chame dados antigos de atuais.',
+      '',
+      'ESTILO DA MATÉRIA:',
+      'Produza aproximadamente UMA LAUDA (400 a 550 palavras) distribuída em parágrafos jornalísticos.',
+      'O texto deve ser extremamente crítico, incisivo, questionador e instigante, com indignação',
+      'embasada em fatos, em linguagem clara, direta, interessante e sem adjetivação vazia.',
+      'Dê atenção especial aos efeitos sobre a classe trabalhadora, famílias de baixa renda e pessoas',
+      'vulneráveis SEMPRE QUE o tema sustentar essa conexão. Investigue desigualdades, custos, incentivos,',
+      'concentração de poder e quem suporta as consequências, mas não presuma culpados.',
+      'Seja imparcial na apuração: aplique o mesmo rigor crítico a empresas, governos e grupos de qualquer',
+      'orientação. Dê espaço a explicações alternativas relevantes e diferencie fato, alegação e avaliação.',
+      'Questione mecanismos e responsabilidades com perguntas pertinentes, nunca com acusações infundadas.',
+      'Não invente estudos, pesquisas, fontes, números, datas, citações nem declarações de entrevistados.',
+      'Não incentive violência nem faça propaganda de partidos ou candidatos.',
+      'Se a pesquisa não sustentar determinada afirmação, omita-a ou informe claramente a incerteza.',
+      'Use dados científicos quando pertinentes, identificando instituição, ano e contexto no corpo do texto.',
+      'Não copie textos jornalísticos de outras fontes. Faça redação original.',
+      'Entregue APENAS o corpo da matéria, sem títulos extras, hashtags, links ou bibliografia.',
+      'Os links efetivos das fontes serão exibidos separadamente pela página, a partir da resposta da API.',
+      '',
+      'DATA ATUAL: ' + new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Fortaleza' }),
+      'ASSUNTO OU TEXTO DE PARTIDA:'
+    ].join('\n');
+
+    function fontesDaResposta(dados) {
+      const itens = dados.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      const vistos = new Set();
+      return itens.flatMap(item => {
+        const nome = item.web?.title?.trim() || 'Fonte consultada';
+        const endereco = item.web?.uri;
+        if (!endereco) return [];
+        try {
+          const url = new URL(endereco);
+          if (!['http:', 'https:'].includes(url.protocol) || vistos.has(url.href)) return [];
+          vistos.add(url.href);
+          return [{ titulo: nome, url: url.href }];
+        } catch { return []; }
+      });
+    }
+
+    function textoDaResposta(dados) {
+      return (dados.candidates?.[0]?.content?.parts || [])
+        .filter(parte => !parte.thought && typeof parte.text === 'string')
+        .map(parte => parte.text).join('\n').trim();
+    }
+
+    function renderizarFontes() {
+      listaFontes.replaceChildren();
+      fontesMateria.forEach(({ titulo, url }) => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = titulo;
+        li.appendChild(link);
+        listaFontes.appendChild(li);
+      });
+      avisoFontes.hidden = fontesMateria.length > 0;
+      avisoFontes.textContent = fontesMateria.length ? '' :
+        'A API não devolveu links verificáveis nesta pesquisa. Confira manualmente as afirmações antes de publicar.';
+    }
+
+    // Uma segunda estratégia entra em ação se a pesquisa direta do Gemma falhar
+    // ou não fornecer fontes. A redação final continua sendo feita pelo Gemma.
+    async function requisitarModelo(modelo, prompt, configuracao = {}) {
+      const senha = document.getElementById('editorialSenha').value;
+      if (!senha) throw new Error('Informe a senha de publicação para usar o Editorial.');
+      const resposta = await fetch('/api/editorial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-trin-password': senha },
+        body: JSON.stringify({ modelo, prompt, configuracao })
+      });
+      const dados = await resposta.json();
+      if (!resposta.ok) {
+        throw new Error(dados.error?.message || 'Erro da API (' + resposta.status + ').');
+      }
+      return dados;
+    }
+
+    async function gerarMateria(assunto) {
+      materia = '';
+      fontesMateria = [];
+      conteudoMateria.hidden = true;
+      tentarMateria.hidden = true;
+      statusMateria.textContent = 'Pesquisando fontes recentes e escrevendo a matéria...';
+      try {
+        let dadosDiretos;
+        let erroDireto = null;
+        try {
+          dadosDiretos = await requisitarModelo('gemma-4-26b-a4b-it', REGRAS_MATERIA + '\n' + assunto, {
+            tools: [{ googleSearch: {} }],
+            generationConfig: { temperature: 0.65, maxOutputTokens: 3200 }
+          });
+          materia = textoDaResposta(dadosDiretos);
+          fontesMateria = fontesDaResposta(dadosDiretos);
+        } catch (falha) {
+          erroDireto = falha;
+        }
+
+        if (!materia || !fontesMateria.length) {
+          statusMateria.textContent = 'Buscando fontes em uma pesquisa alternativa...';
+          try {
+            const pesquisa = await requisitarModelo('gemini-2.5-flash-lite', [
+              'Pesquise no Google informações atuais e verificáveis para apuração jornalística.',
+              'Priorize dados oficiais, estudos científicos, fontes primárias e veículos confiáveis.',
+              'Forneça um resumo factual com datas, nomes, números sustentados por fontes e',
+              'controvérsias relevantes. Não invente informações. Este resumo será usado por',
+              'outro modelo para escrever uma matéria original.',
+              'Tema: ' + assunto
+            ].join('\n'), {
+              tools: [{ googleSearch: {} }],
+              generationConfig: { temperature: 0.2, maxOutputTokens: 1600 }
+            });
+            const apuracao = textoDaResposta(pesquisa);
+            const fontesPesquisa = fontesDaResposta(pesquisa);
+            if (!apuracao) throw new Error('A pesquisa alternativa não retornou informações.');
+            statusMateria.textContent = 'Fontes pesquisadas. Redigindo a matéria com Gemma...';
+            const textoFontes = fontesPesquisa.length
+              ? fontesPesquisa.map((item, i) => (i + 1) + '. ' + item.titulo + ' — ' + item.url).join('\n')
+              : 'Nenhuma referência verificável foi disponibilizada; evite alegações não comprovadas.';
+            const redacao = await requisitarModelo('gemma-4-26b-a4b-it',
+              REGRAS_MATERIA + '\n' + assunto +
+              '\n\nAPURAÇÃO RECENTE (use como contexto; não invente fatos):\n' + apuracao +
+              '\n\nREFERÊNCIAS DISPONÍVEIS:\n' + textoFontes +
+              '\nNão trate dados sem fonte verificável como fatos confirmados.', {
+                generationConfig: { temperature: 0.65, maxOutputTokens: 3200 }
+              });
+            const textoFinal = textoDaResposta(redacao);
+            if (!textoFinal) throw new Error('O Gemma não retornou a matéria.');
+            materia = textoFinal;
+            fontesMateria = fontesPesquisa;
+          } catch (falhaAlternativa) {
+            // Se a pesquisa direta já produziu texto, preserve-o, com alerta explícito.
+            if (!materia) {
+              throw new Error('A pesquisa direta falhou (' +
+                (erroDireto?.message || 'sem dados suficientes') +
+                '). Pesquisa alternativa: ' + falhaAlternativa.message);
+            }
+          }
+        }
+
+        if (!materia) throw new Error('A API não retornou uma matéria.');
+        textoMateria.textContent = materia;
+        renderizarFontes();
+        conteudoMateria.hidden = false;
+        statusMateria.textContent = fontesMateria.length
+          ? 'Matéria gerada com ' + fontesMateria.length + ' fonte(s) retornada(s) pela Pesquisa Google. Revise antes de publicar.'
+          : 'Matéria gerada, mas sem referências verificáveis retornadas pela pesquisa. Confira os fatos antes de publicar.';
+      } catch (falha) {
+        statusMateria.textContent = 'Não foi possível concluir a pesquisa e a matéria: ' + falha.message;
+        tentarMateria.hidden = false;
+      }
+    }
+
+    function materiaComFontes() {
+      const referencia = fontesMateria.length
+        ? '\n\nFontes consultadas:\n' + fontesMateria.map(({ titulo, url }) => titulo + ' — ' + url).join('\n')
+        : '\n\n[Referências não disponibilizadas pela API; verificar antes da publicação.]';
+      return materia + referencia;
+    }
+
+
+    tentarMateria.addEventListener('click', () => {
+      const assunto = document.getElementById('editorialAssunto').value.trim();
+      if (assunto) gerarMateria(assunto);
+    });
+
+    formulario.addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      const assunto = document.getElementById('editorialAssunto').value.trim();
+      if (!assunto) return;
+
+      botao.disabled = true;
+      botao.textContent = 'Gerando 9 opções...';
+      erro.hidden = true;
+      resultado.hidden = true;
+      estadoVazio.hidden = false;
+      estadoVazio.querySelector('p').textContent = 'Gerando as opções de conteúdo...';
+      conteudoMateria.hidden = true;
+
+      try {
+        const dados = await requisitarModelo('gemma-4-26b-a4b-it', REGRAS + '\n' + assunto, {
+          generationConfig: {
+            temperature: 0.85,
+            maxOutputTokens: 3500,
+            thinkingConfig: { thinkingLevel: 'minimal' }
+          }
+        });
+        const texto = (dados.candidates?.[0]?.content?.parts || [])
+          .filter(parte => !parte.thought && typeof parte.text === 'string')
+          .map(parte => parte.text).join('\n');
+        if (!texto.trim()) throw new Error('A IA não retornou conteúdo. Tente novamente.');
+
+        opcoes = validarOpcoes(interpretarJSON(texto));
+        renderizarGrupo('titulos', 'editorialOpcoesTitulos');
+        renderizarGrupo('subtitulos', 'editorialOpcoesSubtitulos');
+        renderizarGrupo('legendas', 'editorialOpcoesLegendas');
+        resultado.hidden = false;
+        estadoVazio.hidden = true;
+        botao.textContent = 'Pesquisando e escrevendo matéria...';
+        await gerarMateria(assunto);
+      } catch (falha) {
+        erro.textContent = 'Não foi possível gerar o conteúdo: ' + falha.message;
+        erro.hidden = false;
+        estadoVazio.querySelector('p').textContent = 'Não foi possível gerar as opções. Revise o texto e tente novamente.';
+      } finally {
+        botao.disabled = false;
+        botao.textContent = 'Gerar conteúdo e matéria';
+      }
+    });
+
+    // Transfere os quatro campos para o Estúdio de postagens, sem publicar automaticamente.
+    function escolhido(campo) {
+      if (!opcoes) return '';
+      const marcado = document.querySelector('#editorialView input[name="' + campo + '"]:checked');
+      return opcoes[campo][marcado ? Number(marcado.value) : 0] || '';
+    }
+
+    function enviarParaPostagem(textoCompleto = materia) {
+      if (!opcoes) return;
+      const campos = {
+        titleText: escolhido('titulos'),
+        subtitleText: escolhido('subtitulos'),
+        captionText: escolhido('legendas'),
+        siteArticle: textoCompleto || ''
+      };
+      Object.entries(campos).forEach(([id, valor]) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.value = valor;
+        // Atualiza prévia, contador de caracteres e ouvintes existentes.
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      // Mostra os campos preenchidos, mas mantém todas as operações de publicação manuais.
+      ['artSection', 'captionSection', 'siteSection'].forEach(id => {
+        const secao = document.getElementById(id);
+        if (secao && 'open' in secao) secao.open = true;
+      });
+      window.location.hash = 'editor';
+    }
+
+    document.getElementById('editorialEnviarEscolhidos').addEventListener('click', () => enviarParaPostagem());
+    document.getElementById('editorialEnviarMateria').addEventListener('click', () => enviarParaPostagem(materia));
+    document.getElementById('editorialEnviarMateriaFontes').addEventListener('click', () => enviarParaPostagem(materiaComFontes()));
+
+})();
 </script>
 </body>
 </html>
