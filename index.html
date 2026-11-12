@@ -176,14 +176,6 @@
     .hero-slide-cta:hover{background:var(--accent-deep);color:#fff;transform:translateY(-2px)}
     .hero-visual{position:relative;min-width:0;width:100%;aspect-ratio:1/1.05;max-height:420px;border:2px solid color-mix(in srgb,var(--accent) 38%,#777);padding:9px;background:#15161c;box-shadow:21px 20px 0 -6px #2c2d36,23px 22px 0 -5px color-mix(in srgb,var(--accent) 52%,transparent);overflow:hidden}
     .hero-visual img,.hero-visual video{width:100%;height:100%;object-fit:cover;display:block}
-    .hero-carousel-controls{position:absolute;z-index:5;bottom:21px;right:21px;display:flex;align-items:center;gap:8px;padding:6px;background:rgba(18,19,25,.83);border:1px solid #777785;color:white;border-radius:40px;backdrop-filter:blur(8px)}
-    .hero-arrow{height:34px;width:34px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:white;font-size:28px;line-height:1;transition:background .2s,color .2s}
-    .hero-arrow:hover,.hero-arrow:focus-visible{background:var(--accent);color:var(--accent-contrast)}
-    .hero-counter{font-size:11px;letter-spacing:1.2px;font-weight:800;min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
-    .hero-dots{display:flex;justify-content:center;gap:8px;padding:14px 0 3px}
-    .hero-dot{width:28px;height:5px;padding:0;border:0;border-radius:5px;background:var(--rule);transition:background .2s,width .2s}
-    .hero-dot.is-active{background:var(--accent-deep);width:48px}
-    .hero-dot:hover,.hero-dot:focus-visible{background:var(--accent)}
     @media(max-width:700px){
       .hero-stage{aspect-ratio:auto;min-height:620px}
       .hero-banner-link{display:none}
@@ -202,7 +194,6 @@
       .hero-editorial-slide p{font-size:13px;margin-bottom:17px;-webkit-line-clamp:2}
       .hero-slide-cta{font-size:13px;padding:11px 16px}
       .hero-visual{justify-self:center;max-width:240px;aspect-ratio:1.45/1;box-shadow:10px 10px 0 -4px #2c2d36}
-      .hero-carousel-controls{bottom:12px;right:12px}
     }
     /* Tom translúcido na cor configurada do TRIN, apenas em imagens das notícias. */
     .featured-media-wrap,.story-media-wrap{position:relative;display:block;overflow:hidden;isolation:isolate;flex-shrink:0}
@@ -278,7 +269,7 @@
           </a>
         </div>
       </div>
-      <div class="footer-action"><a class="support-btn" href="#/recursos">Apoiar o projeto <span aria-hidden="true">↗</span></a></div>
+      <div class="footer-action"><a class="support-btn" href="#/recursos">Apoiar o projeto <span aria-hidden="true">&#x2197;&#xFE0E;</span></a></div>
     </div>
     <div class="shell footer-bottom"><span>© <span id="year"></span> TRIN. Todos os direitos reservados.</span><span>Uma iniciativa sem fins lucrativos.</span></div>
   </footer>
@@ -315,7 +306,7 @@
   const regularMenus=()=>MENUS.filter(m=>!String(m.id||'').startsWith('carrossel-'));
 
   const sectionHead=(title,subtitle)=>`<div class="section-heading"><h2>${title}</h2><span class="aside">${subtitle}</span></div>`;
-  function featuredCard(post){return `<a class="featured-card" href="#/materia/${post.id}"><span class="featured-media-wrap">${media(post,'featured-image')}</span><div class="feature-body"><span class="eyebrow">${escapeHTML(post.category)} / Destaque</span><h3>${escapeHTML(post.title)}</h3><p class="feature-summary">${escapeHTML(post.subtitle)}</p><span class="read-note">Ler matéria ↗</span></div></a>`;}
+  function featuredCard(post){return `<a class="featured-card" href="#/materia/${post.id}"><span class="featured-media-wrap">${media(post,'featured-image')}</span><div class="feature-body"><span class="eyebrow">${escapeHTML(post.category)} / Destaque</span><h3>${escapeHTML(post.title)}</h3><p class="feature-summary">${escapeHTML(post.subtitle)}</p><span class="read-note">Ler matéria &#x2197;&#xFE0E;</span></div></a>`;}
   function storyRow(post){return `<a class="story-card" href="#/materia/${post.id}"><span class="story-media-wrap">${media(post,'story-photo')}</span><div class="story-text"><span class="eyebrow">${escapeHTML(post.category)}</span><h3>${escapeHTML(post.title)}</h3><div class="story-meta">TRIN · leitura breve</div></div><p class="story-excerpt">${escapeHTML(post.subtitle)}</p></a>`;}
   function pager(page,section){
     const total=Math.max(1,Math.ceil(ACTIVE_POSTS.length/8));
@@ -350,16 +341,15 @@
       return `<div class="hero-slide${active}" ${basics}><a class="hero-image-full" href="${escapeHTML(slide.href)}" tabindex="${i===0?'0':'-1'}" aria-label="${escapeHTML(slide.title)}">${img(slide.image,slide.title,'hero-picture')}</a></div>`;
     }
     const imageHTML=img(slide.image,slide.title,'hero-story-image');
-    return `<div class="hero-slide hero-editorial-slide hero-text-slide${active}" ${basics} style="--slide-bg:${escapeHTML(slide.background)}"><div class="hero-slide-content"><span class="hero-kicker">TRIN / EDIÇÃO DIGITAL</span><h2>${escapeHTML(slide.title)}</h2><p>${escapeHTML(slide.subtitle)}</p><a class="hero-slide-cta" href="${escapeHTML(slide.href)}" tabindex="${i===0?'0':'-1'}">${escapeHTML(slide.button)} <span aria-hidden="true">↗</span></a></div><a class="hero-visual" href="${escapeHTML(slide.href)}" aria-label="Abrir ${escapeHTML(slide.title)}" tabindex="${i===0?'0':'-1'}">${imageHTML}</a></div>`;
+    return `<div class="hero-slide hero-editorial-slide hero-text-slide${active}" ${basics} style="--slide-bg:${escapeHTML(slide.background)}"><div class="hero-slide-content"><span class="hero-kicker">TRIN / EDIÇÃO DIGITAL</span><h2>${escapeHTML(slide.title)}</h2><p>${escapeHTML(slide.subtitle)}</p><a class="hero-slide-cta" href="${escapeHTML(slide.href)}" tabindex="${i===0?'0':'-1'}">${escapeHTML(slide.button)} <span aria-hidden="true">&#x2197;&#xFE0E;</span></a></div><a class="hero-visual" href="${escapeHTML(slide.href)}" aria-label="Abrir ${escapeHTML(slide.title)}" tabindex="${i===0?'0':'-1'}">${imageHTML}</a></div>`;
   }
   function renderHeroCarousel(){
     const slides=getHeroSlides();
-    return `<div class="trin-carousel" aria-label="Carrossel de destaques do TRIN"><div class="hero-stage" tabindex="0" aria-label="Use as setas para avançar ou retroceder">${slides.map((s,i)=>renderHeroSlide(s,i,slides.length)).join('')}<div class="hero-carousel-controls"><button type="button" class="hero-arrow" data-hero-prev aria-label="Slide anterior">‹</button><span class="hero-counter" aria-live="polite">01 / ${String(slides.length).padStart(2,'0')}</span><button type="button" class="hero-arrow" data-hero-next aria-label="Próximo slide">›</button></div></div><div class="hero-dots">${slides.map((s,i)=>`<button type="button" data-hero-dot="${i}" class="hero-dot${i===0?' is-active':''}" aria-label="Ir para slide ${i+1}" aria-pressed="${i===0?'true':'false'}"></button>`).join('')}</div></div>`;
+    return `<div class="trin-carousel" aria-label="Destaques do TRIN" aria-roledescription="carrossel"><div class="hero-stage">${slides.map((s,i)=>renderHeroSlide(s,i,slides.length)).join('')}</div></div>`;
   }
   function setupHeroCarousel(){
     const root=document.querySelector('.trin-carousel');if(!root)return;
-    const stage=root.querySelector('.hero-stage'),slides=Array.from(root.querySelectorAll('.hero-slide'));
-    const dots=Array.from(root.querySelectorAll('[data-hero-dot]')),counter=root.querySelector('.hero-counter');
+    const slides=Array.from(root.querySelectorAll('.hero-slide'));
     const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const caption=document.getElementById('heroSubtitle'),headline=document.getElementById('heroHeadline'),cta=document.getElementById('heroCaptionLink');
     const data=getHeroSlides();let index=0,timer=null;
@@ -367,20 +357,14 @@
       index=(next+slides.length)%slides.length;
       slides.forEach((s,i)=>{const active=i===index;s.classList.toggle('is-active',active);s.setAttribute('aria-hidden',String(!active));
         s.querySelectorAll('a,button').forEach(a=>a.tabIndex=active?0:-1);});
-      dots.forEach((d,i)=>{d.classList.toggle('is-active',i===index);d.setAttribute('aria-pressed',String(i===index));});
-      counter.textContent=String(index+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
       root.classList.toggle('is-full',data[index].layout==='full');
       if(headline)headline.textContent=data[index].title;
       if(caption)caption.textContent=data[index].subtitle;
-      if(cta){cta.textContent=data[index].button+' ↗';cta.href=data[index].href;
+      if(cta){cta.textContent=data[index].button+' \u2197\uFE0E';cta.href=data[index].href;
         if(/^https?:\/\//.test(data[index].href)){cta.target='_blank';cta.rel='noopener noreferrer'}else{cta.removeAttribute('target');cta.removeAttribute('rel');}}
     };
     const stop=()=>{if(timer!==null){clearTimeout(timer);timer=null;}};
     const play=()=>{stop();if(slides.length>1&&!reduced&&!document.hidden)timer=setTimeout(()=>{update(index+1);play();},data[index].time);};
-    root.querySelector('[data-hero-prev]').addEventListener('click',()=>{update(index-1);play();});
-    root.querySelector('[data-hero-next]').addEventListener('click',()=>{update(index+1);play();});
-    dots.forEach((dot,i)=>dot.addEventListener('click',()=>{update(i);play();}));
-    stage.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();update(index+(event.key==='ArrowRight'?1:-1));play();}});
     root.addEventListener('mouseenter',stop);root.addEventListener('mouseleave',play);
     root.addEventListener('focusin',stop);root.addEventListener('focusout',()=>{if(!root.contains(document.activeElement))play();});
     const visibility=()=>document.hidden?stop():play();document.addEventListener('visibilitychange',visibility);
@@ -390,20 +374,20 @@
   function renderHome(page){
     if(page>1)return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Arquivo editorial</span><h1>Mais notícias.</h1><p>Continue explorando os conteúdos desta edição.</p></div>${newsSection(page,'inicio')}</div>`;
     const picks=ACTIVE_POSTS.filter(p=>p.featured).slice(0,2);
-    const coursesLink=menuById('cursos')?`<a href="#/cursos" class="courses-band"><span>Nossos cursos</span><span aria-hidden="true">↗</span></a>`:'';
+    const coursesLink=menuById('cursos')?`<a href="#/cursos" class="courses-band"><span>Nossos cursos</span><span aria-hidden="true">&#x2197;&#xFE0E;</span></a>`:'';
     const highlights=picks.length?`<section class="content-section">${sectionHead('Notícias principais','Destaques da edição')}<div class="featured-grid">${picks.map(featuredCard).join('')}</div>${coursesLink}</section>`:`<section class="content-section">${coursesLink}</section>`;
-    return `<div class="shell page"><section class="hero-section"><div class="micro-heading" id="heroHeadline">Informação livre precisa de apoio</div>${renderHeroCarousel()}<div class="donation-caption"><span id="heroSubtitle">Uma iniciativa voltada ao acesso à informação</span><b><a id="heroCaptionLink" href="#/recursos">Conheça como apoiar ↗</a></b></div></section>${highlights}${newsSection(1,'inicio')}</div>`;
+    return `<div class="shell page"><section class="hero-section"><div class="micro-heading" id="heroHeadline">Informação livre precisa de apoio</div>${renderHeroCarousel()}<div class="donation-caption"><span id="heroSubtitle">Uma iniciativa voltada ao acesso à informação</span><b><a id="heroCaptionLink" href="#/recursos">Conheça como apoiar &#x2197;&#xFE0E;</a></b></div></section>${highlights}${newsSection(1,'inicio')}</div>`;
   }
   function renderSobre(){return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Conheça o projeto</span><h1>Sobre o TRIN.</h1><p>Uma proposta de espaço digital para reunir informação, ciência, tecnologia e materiais de aprendizagem.</p></div><div class="prose"><p>O TRIN foi pensado como um portal de leitura direta, com notícias, artigos e recursos organizados de maneira simples. O objetivo deste modelo é facilitar a descoberta de conteúdos sem sobrecarregar a página.</p><p>O visual faz referência a jornais tradicionais: títulos fortes, fotografias quadradas, separadores discretos e um fundo claro inspirado na experiência de leitura do Kindle.</p><p>Os textos e conteúdos publicados nesta versão são demonstrativos e podem ser substituídos pelo material editorial definitivo.</p></div><a class="back-btn" href="#/inicio">← Voltar ao início</a></div>`;}
   // Páginas institucionais com a mesma estrutura de título e texto da seção Sobre.
   function renderCursos(){return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Aprendizagem e formação</span><h1>Nossos cursos.</h1><p>Esta página reunirá cursos, aulas e materiais educativos sobre tecnologia, ciência e outros temas de interesse.</p></div><div class="prose"><p>Em breve, você poderá conhecer os cursos disponíveis, consultar seus conteúdos e encontrar as informações para participar.</p></div><a class="back-btn" href="#/inicio">← Voltar ao início</a></div>`;}
-  function renderRecursos(){return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Apoie o projeto</span><h1>Recursos.</h1><p>O apoio da comunidade ajuda a fortalecer o TRIN e a manter novos conteúdos, cursos e publicações em desenvolvimento.</p></div><div class="pix-support"><div class="pix-copy"><p>Para contribuir, basta escanear o QR Code Pix ao lado com o aplicativo do seu banco. Esta é a forma de apoio disponível nesta etapa do projeto.</p><p>Sua contribuição pode ajudar na manutenção do portal, na organização dos materiais e na produção de novos conteúdos.</p><ul class="pix-points"><li>Escaneie o QR Code com a câmera do app do banco.</li><li>Confira os dados da transferência antes de concluir.</li><li>Contribua com o valor que desejar.</li></ul><a class="pix-action" href="#/inicio">Voltar ao início <span aria-hidden="true">↗</span></a></div><div class="qr-card">${img('pixqr','QR Code Pix para apoiar o projeto TRIN')}<strong>APOIE VIA PIX</strong><span>Use o QR Code para fazer a contribuição de forma rápida e direta.</span></div></div></div>`;}
+  function renderRecursos(){return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Apoie o projeto</span><h1>Recursos.</h1><p>O apoio da comunidade ajuda a fortalecer o TRIN e a manter novos conteúdos, cursos e publicações em desenvolvimento.</p></div><div class="pix-support"><div class="pix-copy"><p>Para contribuir, basta escanear o QR Code Pix ao lado com o aplicativo do seu banco. Esta é a forma de apoio disponível nesta etapa do projeto.</p><p>Sua contribuição pode ajudar na manutenção do portal, na organização dos materiais e na produção de novos conteúdos.</p><ul class="pix-points"><li>Escaneie o QR Code com a câmera do app do banco.</li><li>Confira os dados da transferência antes de concluir.</li><li>Contribua com o valor que desejar.</li></ul><a class="pix-action" href="#/inicio">Voltar ao início <span aria-hidden="true">&#x2197;&#xFE0E;</span></a></div><div class="qr-card">${img('pixqr','QR Code Pix para apoiar o projeto TRIN')}<strong>APOIE VIA PIX</strong><span>Use o QR Code para fazer a contribuição de forma rápida e direta.</span></div></div></div>`;}
   function renderArtigos(){return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Publicações e leitura</span><h1>Artigos.</h1><p>Esta página reunirá artigos, análises e textos informativos, organizados por assunto.</p></div><div class="prose"><p>Em breve, você encontrará publicações completas, referências e materiais para aprofundar a leitura dos temas abordados no portal.</p></div><a class="back-btn" href="#/inicio">← Voltar ao início</a></div>`;}
   function renderManagedPage(menu){
     if(!menu)return renderNotFound();
     // As páginas institucionais têm imagem_url própria na aba Menu.
     const cover=menu.image ? `<div style="max-width:900px;margin:18px auto 24px"><img src="${escapeHTML(menu.image)}" alt="${escapeHTML(menu.title)}" loading="lazy" style="display:block;max-height:550px;max-width:100%;width:100%;object-fit:contain;border-radius:8px"></div>` : '';
-    if(menu.id==='recursos')return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Apoie o projeto</span><h1>${escapeHTML(menu.title)}</h1><p>${escapeHTML(menu.subtitle)}</p></div>${cover}<div class="pix-support"><div class="pix-copy">${para(menu.text)}<ul class="pix-points"><li>Escaneie o QR Code com a câmera do app do banco.</li><li>Confira os dados da transferência antes de concluir.</li><li>Contribua com o valor que desejar.</li></ul><a class="pix-action" href="#/inicio">Voltar ao início <span aria-hidden="true">↗</span></a></div><div class="qr-card">${img('pixqr','QR Code Pix para apoiar o projeto TRIN')}<strong>APOIE VIA PIX</strong><span>Use o QR Code para fazer a contribuição de forma rápida e direta.</span></div></div></div>`;
+    if(menu.id==='recursos')return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">Apoie o projeto</span><h1>${escapeHTML(menu.title)}</h1><p>${escapeHTML(menu.subtitle)}</p></div>${cover}<div class="pix-support"><div class="pix-copy">${para(menu.text)}<ul class="pix-points"><li>Escaneie o QR Code com a câmera do app do banco.</li><li>Confira os dados da transferência antes de concluir.</li><li>Contribua com o valor que desejar.</li></ul><a class="pix-action" href="#/inicio">Voltar ao início <span aria-hidden="true">&#x2197;&#xFE0E;</span></a></div><div class="qr-card">${img('pixqr','QR Code Pix para apoiar o projeto TRIN')}<strong>APOIE VIA PIX</strong><span>Use o QR Code para fazer a contribuição de forma rápida e direta.</span></div></div></div>`;
     return `<div class="shell page inner-page"><div class="inner-lede"><span class="micro-heading">${escapeHTML(menu.name)}</span><h1>${escapeHTML(menu.title)}</h1><p>${escapeHTML(menu.subtitle)}</p></div>${cover}<div class="prose">${para(menu.text)}</div><a class="back-btn" href="#/inicio">← Voltar ao início</a></div>`;
   }
   function renderMateria(id){
