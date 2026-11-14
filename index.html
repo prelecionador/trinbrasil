@@ -13,8 +13,8 @@
       --ink:#1e1e1c;
       --secondary:#5d5b55;
       --rule:#d6d2c7;
-      --accent:#89CFF0;
-      --accent-deep:#387FA1;
+      --accent:#F8FF47;
+      --accent-deep:#C2C73A;
       --accent-contrast:#172b38;
       --paper-dark:#e7e3d9;
       --max:1240px;
@@ -436,7 +436,7 @@
     const nav=document.querySelector('.site-nav');
     nav.innerHTML=`<a href="#/inicio" data-nav="inicio">Início</a>`+regularMenus().map(m=>`<a href="#/${['sobre','cursos','recursos','artigos'].includes(m.id)?m.id:'pagina/'+m.id}" data-nav="${escapeHTML(m.id)}">${escapeHTML(m.name)}</a>`).join('');
   }
-  const DEFAULT_ACCENT='#89CFF0';
+  const DEFAULT_ACCENT='#F8FF47';
   function applyTheme(value){
     const accent=/^#[0-9a-fA-F]{6}$/.test(String(value||''))?value:DEFAULT_ACCENT;
     const n=parseInt(accent.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;

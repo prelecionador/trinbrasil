@@ -243,8 +243,8 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .appearance-menu .appearance-controls>div:nth-child(2){flex:1;min-width:150px}
 .appearance-menu input[type=color]{height:42px;padding:3px;cursor:pointer}
 .appearance-example{display:flex;align-items:center;gap:20px;background:#fafafa;border-radius:10px;border:1px solid #e6ebee;padding:14px}
-.appearance-example span{height:5px;border-radius:3px;background:#89cff0;flex:1;min-width:45px}
-.appearance-example button{border:0;border-radius:8px;background:#89cff0;color:#192d37;font-size:12px;padding:11px 16px;opacity:1;white-space:nowrap}
+.appearance-example span{height:5px;border-radius:3px;background:#F8FF47;flex:1;min-width:45px}
+.appearance-example button{border:0;border-radius:8px;background:#F8FF47;color:#192d37;font-size:12px;padding:11px 16px;opacity:1;white-space:nowrap}
 .appearance-fields .page-panel-message{margin:0}
 
 
@@ -569,11 +569,11 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     <summary><span>Paleta de cores do site <small>Altera linhas, botões e o efeito de cor nas fotos das notícias</small></span><span class="collapsible-chevron" aria-hidden="true"></span></summary>
     <div class="page-panel-fields appearance-fields">
       <div class="appearance-controls">
-        <div><label for="siteAccentPicker">Escolha uma cor</label><input type="color" id="siteAccentPicker" value="#89cff0" aria-label="Cor de destaque do site"></div>
-        <div><label for="siteAccentHex">Código hexadecimal</label><input type="text" id="siteAccentHex" value="#89CFF0" maxlength="7" spellcheck="false" placeholder="#89CFF0"></div>
+        <div><label for="siteAccentPicker">Escolha uma cor</label><input type="color" id="siteAccentPicker" value="#F8FF47" aria-label="Cor de destaque do site"></div>
+        <div><label for="siteAccentHex">Código hexadecimal</label><input type="text" id="siteAccentHex" value="#F8FF47" maxlength="7" spellcheck="false" placeholder="#F8FF47"></div>
       </div>
       <div class="appearance-example"><span id="accentLineExample"></span><button type="button" id="accentButtonExample" disabled>Exemplo de botão</button></div>
-      <div class="page-panel-actions"><button type="button" class="page-save" id="saveSiteAccent">Salvar cor</button><button type="button" id="resetSiteAccent">Redefinir padrão (#89CFF0)</button></div>
+      <div class="page-panel-actions"><button type="button" class="page-save" id="saveSiteAccent">Salvar cor</button><button type="button" id="resetSiteAccent">Redefinir padrão (#F8FF47)</button></div>
       <p id="appearanceStatus" class="page-panel-message" role="status" aria-live="polite"></p>
     </div>
   </details>
@@ -1595,7 +1595,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if(!image)return;
     await api('POST',{action:'uploadMenuImage',id,image});
   }
-  const DEFAULT_ACCENT='#89CFF0';
+  const DEFAULT_ACCENT='#F8FF47';
   const validHex=v=>/^#[0-9A-Fa-f]{6}$/.test(String(v||'').trim());
   const themeColor=()=>String($('siteAccentHex').value||'').trim().toUpperCase();
   function updateAppearancePreview(hex){
