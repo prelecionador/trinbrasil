@@ -23,7 +23,7 @@ export async function POST(request) {
     const url = new URL(mediaUrl);
     if (url.protocol !== 'https:' || !url.hostname.endsWith('.public.blob.vercel-storage.com') ||
         !/^\/trinpost\/[a-f0-9-]{36}(?:-[A-Za-z0-9]+)?\.(?:jpg|mp4)$/.test(url.pathname) || url.search || url.hash) {
-      throw new Error('A mídia precisa estar no armazenamento público autorizado do TRINPost.');
+      throw new Error('A mídia precisa estar no armazenamento público autorizado do TRID.');
     }
     const info = await head(mediaUrl); // Verifica que pertence ao store configurado.
     const mime = type === 'photo' ? 'image/jpeg' : 'video/mp4';
