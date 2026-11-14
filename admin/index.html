@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRIN Studio v5 — Editor de postagens</title>
+<style>
+:root{--ink:#172029;--muted:#6b7480;--line:#e9edf0;--surface:#fff;--page:#f7f9fa;--radius:18px}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:Arial,Helvetica,sans-serif;background:var(--page)}
+button,input,select,textarea{font:inherit}
+.topbar{background:#fff;border-bottom:1px solid var(--line);padding:17px max(24px,calc((100vw - 1270px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:14px}.brand-name{font-family:Georgia,serif;font-size:29px;font-weight:800;letter-spacing:-1.5px}.brand-name:after{content:'';display:block;width:100%;height:3px;background:linear-gradient(90deg,#05bd50 0 33.3%,#ffdb00 33.3% 66.6%,#0865e8 66.6%)}
+.brand-tag{font-size:10px;color:#68717b;letter-spacing:1.7px;line-height:1.5}.top-pill{border:1px solid var(--line);border-radius:99px;padding:8px 13px;color:#46515c;font-size:12px;background:white}
+.shell{max-width:1270px;margin:0 auto;padding:32px 25px 70px}.intro{margin-bottom:25px}.eyebrow{font-size:11px;letter-spacing:2.1px;color:#697683;font-weight:700;margin:0 0 10px}.intro h1{font-size:clamp(26px,3vw,37px);letter-spacing:-1.1px;line-height:1.15;margin:0 0 9px}.intro p{font-size:14px;line-height:1.6;color:var(--muted);margin:0}
+.workspace{display:grid;grid-template-columns:minmax(340px,535px) minmax(340px,1fr);gap:24px;align-items:start}.controls{display:flex;flex-direction:column;gap:17px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:21px;box-shadow:0 4px 25px rgba(16,28,38,.025)}
+.panel-heading{display:flex;gap:11px;align-items:flex-start;margin:0 0 18px}.step{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:#f0f3f5;color:#455260;font-size:12px;font-weight:700;flex-shrink:0}
+.panel-heading h2{font-size:16px;letter-spacing:-.2px;margin:2px 0 5px}.panel-heading p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}.fields{display:grid;gap:14px}.field label,.field-label{display:block;font-size:12px;font-weight:700;margin-bottom:7px;color:#3d4854}
+textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e9;border-radius:10px;padding:11px 12px;outline:0;transition:border-color .2s,box-shadow .2s}textarea:focus,select:focus{border-color:#869ba9;box-shadow:0 0 0 3px #e9f0f4}textarea{resize:vertical;line-height:1.5;font-size:13px;min-height:75px}#titleText{min-height:94px}#captionText{min-height:116px}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:12px;align-items:end}.color-field{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #e0e5e9;border-radius:10px;padding:7px;height:43px}.color-field input{width:30px;height:27px;cursor:pointer;border:0;padding:0;background:none}.color-field span{font-size:11px;color:#64707c;font-family:monospace}
+.dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:7px;padding:27px 15px;border:1.5px dashed #cdd7dc;border-radius:13px;background:#fbfcfd;cursor:pointer;transition:.2s}.dropzone:hover,.dropzone.dragover{background:#f0f7f4;border-color:#21ac70}.drop-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;background:#edf1f4;color:#273744;font-size:23px}.dropzone strong{font-size:13px}.dropzone small{font-size:11px;color:#7b8690}.dropzone input{display:none}.file-status{margin:12px 0 0;font-size:12px;color:#61717b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.divider{height:1px;background:var(--line);margin:17px 0}.range-row{display:grid;grid-template-columns:1fr auto;gap:10px;font-size:12px;font-weight:700}.range-row output{font-weight:400;color:#65717d}input[type=range]{width:100%;accent-color:#1c2932;cursor:pointer;margin:10px 0 0}
+.section-label{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}.section-label label{margin:0}.helper{color:#89929a;font-size:11px}.caption-panel{border-left:3px solid #e8edf0}.caption-note{font-size:11px;color:#71818c;margin:9px 0 0;line-height:1.5}
+.preview-panel{position:sticky;top:23px;padding:22px;background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 10px 40px rgba(20,30,40,.045)}.preview-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.preview-header h2{font-size:17px;margin:0}.preview-ratio{font-size:11px;color:#4d5b68;border:1px solid #d9e2e6;padding:8px 11px;border-radius:100px;background:#fff;cursor:pointer;font-weight:700;white-space:nowrap}.preview-ratio:hover{background:#eef4f6;border-color:#a6b8c2}.preview-ratio:focus-visible{outline:2px solid #44799b;outline-offset:2px}.preview-frame{width:min(100%,430px);margin:0 auto;padding:9px;background:#f2f4f6;border-radius:13px;border:1px solid #e6eaed}.preview-frame canvas{display:block;width:100%;aspect-ratio:1;border-radius:5px;box-shadow:0 6px 15px rgba(0,0,0,.12);touch-action:none;cursor:grab}.preview-frame canvas:active{cursor:grabbing}.preview-panel.is-portrait .preview-frame{width:min(100%,345px)}.video-preview-controls{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;margin:-6px 0 14px}.video-preview-controls[hidden],.original-video-choice[hidden]{display:none}.video-preview-controls button{border:1px solid #dce4e8;background:white;color:#2d4350;padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer}.video-preview-controls span{font-size:11px;color:#83919b}.preview-caption{font-size:11px;text-align:center;color:#8a939c;margin:12px 0 19px}.btn{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:11px;padding:14px 16px;font-size:13px;font-weight:700;cursor:pointer}.btn-primary{width:min(100%,430px);margin:auto;background:#17232d;color:white}.btn-primary:hover{background:#2e4554}.tip{font-size:11px;line-height:1.6;color:#86919b;text-align:center;margin:15px 0 0}
+@media(max-width:880px){.workspace{grid-template-columns:1fr}.preview-panel{position:static;order:-1}.controls{order:2}.preview-frame,.btn-primary{max-width:400px}.shell{padding:25px 16px 55px}}
+@media(max-width:450px){.topbar{padding:14px 16px}.brand-tag{font-size:8px}.top-pill{font-size:10px;padding:7px}.panel{padding:17px}.preview-panel{padding:16px}.two-col{grid-template-columns:minmax(0,1fr) 100px}}
+
+/* Seções principais com cabeçalhos clicáveis */
+.collapsible-panel{padding:0;overflow:hidden}
+.collapsible-panel > summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:15px;cursor:pointer;padding:20px 21px;user-select:none}
+.collapsible-panel > summary::-webkit-details-marker,.inline-advanced > summary::-webkit-details-marker{display:none}
+.collapsible-panel > summary .panel-heading{margin:0;display:flex;align-items:flex-start;gap:11px}
+.collapsible-panel .panel-heading > span:last-child{display:block;min-width:0}
+.section-title{display:block;font-size:16px;letter-spacing:-.2px;line-height:1.35;margin:1px 0 5px}
+.collapsible-panel .panel-heading small{display:block;color:var(--muted);font-size:12px;line-height:1.45;font-weight:400}
+.collapsible-chevron{width:11px;height:11px;flex-shrink:0;border-right:2px solid #697681;border-bottom:2px solid #697681;transform:rotate(45deg);transition:transform .18s;margin:-5px 6px 0 0}
+.collapsible-panel[open] > summary .collapsible-chevron,.inline-advanced[open] > summary .collapsible-chevron{transform:rotate(225deg);margin-top:5px}
+.collapsible-panel[open] > summary{border-bottom:1px solid var(--line)}
+.collapsible-panel > summary:focus-visible,.inline-advanced > summary:focus-visible{outline:3px solid #d3e5ef;outline-offset:-4px}
+.panel-body{padding:20px 21px 21px}
+.caption-panel{border-left:1px solid var(--line)}
+.caption-panel > summary .step{background:#f0f3f5}
+/* Subacordeão discreto, abaixo dos campos de fontes e cores */
+.inline-advanced{margin-top:17px;border:1px solid #e5eaee;border-radius:12px;background:#fbfcfd;overflow:hidden}
+.inline-advanced > summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;padding:13px 15px;user-select:none}
+.inline-advanced[open] > summary{border-bottom:1px solid #e5eaee;background:#f7f9fa}
+.inline-advanced-label strong{display:block;font-size:12px;color:#3d4854}
+.inline-advanced-label small{display:block;font-size:11px;color:#7a8791;margin-top:5px}
+.advanced-content{padding:17px 16px 18px;display:grid;gap:17px}
+.advanced-explain{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+.advanced-control label{font-size:12px;font-weight:700;color:#3d4854}
+.advanced-control input{display:block}
+.advanced-hint{font-size:11px;color:#85909a;margin:4px 0 0;line-height:1.5}
+.reset-positions{justify-self:start;border:1px solid #dfe5e9;background:#fff;border-radius:8px;color:#52606a;padding:9px 13px;font-size:12px;font-weight:600;cursor:pointer}
+.reset-positions:hover{background:#f2f5f7}
+@media(max-width:450px){.collapsible-panel > summary{padding:17px}.panel-body{padding:17px}.collapsible-panel .panel-heading small{font-size:11px}}
+
+
+/* Exportação com duas opções e animações compactas */
+.export-actions{width:min(100%,430px);margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.export-actions .btn{width:100%;min-width:0;margin:0;padding:13px 10px;white-space:normal;line-height:1.35}
+.btn-video{border:1px solid #cfd8de;background:white;color:#21313e}
+.btn-video:hover{background:#f5f8fa}
+.btn-video.recording{background:#fff4f3;border-color:#eecbc8;color:#a23b32}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.video-settings{width:min(100%,430px);margin:12px auto 0;padding:0 13px;border:1px solid #e6eaee;border-radius:11px;background:#fbfcfd}
+.video-settings summary{list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:10px;padding:12px 0;font-size:12px;font-weight:700;color:#485762}
+.video-settings summary::-webkit-details-marker{display:none}
+.video-settings summary:after{content:'⌄';font-size:18px;color:#667581;line-height:1}
+.video-settings[open] summary:after{content:'⌃'}
+.video-settings .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding-bottom:12px}
+.video-settings label{font-size:11px;color:#5b6771;display:block;margin-bottom:5px}
+.video-settings select{font-size:12px;padding:9px 7px}
+.video-fixed{grid-column:1/-1;color:#75828c;font-size:11px;line-height:1.5;margin:0}
+.video-progress{display:none;width:min(100%,430px);margin:11px auto 0}
+.video-progress[aria-hidden=false]{display:block}
+.video-progress-track{height:5px;background:#e8edf1;border-radius:20px;overflow:hidden}
+.video-progress-fill{width:0%;height:100%;background:linear-gradient(90deg,#00c84f 0 33%,#ffdf00 33% 66%,#0867ef 66%);transition:width .12s linear}
+.video-progress-text,.video-status{font-size:11px;line-height:1.5;color:#72808a;text-align:center}
+.video-progress-text{margin:7px 0 0}.video-status{width:min(100%,430px);margin:9px auto 0;min-height:17px}
+@media(max-width:460px){.export-actions{grid-template-columns:1fr}.video-settings .settings-grid{grid-template-columns:1fr}}
+
+/* Publicação oficial no Instagram via servidor protegido. */
+.publish-panel{width:min(100%,430px);margin:17px auto 0;border:1px solid #e1e6e9;border-radius:13px;background:#fff;padding:17px}
+.publish-panel h3{font-size:14px;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.publish-panel p{font-size:11px;line-height:1.55;color:#79848e;margin:0 0 14px}
+.publish-choice{display:flex;gap:9px;margin:10px 0 14px}
+.publish-choice label{flex:1;display:flex;align-items:center;gap:7px;border:1px solid #e1e7eb;border-radius:9px;padding:11px;font-size:12px;cursor:pointer}
+.publish-choice input{accent-color:#17232d}.original-video-choice{display:flex;align-items:flex-start;gap:8px;font-size:11px;line-height:1.5;color:#4e6170;background:#f5f8f9;border-radius:9px;padding:11px 12px;margin:-1px 0 14px;cursor:pointer}.original-video-choice input{accent-color:#17232d;margin-top:2px;flex-shrink:0}
+.publish-secret{display:grid;gap:6px;margin-bottom:12px}
+.publish-secret label{font-size:11px;font-weight:700;color:#4d5a65}
+.publish-secret input{width:100%;border:1px solid #e0e5e9;border-radius:9px;font:inherit;font-size:13px;padding:10px 12px;outline:0;background:#fff}
+.publish-actions{display:grid;grid-template-columns:1fr auto;gap:8px}
+.publish-main{width:100%;background:#17232d;color:white}
+.publish-main:hover{background:#2e4554}
+.publish-verify{border:1px solid #dfe5e9;background:#fff;color:#3a4a55}
+.publish-status{font-size:12px;line-height:1.6;margin:12px 0 0;white-space:pre-wrap;color:#667780;min-height:24px;overflow-wrap:anywhere}
+.publish-status.success{color:#117145}.publish-status.error{color:#aa3434}
+.publish-status a{color:inherit;text-decoration:underline;font-weight:700}
+@media(max-width:460px){.publish-choice{flex-direction:column}.publish-actions{grid-template-columns:1fr}}
+
+/* Seção 04: metadados para uma futura publicação no site */
+.site-fields{display:grid;gap:14px}
+.site-input{width:100%;border:1px solid #e0e5e9;border-radius:10px;padding:11px 12px;background:#fff;color:#27313b;font:inherit;font-size:13px;outline:0}
+.site-input:focus{border-color:#869ba9;box-shadow:0 0 0 3px #e9f0f4}
+.site-checkbox{display:flex;align-items:center;gap:9px;font-size:12px;color:#3d4854;cursor:pointer}
+.site-checkbox input{accent-color:#17232d}
+.site-soon{width:100%;background:#edf1f4;color:#63717b;border:1px solid #dfe5ea;cursor:not-allowed;margin-top:2px}
+.site-soon-note{font-size:11px;color:#84919b;line-height:1.5;margin:0}
+/* Downloads e transições juntos, dentro de um único menu recolhido */
+.export-tools{width:min(100%,430px);margin:0 auto 12px;border:1px solid #e6eaee;background:#fbfcfd;border-radius:11px;overflow:hidden}
+.export-tools > summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;font-weight:700;font-size:12px;color:#485762;cursor:pointer}
+.export-tools > summary::-webkit-details-marker{display:none}
+.export-tools > summary:after{content:'⌄';font-size:19px;line-height:1;color:#667581}
+.export-tools[open] > summary:after{content:'⌃'}
+.export-tools[open] > summary{border-bottom:1px solid #e6eaee}
+.export-tools-body{padding:13px}
+.export-tools .export-actions{width:100%}
+.export-tools .video-settings{width:100%;margin:12px auto 0}
+
+/* Segunda tela — gestão visual de postagens (demonstração local) */
+[hidden]{display:none!important}
+.top-pill-link{cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .2s,border-color .2s}
+.top-pill-link:hover,.top-pill-link:focus-visible{background:#f0f5f6;border-color:#cbd6dc}
+.posts-view{max-width:1270px}
+.posts-navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:21px;flex-wrap:wrap}
+.posts-back{background:#fff;border:1px solid #dfe6e9;border-radius:9px;color:#344451;padding:11px 14px;font-size:12px;font-weight:700;cursor:pointer}
+.posts-back:hover{background:#f0f3f5}
+.posts-count{color:#70808b;font-size:12px}
+.posts-intro{margin:0 0 24px}
+.posts-intro h1{font-size:clamp(28px,3.2vw,39px);letter-spacing:-1.2px;margin:0 0 8px}
+.posts-intro p{font-size:13px;color:#6d7984;line-height:1.6;margin:0}
+.posts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
+.post-card{height:415px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 25px rgba(16,28,38,.025)}
+.post-cover{height:145px;flex-shrink:0;background:linear-gradient(140deg,#173341 0%,#29495a 52%,#0b1821 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.post-cover:before{content:'';position:absolute;width:190px;height:190px;border:1px solid #ffffff27;transform:rotate(32deg);left:-70px;top:-110px;border-radius:22px}
+.post-cover:after{content:'';position:absolute;bottom:0;left:0;right:0;height:5px;background:linear-gradient(to right,#00c84f 0 33.33%,#ffdf00 33.33% 66.66%,#0867ef 66.66% 100%)}
+.post-cover-top{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:1}
+.post-featured-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#ffffff14;border:1px solid #ffffff20;color:#f7fbfd;font-size:10px;font-weight:700;letter-spacing:.2px;backdrop-filter:blur(6px)}
+.post-featured-toggle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;border:1px solid #ffffff2b;background:#0e1c2599;color:#ffffff;cursor:pointer;font-size:16px;line-height:1;backdrop-filter:blur(6px);transition:transform .15s ease,background .15s ease,border-color .15s ease,color .15s ease}
+.post-featured-toggle:hover{transform:translateY(-1px);background:#142834cc}
+.post-featured-toggle.is-active{background:#fff1b8;color:#8a6200;border-color:#ffe07a}
+.post-cover-label{color:#fff;font:700 38px Georgia,serif;letter-spacing:-1.5px;opacity:.9}
+.post-card-body{padding:19px;display:flex;flex-direction:column;gap:11px;flex:1;min-width:0}
+.post-meta{color:#7f8b94;font-size:11px;letter-spacing:.2px}
+.post-meta strong{color:#3b6d6a}
+.post-card h2{font-size:19px;letter-spacing:-.4px;line-height:1.3;margin:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;height:2.6em;flex-shrink:0}
+.post-text{font-size:13px;color:#61707b;line-height:1.7;margin:0;white-space:normal;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;max-height:5.1em;flex:0 0 auto}
+.post-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:auto}
+.post-actions button{border:1px solid #dce4e8;border-radius:9px;padding:10px 12px;font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:#273743}
+.post-actions button:hover{background:#f1f5f7}
+.post-actions .post-delete{color:#aa4040;border-color:#eedcdb}
+.post-actions .post-delete:hover{background:#fdf2f2}
+.posts-empty{background:white;border:1px solid var(--line);border-radius:14px;padding:35px;color:#6d7984;text-align:center}
+.posts-note{margin:20px 0 0;font-size:11px;line-height:1.5;color:#88959e}
+.post-editor-dialog{border:none;border-radius:18px;padding:0;width:min(520px,calc(100vw - 28px));box-shadow:0 22px 90px #0004;color:var(--ink)}
+.post-editor-dialog::backdrop{background:#0b17248c}
+.post-dialog-form{padding:24px;display:grid;gap:14px}
+.post-dialog-form h2{margin:0;font-size:20px}
+.post-dialog-form p{margin:-5px 0 3px;font-size:12px;color:#74818c}
+.post-dialog-field label{font-size:12px;font-weight:700;color:#44525c;display:block;margin-bottom:7px}
+.post-dialog-field input,.post-dialog-field textarea{display:block;width:100%;border-radius:10px;border:1px solid #dce3e8;padding:11px 12px;font-size:13px;line-height:1.6;background:white;color:#27313b}
+.post-dialog-field textarea{min-height:165px}
+.post-dialog-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:4px}
+.post-dialog-actions button{padding:11px 17px;border-radius:9px;border:1px solid #dce4e8;cursor:pointer;font-size:12px;font-weight:700;background:white;color:#31404a}
+.post-dialog-actions .post-save{background:#17232d;color:white;border-color:#17232d}
+@media(max-width:920px){.posts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.posts-grid{grid-template-columns:1fr}.post-cover{height:125px}}
+
+/* Tipografia da seção 02: seletores compactos e N / I / S independentes. */
+#artSection .two-col select{font-size:12px;padding:9px 10px}
+#artSection .two-col .field>label{font-size:11px}
+.art-type-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-top:10px;padding:9px 10px;background:#fbfcfd;border:1px solid #e5eaee;border-radius:10px}
+.art-type-group{display:flex;align-items:center;gap:5px;min-width:0}
+.art-type-caption{font-size:10px;color:#6c7983;margin-right:3px;font-weight:700}
+.art-type-button{border:1px solid #dce3e8;background:#fff;color:#24333f;border-radius:7px;width:31px;height:31px;display:inline-flex;align-items:center;justify-content:center;font:700 13px Arial,sans-serif;cursor:pointer;padding:0;transition:background .15s,color .15s}
+.art-type-button:hover:not(:disabled){background:#edf2f5}
+.art-type-button[aria-pressed="true"]{background:#17232d;color:#fff;border-color:#17232d}
+.art-type-button[aria-pressed="true"]:hover:not(:disabled){background:#344857}
+.art-type-button:focus-visible{outline:2px solid #779cb3;outline-offset:2px}
+.art-type-button:disabled{opacity:.45;cursor:not-allowed}
+.art-type-value{font-size:12px;font-weight:700;color:#263541;min-width:45px;text-align:center;font-variant-numeric:tabular-nums}
+.art-type-italic{font-style:italic}
+.art-type-underline{text-decoration:underline;text-underline-offset:2px}
+@media(max-width:440px){.art-type-toolbar{padding:8px}.art-type-button{width:29px;height:30px}.art-type-caption{font-size:10px}}
+/* Navegação: dois acessos no topo, seguindo o estilo existente. */
+.top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:600px){.topbar{flex-wrap:wrap}.top-actions{width:100%;justify-content:flex-start}.top-actions .top-pill{flex:1;justify-content:center}}
+/* Tela provisória do Painel da página. */
+.page-panel-view{max-width:1270px}
+.page-panel-placeholder{min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;border:1px solid var(--line);background:white;border-radius:var(--radius);padding:45px 22px;box-shadow:0 4px 25px rgba(16,28,38,.025)}
+.page-panel-placeholder-icon{display:grid;place-items:center;width:60px;height:60px;border-radius:19px;background:#f0f3f5;color:#354650;font-size:27px}
+.page-panel-placeholder h2{font-family:Georgia,serif;font-size:clamp(27px,3vw,36px);letter-spacing:-.7px;margin:0}
+.page-panel-placeholder p{font-size:13px;color:var(--muted);line-height:1.6;margin:0;max-width:430px}
+
+/* Gestão de postagens e navegação. Estilos isolados da exportação de imagem. */
+.site-publish{background:#17232d;color:white;cursor:pointer;border:1px solid #17232d}
+.site-publish:hover{background:#2e4554}
+.site-publish:disabled{opacity:.55;cursor:wait}
+.site-publish-status{font-size:11px;color:#61707b;line-height:1.5;min-height:16px;overflow-wrap:anywhere}
+.site-publish-status.is-error,.site-panel-error{color:#ad3940}
+.site-publish-status.is-success,.site-panel-success{color:#117145}
+.site-publish-status a{color:inherit;text-decoration:underline;font-weight:700}
+.page-panel-view{max-width:1270px}
+.page-panel-help{font-size:12px;color:#788692;line-height:1.6;margin:0 0 20px}
+.page-panel-menulist{display:grid;gap:12px}
+.page-panel-menu{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden}
+.page-panel-menu>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 20px;font-weight:800;font-size:15px;cursor:pointer}
+.page-panel-menu>summary::-webkit-details-marker{display:none}
+.page-panel-menu>summary:after{content:none}
+.page-panel-menu[open]>summary{border-bottom:1px solid var(--line)}
+.page-panel-menu[open]>summary .collapsible-chevron{transform:rotate(225deg);margin-top:5px}
+.page-panel-fields{padding:19px;display:grid;gap:13px}
+.page-panel-fields label{display:block;font-size:12px;font-weight:700;color:#42505d;margin-bottom:6px}
+.page-panel-fields input,.page-panel-fields textarea{width:100%;border:1px solid #dbe3e8;border-radius:9px;padding:11px;font-size:13px;background:#fff;color:#21313e;outline:none}
+.page-panel-fields textarea{min-height:140px;resize:vertical;line-height:1.55}
+.page-panel-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+.page-panel-actions button,.page-add-button{padding:10px 17px;font-size:12px;font-weight:700;border-radius:9px;cursor:pointer;border:1px solid #dbe3e8;background:#fff;color:#21313e}
+.page-panel-actions .page-save,.page-add-button{background:#17232d;color:#fff;border-color:#17232d}
+.page-panel-actions .page-delete{color:#a33c3c;border-color:#efd9d9}
+.page-add-menu{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;margin-top:24px;max-width:760px}
+.page-add-menu h2{font-size:17px;margin:0 0 14px}
+.page-panel-message{font-size:12px;line-height:1.6;min-height:19px;color:#64727c;margin-top:12px}
+@media(max-width:600px){.page-panel-menu>summary{padding:15px}.page-panel-fields{padding:14px}}
+
+/* Ajustes do portal, sem interferir na exportação/publicação do Instagram. */
+#siteSection .site-article-input{min-height:175px;resize:vertical;line-height:1.55}
+.subpage-credentials{border:1px solid #dce5e9;background:#fff;border-radius:12px;padding:15px 18px;margin:0 0 10px;max-width:760px}
+.subpage-credentials label{display:block;font-size:12px;font-weight:700;color:#45545e;margin-bottom:8px}
+.subpage-credentials input{width:100%;max-width:500px;border:1px solid #dce5e9;border-radius:9px;padding:12px;background:#fff;color:#253540;font:inherit;font-size:13px}
+.subpage-status{font-size:12px;line-height:1.6;min-height:20px;margin:8px 0 20px;color:#60717e;white-space:pre-line;overflow-wrap:anywhere}
+.subpage-status.is-error,.page-panel-message.site-panel-error{color:#ad3940}
+.subpage-status.is-success,.page-panel-message.site-panel-success{color:#117145}
+#postDialogStatus{margin:0;min-height:0}
+.appearance-menu{max-width:760px;margin-bottom:17px}
+.appearance-menu>summary>span:first-child{display:flex;flex-direction:column;gap:5px}
+.appearance-menu>summary small{font-weight:400;color:#697681;font-size:11px}
+.appearance-menu>summary:after{content:none!important}
+.appearance-menu[open]>summary .collapsible-chevron{transform:rotate(225deg);margin-top:5px}
+.appearance-menu .appearance-controls{display:flex;gap:15px;align-items:end;flex-wrap:wrap}
+.appearance-menu .appearance-controls>div:first-child{flex:0 0 110px}
+.appearance-menu .appearance-controls>div:nth-child(2){flex:1;min-width:150px}
+.appearance-menu input[type=color]{height:42px;padding:3px;cursor:pointer}
+.appearance-example{display:flex;align-items:center;gap:20px;background:#fafafa;border-radius:10px;border:1px solid #e6ebee;padding:14px}
+.appearance-example span{height:5px;border-radius:3px;background:#89cff0;flex:1;min-width:45px}
+.appearance-example button{border:0;border-radius:8px;background:#89cff0;color:#192d37;font-size:12px;padding:11px 16px;opacity:1;white-space:nowrap}
+.appearance-fields .page-panel-message{margin:0}
+
+
+/* Novo gerenciamento de carrossel: utiliza a aba Menu existente, sem novas colunas. */
+.page-management-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;margin-top:24px}
+.page-management-grid .page-add-menu{margin:0;max-width:none;min-width:0}
+.carousel-manager h2{font-size:17px;margin:0 0 8px}
+.carousel-manager>p{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 16px}
+.carousel-manager .page-panel-fields{padding:0}
+.carousel-current{display:grid;gap:9px;margin-bottom:18px}
+.carousel-current details{background:#fbfcfd;border:1px solid #dfe6eb;border-radius:11px;overflow:hidden}
+.carousel-current details>summary{display:flex;gap:10px;justify-content:space-between;align-items:center;cursor:pointer;padding:12px 14px;font-size:12px;font-weight:700}
+.carousel-current details[open]>summary{border-bottom:1px solid #e3e9ed}
+.carousel-current .carousel-edit{padding:14px;display:grid;gap:12px}
+.carousel-current .carousel-edit>div label{display:block;font-size:12px;font-weight:700;color:#42505d;margin-bottom:6px}
+.carousel-current .carousel-edit input,.carousel-current .carousel-edit select{width:100%;height:40px;border:1px solid #dbe3e8;border-radius:9px;padding:8px;background:#fff;color:#21313e}
+.carousel-current .carousel-edit input[type=file]{height:auto}
+.carousel-current .carousel-edit img{width:100%;max-height:150px;object-fit:contain;border:1px solid #e5e9ec;background:#eee;margin-top:9px}
+.carousel-fields{display:grid;gap:12px}
+.carousel-fields>div label{display:block;font-size:12px;font-weight:700;color:#42505d;margin-bottom:6px}
+.carousel-fields input,.carousel-fields select{width:100%;height:42px;border:1px solid #dbe3e8;border-radius:9px;padding:10px;background:#fff;color:#21313e}
+.carousel-fields input[type=file]{height:auto;padding:10px}
+.carousel-fields input[type=color],.carousel-current input[type=color]{padding:3px;width:65px;height:40px;cursor:pointer}
+.carousel-time-control{display:flex;align-items:center;gap:9px}
+.carousel-time-control button{border:1px solid #dbe3e8;border-radius:8px;background:#fff;padding:8px 13px;font-size:16px;cursor:pointer}
+.carousel-time-control output{font-size:12px;min-width:45px;text-align:center;font-weight:700}
+.carousel-current .carousel-time-control input{display:none}
+.carousel-preview-note{font-size:11px;color:#73818b;line-height:1.6}
+.carousel-timeline{font-size:12px;color:#62717b;padding:8px 0}
+@media(max-width:900px){.page-management-grid{grid-template-columns:1fr}}
+
+/* Editorial integrado: segue a tipografia, painéis e paleta TRIN existentes. */
+.top-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.editorial-view{max-width:1270px}
+.editorial-workspace{display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.14fr);gap:20px;align-items:start}
+.editorial-editor,.editorial-results{min-width:0}
+.editorial-editor .panel-heading{margin-bottom:22px}
+.editorial-editor label{font-weight:700;font-size:12px;color:#3d4854;display:block;margin-bottom:9px}
+.editorial-editor textarea{min-height:245px;line-height:1.65;font-size:14px}
+.editorial-editor input[type=password]{display:block;width:100%;padding:12px 14px;font:inherit;font-size:13px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;outline:none}
+.editorial-main-action,.editorial-send-all{border:0;border-radius:11px;padding:14px 18px;background:#17232d;color:white;font-size:13px;font-weight:700;cursor:pointer}
+.editorial-main-action{width:100%;margin-top:14px}
+.editorial-main-action:disabled{opacity:.55;cursor:wait}
+.editorial-main-action:hover:not(:disabled),.editorial-send-all:hover{background:#2e4554}
+.editorial-send-all{width:100%;margin:10px 0 0}
+.editorial-results h2{font-size:17px;letter-spacing:-.2px;margin:0 0 6px}
+.editorial-results h3{font-size:13px;margin:0 0 9px}
+.editorial-help{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 15px}
+.editorial-group{margin:0 0 24px}
+.editorial-group + .editorial-group{padding-top:18px;border-top:1px solid var(--line)}
+.editorial-options{display:grid;gap:10px}
+.editorial-option{border:1px solid #e2e8eb;background:#fff;border-radius:12px;padding:15px;transition:border-color .15s,background .15s}
+.editorial-option.selected{border-color:#99b3bd;background:#f5f9fa}
+.editorial-option-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.editorial-option-label{display:inline-flex;gap:9px;align-items:center;color:#586874;font-size:12px;font-weight:700;cursor:pointer}
+.editorial-option-label input{accent-color:#17232d;width:17px;height:17px;margin:0}
+.editorial-option-text{font-size:13px;line-height:1.65;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.editorial-titulos .editorial-option-text{font-size:17px;line-height:1.4;font-weight:700}
+.editorial-subtitulos .editorial-option-text{color:#42525f}
+.editorial-send-option,.editorial-send-article{padding:9px 13px;font-size:12px;font-weight:700;color:#263e4d;background:#fff;border:1px solid #d7e2e7;border-radius:9px;cursor:pointer}
+.editorial-send-option:hover,.editorial-send-article:hover{background:#eef4f6}
+.editorial-article{border-top:1px solid var(--line);padding-top:22px;margin-top:26px}
+.editorial-article-text{border:1px solid #e5ecef;background:#fbfcfd;padding:17px;border-radius:12px;white-space:pre-wrap;line-height:1.8;overflow-wrap:anywhere;font-size:13px;margin:12px 0}
+.editorial-article-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.editorial-sources{border-top:1px solid var(--line);margin-top:18px;padding-top:17px}
+.editorial-sources ul{margin:0;padding-left:19px;font-size:12px;line-height:1.7}
+.editorial-sources li{margin:0 0 7px;overflow-wrap:anywhere}
+.editorial-sources a{color:#32556b}
+.editorial-error{font-size:12px;color:#ad3940;margin-top:12px;line-height:1.65}
+.editorial-status{font-size:12px;line-height:1.6;color:#6b7480}
+.editorial-empty{display:flex;min-height:230px;align-items:center;justify-content:center;text-align:center;padding:20px;color:#71808c;line-height:1.6;font-size:13px}
+@media(max-width:850px){.editorial-workspace{grid-template-columns:minmax(0,1fr)}.editorial-editor textarea{min-height:160px}}
+@media(max-width:650px){.topbar{flex-wrap:wrap}.top-actions{width:100%}.top-pill-link{font-size:11px}.editorial-option-top{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="brand"><div class="brand-name">TRID</div><div class="brand-tag">TARGETED INDIVIDUALS<br>BRASIL</div></div><nav class="top-actions" aria-label="Navegação principal"><button class="top-pill top-pill-link" type="button" id="openPostsBtn" aria-controls="postsView" aria-expanded="false">Estúdio de postagens <span aria-hidden="true">↗</span></button><button class="top-pill top-pill-link" type="button" id="openPagePanelBtn" aria-controls="pagePanelView" aria-expanded="false">Painel da página <span aria-hidden="true">↗</span></button><button class="top-pill top-pill-link" type="button" id="openEditorialBtn" aria-controls="editorialView" aria-expanded="false">Editorial <span aria-hidden="true">↗</span></button></nav></header>
+<div class="shell" id="editorView">
+  <div class="intro"><p class="eyebrow">TRID / EDITORIAL STUDIO</p><h1>Crie sua próxima publicação.</h1><p>Foto, vídeo, manchete e identidade visual em um só lugar.</p></div>
+  <main class="workspace">
+    <div class="controls">
+      <!-- Cada seção principal pode ser aberta ou fechada pela seta -->
+      <details class="panel collapsible-panel" id="photoSection" open>
+        <summary aria-label="Abrir ou fechar Foto ou vídeo">
+          <span class="panel-heading"><span class="step">01</span><span><strong id="photoHeading" class="section-title">Foto ou vídeo</strong><small>Envie uma imagem ou vídeo para usar como fundo da publicação.</small></span></span>
+          <span class="collapsible-chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="panel-body">
+          <label class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Escolher ou arrastar uma foto ou vídeo"><span class="drop-icon">＋</span><strong>Arraste uma foto ou vídeo, ou clique para enviar</strong><small>JPG, PNG, WEBP, GIF, MP4 ou WebM</small><input id="photoInput" type="file" accept="image/*,video/mp4,video/webm"></label>
+          <div class="file-status" id="fileStatus">Nenhuma mídia selecionada</div>
+          <div class="divider"></div>
+          <div class="fields">
+            <div><div class="range-row"><label for="darkness">Escurecimento inferior</label><output id="darkValue">88%</output></div><input type="range" min="0" max="100" value="88" id="darkness"></div>
+            <div><div class="range-row"><label for="zoom">Zoom da mídia</label><output id="zoomValue">100%</output></div><input type="range" min="100" max="200" value="100" id="zoom"></div>
+            <div><div class="range-row"><label for="vertical">Posição vertical da mídia</label><output id="verticalValue">0</output></div><input type="range" min="-250" max="250" value="0" id="vertical"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel collapsible-panel" id="artSection" open>
+        <summary aria-label="Abrir ou fechar Texto da arte">
+          <span class="panel-heading"><span class="step">02</span><span><strong id="artHeading" class="section-title">Texto da arte</strong><small>Título e subtítulo aparecem na imagem exportada.</small></span></span>
+          <span class="collapsible-chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="panel-body">
+          <div class="fields">
+            <div class="field"><div class="section-label"><label for="titleText">Título</label><span class="helper">Manchete principal</span></div><textarea id="titleText">Título, do post da imagem</textarea></div>
+            <div class="two-col"><div class="field"><label for="titleFont">Fonte do título</label><select id="titleFont"><option value="Georgia">Georgia · Clássica</option><option value="Times New Roman">Times New Roman · Editorial</option><option value="Palatino Linotype">Palatino · Elegante</option><option value="Arial">Arial · Moderna</option><option value="Trebuchet MS">Trebuchet · Humanista</option><option value="Impact">Impact · Forte</option></select></div><div class="field"><label for="titleColor">Cor do título</label><div class="color-field"><input id="titleColor" type="color" value="#ffffff"><span id="titleHex">#FFFFFF</span></div></div></div>
+            <div class="art-type-toolbar" aria-label="Formatação de título">
+              <div class="art-type-group" aria-label="Tamanho da fonte de título">
+                <span class="art-type-caption">Tamanho</span>
+                <button type="button" class="art-type-button" id="titleSizeDown" aria-label="Diminuir tamanho de título" title="Diminuir tamanho">−</button>
+                <output class="art-type-value" id="titleSizeValue" aria-live="polite">80 px</output>
+                <button type="button" class="art-type-button" id="titleSizeUp" aria-label="Aumentar tamanho de título" title="Aumentar tamanho">+</button>
+              </div>
+              <div class="art-type-group" aria-label="Estilo de título">
+                <span class="art-type-caption">Estilo</span>
+                <button type="button" class="art-type-button" id="titleBold" aria-pressed="true" aria-label="Negrito no título" title="Negrito">N</button>
+                <button type="button" class="art-type-button art-type-italic" id="titleItalic" aria-pressed="false" aria-label="Itálico no título" title="Itálico">I</button>
+                <button type="button" class="art-type-button art-type-underline" id="titleUnderline" aria-pressed="false" aria-label="Sublinhado no título" title="Sublinhado">S</button>
+              </div>
+            </div>
+            <div class="divider" style="margin:2px 0"></div>
+            <div class="field"><div class="section-label"><label for="subtitleText">Subtítulo</label><span class="helper">Texto de apoio</span></div><textarea id="subtitleText">Como os dados do dia a dia alimentam sistemas de rastreamento e manipulação de comportamento.</textarea></div>
+            <div class="two-col"><div class="field"><label for="subtitleFont">Fonte do subtítulo</label><select id="subtitleFont"><option value="Arial">Arial · Minimalista</option><option value="Trebuchet MS">Trebuchet · Suave</option><option value="Georgia">Georgia · Clássica</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana · Legível</option><option value="Courier New">Courier · Monoespaçada</option></select></div><div class="field"><label for="subtitleColor">Cor do subtítulo</label><div class="color-field"><input id="subtitleColor" type="color" value="#ffffff"><span id="subtitleHex">#FFFFFF</span></div></div></div>
+            <div class="art-type-toolbar" aria-label="Formatação de subtítulo">
+              <div class="art-type-group" aria-label="Tamanho da fonte de subtítulo">
+                <span class="art-type-caption">Tamanho</span>
+                <button type="button" class="art-type-button" id="subtitleSizeDown" aria-label="Diminuir tamanho de subtítulo" title="Diminuir tamanho">−</button>
+                <output class="art-type-value" id="subtitleSizeValue" aria-live="polite">35 px</output>
+                <button type="button" class="art-type-button" id="subtitleSizeUp" aria-label="Aumentar tamanho de subtítulo" title="Aumentar tamanho">+</button>
+              </div>
+              <div class="art-type-group" aria-label="Estilo de subtítulo">
+                <span class="art-type-caption">Estilo</span>
+                <button type="button" class="art-type-button" id="subtitleBold" aria-pressed="false" aria-label="Negrito no subtítulo" title="Negrito">N</button>
+                <button type="button" class="art-type-button art-type-italic" id="subtitleItalic" aria-pressed="false" aria-label="Itálico no subtítulo" title="Itálico">I</button>
+                <button type="button" class="art-type-button art-type-underline" id="subtitleUnderline" aria-pressed="false" aria-label="Sublinhado no subtítulo" title="Sublinhado">S</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agora as opções avançadas vivem DENTRO de Texto da arte -->
+          <details class="inline-advanced" id="advancedOptions">
+            <summary aria-label="Abrir ou fechar opções avançadas do texto">
+              <span class="inline-advanced-label"><strong>Opções avançadas</strong><small>Ajustar posições e cor da linha</small></span>
+              <span class="collapsible-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="advanced-content">
+              <p class="advanced-explain">Ajuste individualmente o título e o subtítulo, mova os dois juntos e altere a cor da linha lateral. As alterações aparecem na prévia e no PNG.</p>
+              <div class="advanced-control">
+                <div class="range-row"><label for="titleVertical">Posição vertical do título</label><output id="titleVerticalValue" for="titleVertical">0 px</output></div>
+                <input type="range" id="titleVertical" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Negativo sobe · Positivo desce</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="subtitleVertical">Posição vertical do subtítulo</label><output id="subtitleVerticalValue" for="subtitleVertical">0 px</output></div>
+                <input type="range" id="subtitleVertical" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Move somente o subtítulo e a linha lateral</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="bothVertical">Posição vertical de ambos</label><output id="bothVerticalValue" for="bothVertical">0 px</output></div>
+                <input type="range" id="bothVertical" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Move os dois textos ao mesmo tempo</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="titleHorizontal">Posição horizontal do título</label><output id="titleHorizontalValue" for="titleHorizontal">0 px</output></div>
+                <input type="range" id="titleHorizontal" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Negativo vai para a esquerda · Positivo vai para a direita</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="subtitleHorizontal">Posição horizontal do subtítulo</label><output id="subtitleHorizontalValue" for="subtitleHorizontal">0 px</output></div>
+                <input type="range" id="subtitleHorizontal" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Move somente o subtítulo e a linha lateral</p>
+              </div>
+              <div class="advanced-control">
+                <div class="range-row"><label for="bothHorizontal">Posição horizontal de ambos</label><output id="bothHorizontalValue" for="bothHorizontal">0 px</output></div>
+                <input type="range" id="bothHorizontal" min="-220" max="220" step="1" value="0">
+                <p class="advanced-hint">Move os dois textos ao mesmo tempo</p>
+              </div>
+              <div class="advanced-control">
+                <div class="field-label">Cor da linha lateral</div>
+                <label class="color-field" for="lineColor"><input id="lineColor" type="color" value="#FFFFFF"><span id="lineHex">#FFFFFF</span></label>
+                <p class="advanced-hint">Essa cor altera a linha vertical ao lado do subtítulo.</p>
+              </div>
+              <button class="reset-positions" id="resetPositions" type="button">↺ Restaurar posições</button>
+            </div>
+          </details>
+        </div>
+      </details>
+
+      <details class="panel collapsible-panel caption-panel" id="captionSection">
+        <summary aria-label="Abrir ou fechar Legenda da postagem">
+          <span class="panel-heading"><span class="step">03</span><span><strong id="captionHeading" class="section-title">Legenda da postagem</strong><small>Legenda enviada junto com a publicação.</small></span></span>
+          <span class="collapsible-chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="panel-body">
+          <div class="field"><div class="section-label"><label for="captionText">Escreva sua legenda</label><span id="captionCount" class="helper">0 caracteres</span></div><textarea id="captionText" placeholder="Escreva aqui a legenda que acompanhará a publicação..."></textarea></div>
+          <p class="caption-note">Essa legenda é enviada à API do Instagram com a foto ou o vídeo. Ela não aparece dentro da arte.</p>
+        </div>
+      </details>
+
+      <!-- 04: metadados destinados ao futuro site; ainda não envia nada. -->
+      <details class="panel collapsible-panel" id="siteSection" open>
+        <summary aria-label="Abrir ou fechar configurações de site">
+          <span class="panel-heading"><span class="step">04</span><span><strong class="section-title">Site</strong><small>Informações complementares da publicação.</small></span></span>
+          <span class="collapsible-chevron" aria-hidden="true"></span>
+        </summary>
+        <div class="panel-body">
+          <div class="site-fields">
+            <div class="field">
+              <label for="siteCategory">Categoria</label>
+              <select id="siteCategory" name="siteCategory">
+                <option value="noticias">Notícias</option>
+                <option value="tecnologia">Tecnologia</option>
+                <option value="ciencia">Ciência</option>
+                <option value="sociedade">Sociedade</option>
+                <option value="cultura">Cultura</option>
+                <option value="opiniao">Opinião</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="siteTags">Tags</label>
+              <input class="site-input" id="siteTags" name="siteTags" type="text" maxlength="200" placeholder="Ex.: tecnologia, internet, dados">
+            </div>
+            <div class="field">
+              <label for="siteAuthor">Membro Equipe</label>
+              <input class="site-input" id="siteAuthor" name="siteAuthor" type="text" maxlength="90" placeholder="Ex.: Nome" autocomplete="name">
+            </div>
+            <div class="field">
+              <div class="section-label"><label for="siteArticle">Matéria (texto completo)</label><span class="helper">Conteúdo da notícia na aba ADMIN</span></div>
+              <textarea class="site-input site-article-input" id="siteArticle" name="siteArticle" maxlength="15000" placeholder="Escreva aqui a matéria completa que será publicada no site..."></textarea>
+            </div>
+            <label class="site-checkbox" for="siteFeatured"><input id="siteFeatured" name="siteFeatured" type="checkbox" checked> Destacar na página inicial</label>
+            <button class="btn site-publish" id="publishSiteBtn" type="button">Postar no site</button>
+            <p class="site-soon-note">O site utiliza a fotografia original enviada (sem textos, filtros ou recortes da prévia). A imagem editada continua disponível para o Instagram.</p>
+            <div id="publishSiteStatus" class="site-publish-status" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </details>
+    </div>
+    <aside class="preview-panel" aria-labelledby="previewHeading">
+      <div class="preview-header"><h2 id="previewHeading">Pré-visualização</h2><button id="ratioToggle" class="preview-ratio" type="button" aria-label="Formato Instagram 1:1. Clique para alternar para 9:16" title="Clique para alternar o formato">Instagram · 1:1 ↔</button></div>
+      <div class="preview-frame"><canvas id="postCanvas" width="1080" height="1080" aria-label="Prévia da postagem TRID"></canvas></div>
+      <p class="preview-caption" id="previewCaption">1080 × 1080 px · Arraste para reposicionar</p>
+      <div class="video-preview-controls" id="videoPreviewControls" hidden><button id="toggleVideoPlayback" type="button">❚❚ Pausar vídeo</button><span>Prévia de vídeo sem áudio</span></div>
+      <details class="export-tools" id="exportTools">
+        <summary>Baixar PNG, vídeo e personalizar transições</summary>
+        <div class="export-tools-body">
+          <div class="export-actions">
+            <button class="btn btn-primary" id="downloadBtn" type="button">↓ &nbsp; Baixar PNG</button>
+            <button class="btn btn-video" id="downloadVideoBtn" type="button">▶ &nbsp; Baixar vídeo · 9 s</button>
+          </div>
+          <details class="video-settings" id="videoSettings">
+            <summary>Personalizar transições do vídeo</summary>
+            <div class="settings-grid">
+              <div><label for="titleEntrance">Entrada do título</label>
+                <select id="titleEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="zoom">Aproximar (zoom)</option></select></div>
+              <div><label for="footerEntrance">Entrada do rodapé</label>
+                <select id="footerEntrance"><option value="up">Subir suavemente</option><option value="fade">Aparecer (fade)</option><option value="right">Da direita para a esquerda</option></select></div>
+              <p class="video-fixed">Subtítulo: sempre entra da esquerda para a direita. Foto ou vídeo no início; todas as entradas terminam até 1,2 s. Depois, a arte fica parada até completar 9 s.</p>
+            </div>
+          </details>
+        </div>
+      </details>
+      <div class="video-progress" id="videoProgress" aria-hidden="true">
+        <div class="video-progress-track"><div class="video-progress-fill" id="videoProgressFill"></div></div>
+        <p class="video-progress-text" id="videoProgressText">Preparando vídeo…</p>
+      </div>
+      <p class="video-status" id="videoStatus" role="status" aria-live="polite"></p>
+      <section class="publish-panel" aria-labelledby="publishTitle">
+        <h3 id="publishTitle">◎ Publicar no Instagram</h3>
+        <p>Conta de destino: <strong>@tridbrasil</strong>. O servidor envia a arte final e a legenda externa à API oficial da Meta. Vídeos de 9 segundos são publicados como vídeo e aparecem no feed.</p>
+        <div class="publish-choice" role="group" aria-label="Escolha o tipo de postagem">
+          <label><input type="radio" name="publishKind" value="photo" checked> <span id="photoPublishLabel">Foto (1080 × 1080)</span></label>
+          <label><input type="radio" name="publishKind" value="video"> Vídeo (9 segundos)</label>
+        </div>
+        <label class="original-video-choice" id="originalVideoChoice" hidden><input id="publishOriginalVideo" type="checkbox" checked> Publicar vídeo original, mantendo áudio e duração (sem textos sobrepostos)</label>
+        <div class="publish-secret">
+          <label for="postPassword">Senha local de publicação</label>
+          <input id="postPassword" type="password" autocomplete="off" placeholder="Senha definida">
+        </div>
+        <div class="publish-actions">
+          <button class="btn publish-main" type="button" id="publishBtn">Publicar no Instagram</button>
+          <button class="btn publish-verify" type="button" id="verifyBtn" title="Verificar conexão com a Meta">Verificar</button>
+        </div>
+        <div id="publishStatus" class="publish-status" role="status" aria-live="polite">Verificando se o servidor está disponível…</div>
+      </section>
+      <p class="tip" id="mediaTip">A arte é gerada no navegador. Para publicar vídeos com textos aplicados, o navegador precisa gerar MP4; vídeos originais em MP4 preservam o áudio.</p>
+    </aside>
+  </main>
+</div>
+
+<!-- Segunda tela: exemplos locais, ainda sem sincronização com o site real. -->
+<section class="shell posts-view" id="postsView" aria-label="Postagens do site" hidden>
+  <div class="posts-navigation">
+    <button class="posts-back" id="backToEditorBtn" type="button">← Voltar ao editor</button>
+    <span class="posts-count" id="postsCount">Postagens</span>
+  </div>
+  <div class="posts-intro">
+    <p class="eyebrow">TRID / PUBLICAÇÕES</p>
+    <h1>Postagens do site.</h1>
+    <p>Gerencie as postagens publicadas, seus títulos, conteúdos e destaques.</p>
+  </div>
+  <p id="postsPanelStatus" class="subpage-status" role="status" aria-live="polite"></p>
+  <div class="posts-grid" id="postsGrid" aria-live="polite"></div>
+  <p class="posts-note">As postagens publicadas ficam disponíveis no site. A remoção exige confirmação e não apaga a publicação do Instagram.</p>
+</section>
+
+<!-- Terceira tela: painel futuro, sem integração com o backend. -->
+<section class="shell page-panel-view" id="pagePanelView" aria-label="Painel da página" hidden>
+  <div class="posts-navigation">
+    <button class="posts-back" id="backFromPagePanelBtn" type="button">← Voltar ao início</button>
+  </div>
+  <div class="posts-intro">
+    <p class="eyebrow">TRID / PAINEL DA PÁGINA</p>
+    <h1>Painel da página.</h1>
+  </div>
+  <p class="page-panel-help">Clique em um menu para editar seu título, subtítulo e texto. As alterações feitas aqui são publicadas no site. A página inicial é fixa e não pode ser removida.</p>
+  <p id="menuPanelStatus" class="subpage-status page-panel-message" role="status" aria-live="polite"></p>
+  <details class="page-panel-menu appearance-menu" id="appearanceMenu">
+    <summary><span>Paleta de cores do site <small>Altera linhas, botões e o efeito de cor nas fotos das notícias</small></span><span class="collapsible-chevron" aria-hidden="true"></span></summary>
+    <div class="page-panel-fields appearance-fields">
+      <div class="appearance-controls">
+        <div><label for="siteAccentPicker">Escolha uma cor</label><input type="color" id="siteAccentPicker" value="#89cff0" aria-label="Cor de destaque do site"></div>
+        <div><label for="siteAccentHex">Código hexadecimal</label><input type="text" id="siteAccentHex" value="#89CFF0" maxlength="7" spellcheck="false" placeholder="#89CFF0"></div>
+      </div>
+      <div class="appearance-example"><span id="accentLineExample"></span><button type="button" id="accentButtonExample" disabled>Exemplo de botão</button></div>
+      <div class="page-panel-actions"><button type="button" class="page-save" id="saveSiteAccent">Salvar cor</button><button type="button" id="resetSiteAccent">Redefinir padrão (#89CFF0)</button></div>
+      <p id="appearanceStatus" class="page-panel-message" role="status" aria-live="polite"></p>
+    </div>
+  </details>
+  <div id="menusPanelList" class="page-panel-menulist" aria-live="polite"></div>
+  <div class="page-management-grid">
+  <form id="addMenuForm" class="page-add-menu">
+    <h2>Adicionar novo menu</h2>
+    <div class="page-panel-fields">
+      <div><label for="newMenuName">Nome do menu</label><input id="newMenuName" type="text" required maxlength="42" placeholder="Ex.: Pesquisas"></div>
+      <div><label for="newMenuTitle">Título da página</label><input id="newMenuTitle" type="text" required maxlength="160" placeholder="Ex.: Nossas pesquisas"></div>
+      <div><label for="newMenuSubtitle">Subtítulo</label><input id="newMenuSubtitle" type="text" maxlength="380"></div>
+      <div><label for="newMenuText">Texto da página</label><textarea id="newMenuText" maxlength="12000" placeholder="Escreva o conteúdo desta seção..."></textarea></div>
+      <div><label for="newMenuImage">Imagem da página (opcional, JPG/PNG/WEBP)</label><input id="newMenuImage" type="file" accept="image/jpeg,image/png,image/webp"></div>
+      <div class="page-panel-actions"><button type="submit" class="page-add-button">+ Adicionar menu</button></div>
+      <p id="newMenuStatus" class="page-panel-message" role="status" aria-live="polite"></p>
+    </div>
+  </form>
+  <section class="page-add-menu carousel-manager" aria-labelledby="carouselManagerHeading">
+    <h2 id="carouselManagerHeading">Carrossel da página inicial</h2>
+    <p>Gerencie os slides sem modificar a planilha. Cada item usa a mesma aba Menu: título, subtítulo, conteúdo (link e opções) e imagem do Drive.</p>
+    <div id="carouselPanelList" class="carousel-current" aria-live="polite"></div>
+    <form id="addCarouselForm" class="carousel-fields">
+      <div><label for="carouselNewTitle">Título</label><input id="carouselNewTitle" maxlength="160" required placeholder="Informação livre precisa de apoio"></div>
+      <div><label for="carouselNewSubtitle">Subtítulo</label><input id="carouselNewSubtitle" maxlength="380" placeholder="Uma iniciativa voltada ao acesso à informação"></div>
+      <div><label for="carouselNewLink">Link do botão</label><input id="carouselNewLink" type="text" required maxlength="1000" value="#/recursos" placeholder="#/recursos ou https://..."></div>
+      <div><label for="carouselNewButton">Texto do botão</label><input id="carouselNewButton" maxlength="100" value="Conheça como apoiar" required></div>
+      <div><label for="carouselNewLayout">Modelo do carrossel</label><select id="carouselNewLayout"><option value="full">Imagem inteira (como o banner original)</option><option value="text">Texto + imagem lateral</option></select></div>
+      <div><label for="carouselNewBackground">Cor de fundo (apenas para modelo Texto)</label><input id="carouselNewBackground" type="color" value="#1b1c23"></div>
+      <div><label for="carouselNewImage">Imagem (JPG, PNG, WEBP)</label><input id="carouselNewImage" type="file" accept="image/jpeg,image/png,image/webp" required></div>
+      <div><label>Tempo do slide</label><div class="carousel-time-control" data-carousel-time><button type="button" data-step="-1000" aria-label="Diminuir o tempo">−</button><output>6,5 s</output><button type="button" data-step="1000" aria-label="Aumentar o tempo">+</button><input id="carouselNewTime" type="hidden" value="6500"></div></div>
+      <div class="page-panel-actions"><button type="submit" class="page-add-button" id="carouselAddButton">+ Adicionar slide</button></div>
+      <p id="carouselAddStatus" class="page-panel-message" aria-live="polite" role="status"></p>
+    </form>
+  </section>
+  </div>
+</section>
+
+<!-- Editorial: terceira opção da navegação do próprio painel TRIN. -->
+<section class="shell editorial-view" id="editorialView" aria-label="Editorial" hidden>
+  <div class="posts-navigation">
+    <button class="posts-back" id="backFromEditorialBtn" type="button">← Voltar ao Estúdio de postagens</button>
+    <span class="posts-count">TRID / EDITORIAL</span>
+  </div>
+  <div class="posts-intro">
+    <p class="eyebrow">TRID / EDITORIAL</p>
+    <h1>Editorial.</h1>
+    <p>Uma equipe jornalística inteira pra você.</p>
+  </div>
+  <div class="editorial-workspace">
+    <section class="panel editorial-editor" aria-label="Gerar conteúdo">
+      <div class="panel-heading"><span class="step">01</span><div><h2>Produção editorial</h2><p>Gemma 4 · Google AI Studio</p></div></div>
+      <form id="editorialForm">
+        <label for="editorialAssunto">Sua pergunta ou texto</label>
+        <textarea id="editorialAssunto" placeholder="Ex.: Como o computador encontra outro computador na Internet?" required></textarea>
+        <label for="editorialSenha" style="margin-top:16px">Senha de publicação</label>
+        <input id="editorialSenha" type="password" autocomplete="current-password" placeholder="A mesma senha do Estúdio" required>
+        <p class="editorial-help" style="margin:8px 0 0">A senha protege o acesso à IA. A chave do Google fica somente na Vercel.</p>
+        <button type="submit" id="editorialGerar" class="editorial-main-action">Gerar conteúdo e matéria</button>
+      </form>
+      <p class="editorial-error" id="editorialErro" role="alert" hidden></p>
+      <p class="editorial-help" style="margin-top:18px">Revise os textos e as fontes antes de publicar. O envio só preenche o formulário de postagem.</p>
+    </section>
+    <section class="panel editorial-results" aria-label="Opções geradas">
+      <div id="editorialEstadoVazio" class="editorial-empty"><p>Seus títulos, subtítulos, legendas e matéria aparecerão aqui.</p></div>
+      <div id="editorialResultado" aria-live="polite" hidden>
+        <div class="editorial-group editorial-titulos">
+          <h2>3 opções de título</h2>
+          <p class="editorial-help">Selecione uma opção ou envie diretamente ao estúdio.</p>
+          <div id="editorialOpcoesTitulos" class="editorial-options"></div>
+        </div>
+        <div class="editorial-group editorial-subtitulos">
+          <h2>3 opções de subtítulo</h2>
+          <p class="editorial-help">Escolha o subtítulo que preferir.</p>
+          <div id="editorialOpcoesSubtitulos" class="editorial-options"></div>
+        </div>
+        <div class="editorial-group editorial-legendas">
+          <h2>3 opções de legenda</h2>
+          <p class="editorial-help">Cada legenda inclui suas próprias hashtags.</p>
+          <div id="editorialOpcoesLegendas" class="editorial-options"></div>
+        </div>
+        <button type="button" class="editorial-send-all" id="editorialEnviarEscolhidos">Enviar selecionados para postagem</button>
+        <div class="editorial-article" aria-live="polite">
+          <h2>Matéria jornalística</h2>
+          <p class="editorial-help">Aproximadamente uma lauda, com abordagem crítica e fontes pesquisadas na web.</p>
+          <p id="editorialStatusMateria" class="editorial-status">Aguardando pesquisa...</p>
+          <div id="editorialConteudoMateria" hidden>
+            <p id="editorialTextoMateria" class="editorial-article-text"></p>
+            <div class="editorial-article-actions">
+              <button type="button" class="editorial-send-article" id="editorialEnviarMateria">Enviar matéria para postagem</button>
+              <button type="button" class="editorial-send-article" id="editorialEnviarMateriaFontes">Enviar matéria + fontes</button>
+            </div>
+            <div class="editorial-sources">
+              <h3>Fontes encontradas pela pesquisa</h3>
+              <ul id="editorialListaFontes"></ul>
+              <p id="editorialAvisoFontes" class="editorial-error" hidden></p>
+            </div>
+          </div>
+          <button type="button" class="editorial-send-article" id="editorialTentarMateria" hidden>Pesquisar e gerar matéria novamente</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<dialog class="post-editor-dialog" id="postEditorDialog" aria-labelledby="postEditorTitle">
+  <form class="post-dialog-form" id="postEditForm">
+    <h2 id="postEditorTitle">Editar postagem</h2>
+    <p>Atualize o título e o conteúdo desta postagem de exemplo.</p>
+    <div class="post-dialog-field">
+      <label for="editPostTitle">Título</label>
+      <input type="text" id="editPostTitle" maxlength="180" required>
+    </div>
+    <div class="post-dialog-field">
+      <label for="editPostSubtitle">Subtítulo</label>
+      <textarea id="editPostSubtitle" maxlength="1200"></textarea>
+    </div>
+    <div class="post-dialog-field">
+      <label for="editPostCaption">Legenda</label>
+      <textarea id="editPostCaption" maxlength="2200"></textarea>
+    </div>
+    <div class="post-dialog-field">
+      <label for="editPostContent">Matéria (texto completo)</label>
+      <textarea id="editPostContent" maxlength="15000"></textarea>
+    </div>
+    <div class="post-dialog-field"><label for="editPostCategory">Categoria</label><input id="editPostCategory" maxlength="60"></div>
+    <div class="post-dialog-field"><label for="editPostAuthor">Autor</label><input id="editPostAuthor" maxlength="100"></div>
+    <div class="post-dialog-field"><label for="editPostTags">Tags</label><input id="editPostTags" maxlength="350"></div>
+    <p id="postDialogStatus" class="subpage-status" role="status" aria-live="polite"></p>
+    <div class="post-dialog-actions">
+      <button id="cancelPostEdit" type="button">Cancelar</button>
+      <button class="post-save" type="submit">Salvar alterações</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="/src/client-blob.js"></script>
+<script>
+(() => {
+  'use strict';
+  const byId = id => document.getElementById(id);
+  const canvas = byId('postCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 1080;
+  let H = 1080, FOOTER_Y = 1004;
+  // O editor usa o mesmo canvas para o formato quadrado e o vertical.
+  // Os elementos da arte permanecem próximos à base em ambos os formatos.
+  const TEXT_LEFT = 150, SUBTITLE_LEFT = 184;
+  let image = null, sourceVideo = null, sourceVideoFile = null, sourceVideoUrl = null;
+  // Mantém o arquivo enviado para o portal; a prévia editada só vai ao Instagram.
+  let originalPhotoFile = null;
+  let offsetX = 0, offsetY = 0, dragging = false, lastPointer = null;
+  let previewFrameId = 0, fileSelectionId = 0;
+
+  function selectedKind() {
+    return document.querySelector('input[name="publishKind"]:checked')?.value || 'photo';
+  }
+  function hasMedia() { return !!(image || sourceVideo); }
+  function isPortrait() { return H === 1920; }
+  function refreshPublishOptions() {
+    const kind = selectedKind();
+    byId('originalVideoChoice').hidden = !(sourceVideo && kind === 'video');
+    byId('photoPublishLabel').textContent = `Foto (1080 × ${H})`;
+    if (sourceVideo) {
+      byId('mediaTip').textContent = 'Vídeo original: mantém formato, duração e áudio, mas não aplica os textos da prévia. Desmarque a opção acima para publicar uma edição no formato escolhido, de 9 segundos e sem áudio.';
+    } else {
+      byId('mediaTip').textContent = 'A arte é gerada no navegador. Vídeos editados são de 9 segundos, sem áudio, e exigem codificação MP4 para publicar no Instagram.';
+    }
+  }
+  function changeRatio() {
+    if (currentRecording || postSending) return;
+    H = H === 1080 ? 1920 : 1080;
+    FOOTER_Y = H - 76;
+    canvas.width = W;
+    canvas.height = H;
+    canvas.style.aspectRatio = isPortrait() ? '9 / 16' : '1';
+    byId('ratioToggle').textContent = `Instagram · ${isPortrait() ? '9:16' : '1:1'} ↔`;
+    byId('ratioToggle').setAttribute('aria-label', `Formato Instagram ${isPortrait() ? '9:16' : '1:1'}. Clique para alternar`);
+    byId('previewCaption').textContent = `1080 × ${H} px · Arraste para reposicionar`;
+    document.querySelector('.preview-panel').classList.toggle('is-portrait', isPortrait());
+    refreshPublishOptions();
+    draw();
+  }
+  byId('ratioToggle').addEventListener('click', changeRatio);
+  document.querySelectorAll('input[name="publishKind"]').forEach(radio => radio.addEventListener('change', refreshPublishOptions));
+
+  function startPreviewFrames() {
+    cancelAnimationFrame(previewFrameId);
+    const frame = () => {
+      if (!sourceVideo || sourceVideo.paused || currentRecording) return;
+      draw();
+      previewFrameId = requestAnimationFrame(frame);
+    };
+    if (sourceVideo && !sourceVideo.paused && !currentRecording) previewFrameId = requestAnimationFrame(frame);
+  }
+  function clearPreviousVideo() {
+    cancelAnimationFrame(previewFrameId);
+    if (sourceVideo) { sourceVideo.pause(); sourceVideo.removeAttribute('src'); sourceVideo.load(); }
+    if (sourceVideoUrl) URL.revokeObjectURL(sourceVideoUrl);
+    sourceVideo = null; sourceVideoFile = null; sourceVideoUrl = null;
+    byId('videoPreviewControls').hidden = true;
+    refreshPublishOptions();
+  }
+  byId('toggleVideoPlayback').addEventListener('click', async () => {
+    if (!sourceVideo) return;
+    if (sourceVideo.paused) {
+      try { await sourceVideo.play(); startPreviewFrames(); }
+      catch { byId('fileStatus').textContent = 'Não foi possível reproduzir o vídeo.'; }
+    } else { sourceVideo.pause(); cancelAnimationFrame(previewFrameId); draw(); }
+    byId('toggleVideoPlayback').textContent = sourceVideo.paused ? '▶ Reproduzir vídeo' : '❚❚ Pausar vídeo';
+  });
+  // O estilo é individual para título e subtítulo. N padrão no título preserva o desenho antigo.
+  const typeStyles = {
+    title: {size: 80, bold: true, italic: false, underline: false},
+    subtitle: {size: 35, bold: false, italic: false, underline: false}
+  };
+
+  function updateAndDraw() {
+    byId('darkValue').textContent = byId('darkness').value + '%';
+    byId('zoomValue').textContent = byId('zoom').value + '%';
+    byId('verticalValue').textContent = byId('vertical').value;
+    ['titleVertical','subtitleVertical','bothVertical','titleHorizontal','subtitleHorizontal','bothHorizontal'].forEach(id => {
+      const n = Number(byId(id).value);
+      byId(id+'Value').textContent = (n > 0 ? '+' : '') + n + ' px';
+    });
+    byId('titleHex').textContent = byId('titleColor').value.toUpperCase();
+    byId('subtitleHex').textContent = byId('subtitleColor').value.toUpperCase();
+    byId('lineHex').textContent = byId('lineColor').value.toUpperCase();
+    byId('captionCount').textContent = byId('captionText').value.length + ' caracteres';
+    for (const part of ['title','subtitle']) {
+      const style = typeStyles[part];
+      byId(part+'SizeValue').textContent = style.size + ' px';
+      for (const [id, key] of [['Bold','bold'], ['Italic','italic'], ['Underline','underline']]) {
+        byId(part+id).setAttribute('aria-pressed', String(style[key]));
+      }
+    }
+    draw();
+  }
+
+  function fontSpec(size, family, bold = false, italic = false) {
+    return `${italic ? 'italic ' : ''}${bold ? 'bold ' : ''}${size}px "${family}", serif`;
+  }
+
+  function wrapText(value, maxWidth) {
+    const lines = [];
+    for (const para of value.split('\n')) {
+      if (!para.trim()) { lines.push(''); continue; }
+      let line = '';
+      for (const word of para.trim().split(/\s+/)) {
+        let candidate = line ? `${line} ${word}` : word;
+        if (ctx.measureText(candidate).width <= maxWidth) { line = candidate; continue; }
+        if (line) lines.push(line);
+        line = '';
+        // Quebra palavras muito longas sem ultrapassar a borda.
+        for (const letter of word) {
+          if (line && ctx.measureText(line + letter).width > maxWidth) { lines.push(line); line = letter; }
+          else line += letter;
+        }
+      }
+      if (line) lines.push(line);
+    }
+    return lines;
+  }
+
+  function fit(value, family, maxSize, minSize, maxWidth, maxHeight, bold, italic = false) {
+    const clean = value.trim();
+    if (!clean) return { lines: [], size: maxSize, step: 0, height: 0 };
+    let best;
+    for (let size = maxSize; size >= minSize; size -= 2) {
+      ctx.font = fontSpec(size, family, bold, italic);
+      const lines = wrapText(clean, maxWidth);
+      const step = size * 1.12;
+      best = { lines, size, step, height: lines.length * step };
+      if (best.height <= maxHeight) return best;
+    }
+    return best;
+  }
+
+  function drawBackground() {
+    ctx.fillStyle = '#162934';
+    ctx.fillRect(0, 0, W, FOOTER_Y);
+    const background = sourceVideo || image;
+    const iw = sourceVideo?.videoWidth || image?.width || 0;
+    const ih = sourceVideo?.videoHeight || image?.height || 0;
+    if (background && iw && ih) {
+      const scale = Math.max(W / iw, FOOTER_Y / ih) * (+byId('zoom').value / 100);
+      const dw = iw * scale, dh = ih * scale;
+      const x = (W - dw) / 2 + offsetX;
+      const y = (FOOTER_Y - dh) / 2 + (+byId('vertical').value) + offsetY;
+      ctx.save();
+      ctx.beginPath(); ctx.rect(0, 0, W, FOOTER_Y); ctx.clip();
+      ctx.drawImage(background, x, y, dw, dh);
+      ctx.restore();
+    } else {
+      const gradient = ctx.createLinearGradient(0, 0, W, FOOTER_Y);
+      gradient.addColorStop(0, '#436575'); gradient.addColorStop(.45, '#1d3646'); gradient.addColorStop(1, '#06131d');
+      ctx.fillStyle = gradient; ctx.fillRect(0, 0, W, FOOTER_Y);
+      ctx.fillStyle = 'rgba(255,255,255,.035)';
+      ctx.beginPath();ctx.arc(730,270,280,0,Math.PI*2);ctx.fill();
+    }
+    const dark = +byId('darkness').value / 100;
+    const gradientStart = Math.max(210, FOOTER_Y - 764);
+    const gradient = ctx.createLinearGradient(0, gradientStart, 0, FOOTER_Y);
+    gradient.addColorStop(0, 'rgba(3,13,20,0)');
+    gradient.addColorStop(.40, `rgba(3,13,20,${dark*.35})`);
+    gradient.addColorStop(.75, `rgba(3,13,20,${dark*.82})`);
+    gradient.addColorStop(1, `rgba(3,13,20,${Math.min(1,dark+.1)})`);
+    ctx.fillStyle = gradient; ctx.fillRect(0, gradientStart, W, FOOTER_Y-gradientStart);
+  }
+
+  // Argumento opcional para os quadros do vídeo. Na imagem PNG tudo fica na posição normal.
+  function drawHeadlines(animation = null) {
+    const title = byId('titleText').value;
+    const subtitle = byId('subtitleText').value;
+    const subtitleStyle = typeStyles.subtitle;
+    const titleStyle = typeStyles.title;
+    const sub = fit(subtitle, byId('subtitleFont').value, subtitleStyle.size, Math.min(16, subtitleStyle.size), 690, 142, subtitleStyle.bold, subtitleStyle.italic);
+    const subtitleBase = FOOTER_Y - 116;
+    const subY = subtitleBase - sub.height;
+    const titleBottom = sub.lines.length ? subY - 36 : subtitleBase;
+    const titleSpace = Math.max(140, Math.min(430, titleBottom - (FOOTER_Y - 589)));
+    const headline = fit(title, byId('titleFont').value, titleStyle.size, Math.min(20, titleStyle.size), 720, titleSpace, titleStyle.bold, titleStyle.italic);
+    const titleY = titleBottom - headline.height;
+    const groupShift = Number(byId('bothVertical').value);
+    const titleShift = Number(byId('titleVertical').value) + groupShift;
+    const subtitleShift = Number(byId('subtitleVertical').value) + groupShift;
+    const groupHorizontal = Number(byId('bothHorizontal').value);
+    const titleX = TEXT_LEFT + Number(byId('titleHorizontal').value) + groupHorizontal;
+    const lineX = TEXT_LEFT + Number(byId('subtitleHorizontal').value) + groupHorizontal;
+    const subtitleX = SUBTITLE_LEFT + Number(byId('subtitleHorizontal').value) + groupHorizontal;
+    const lineColor = byId('lineColor').value;
+
+    const titleP = animation ? animation.title : 1;
+    const subtitleP = animation ? animation.subtitle : 1;
+
+    // Título: efeito selecionável (subir, dissolver ou zoom).
+    if (titleP > 0 && headline.lines.length) {
+      ctx.save();
+      const effect = animation?.titleEffect ?? 'up';
+      ctx.globalAlpha = titleP;
+      if (effect === 'up') ctx.translate(0, 45 * (1 - titleP));
+      if (effect === 'zoom') {
+        const scale = .90 + .10 * titleP;
+        ctx.translate(titleX, titleY + titleShift);
+        ctx.scale(scale, scale);
+        ctx.translate(-titleX, -(titleY + titleShift));
+      }
+      ctx.textBaseline = 'top';
+      ctx.fillStyle = byId('titleColor').value;
+      ctx.font = fontSpec(headline.size, byId('titleFont').value, titleStyle.bold, titleStyle.italic);
+      headline.lines.forEach((line,i) => {
+        const y = titleY + titleShift + i * headline.step;
+        ctx.fillText(line, titleX, y);
+        if (titleStyle.underline && line) {
+          ctx.fillRect(titleX, y + headline.size * 1.02, ctx.measureText(line).width, Math.max(1.5, headline.size / 25));
+        }
+      });
+      ctx.restore();
+    }
+
+    // Subtítulo: obrigatoriamente entra da ESQUERDA para a DIREITA.
+    // A combinação de deslizamento e máscara progressiva revela o texto horizontalmente.
+    if (subtitleP > 0 && sub.lines.length) {
+      ctx.save();
+      const clipRight = Math.max(0, lineX) + subtitleP * (W - Math.max(0, lineX));
+      ctx.beginPath(); ctx.rect(0, 0, clipRight, FOOTER_Y); ctx.clip();
+      ctx.globalAlpha = subtitleP;
+      ctx.translate(-110 * (1 - subtitleP), 0);
+      ctx.textBaseline = 'top';
+      ctx.fillStyle = lineColor;
+      ctx.fillRect(lineX, subY + subtitleShift + 2, 5, Math.max(25, sub.height - 2));
+      ctx.fillStyle = byId('subtitleColor').value;
+      ctx.font = fontSpec(sub.size, byId('subtitleFont').value, subtitleStyle.bold, subtitleStyle.italic);
+      sub.lines.forEach((line,i) => {
+        const y = subY + subtitleShift + i * sub.step;
+        ctx.fillText(line, subtitleX, y);
+        if (subtitleStyle.underline && line) {
+          ctx.fillRect(subtitleX, y + sub.size * 1.02, ctx.measureText(line).width, Math.max(1.5, sub.size / 25));
+        }
+      });
+      ctx.restore();
+    }
+  }
+
+  function drawAccent(progress = 1) {
+    if (progress <= 0) return;
+    ctx.save();
+    ctx.beginPath();ctx.rect(84, FOOTER_Y - 64, 912 * progress, 16);ctx.clip();
+    const y = FOOTER_Y - 60, x = 84, length = 912, part = length / 3;
+    ['#00c84f','#ffdf00','#0867ef'].forEach((color,i) => {
+      ctx.fillStyle = color;ctx.fillRect(x+part*i,y,part,8);
+    });
+    ctx.restore();
+  }
+
+  function trackText(text, x, y, gap) {
+    for (const ch of text) {ctx.fillText(ch,x,y); x+=ctx.measureText(ch).width+gap;}
+    return x;
+  }
+  function trackWidth(text, gap) {
+    return [...text].reduce((acc,ch)=>acc+ctx.measureText(ch).width+gap,0);
+  }
+
+  function drawFooter(progress = 1, effect = 'up') {
+    if (progress <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = progress;
+    if (effect === 'up') ctx.translate(0, 36 * (1 - progress));
+    if (effect === 'right') ctx.translate(80 * (1 - progress), 0);
+    ctx.fillStyle = '#000';ctx.fillRect(0,FOOTER_Y,W,H-FOOTER_Y);
+    const word = 'TRIN', brand = 'TARGETED INDIVIDUALS BRASIL';
+    ctx.textBaseline = 'alphabetic';
+    ctx.font = 'bold 42px Georgia,serif';const nameW=ctx.measureText(word).width;
+    ctx.font = '17px Arial,sans-serif';const brandW=trackWidth(brand,2.1);
+    const gap1=26, gap2=26, flagGap=19, flagWidth=78;
+    const total=nameW+gap1+2+gap2+brandW+flagGap+flagWidth;
+    const sx=(W-total)/2, cy=FOOTER_Y + 54;
+    ctx.fillStyle='#fff';ctx.font='bold 42px Georgia,serif';ctx.fillText(word,sx,cy+13);
+    const sep=sx+nameW+gap1;ctx.fillRect(sep,cy-19,2,36);
+    const bx=sep+2+gap2;ctx.font='17px Arial,sans-serif';trackText(brand,bx,cy+7,2.1);
+    const fx=bx+brandW+flagGap;ctx.fillRect(fx,cy,14,2);
+    const diamondX=fx+38;
+    ctx.fillStyle='#ffdf00';ctx.beginPath();ctx.moveTo(diamondX,cy-15);ctx.lineTo(diamondX+23,cy);ctx.lineTo(diamondX,cy+15);ctx.lineTo(diamondX-23,cy);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#0752ad';ctx.beginPath();ctx.arc(diamondX,cy,9,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.fillRect(diamondX+25,cy,15,2);
+    ctx.restore();
+  }
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    drawBackground();drawHeadlines();drawAccent();drawFooter();
+  }
+
+  // Exporta no formato de prévia selecionado: 1080 × 1080 ou 1080 × 1920.
+  function photoExportCanvas() {
+    draw();
+    return canvas;
+  }
+
+  const clamp01 = x => Math.max(0,Math.min(1,x));
+  const easeOut = x => 1-Math.pow(1-clamp01(x),3);
+  function enter(t,start,end) {return easeOut((t-start)/(end-start));}
+
+  // Linha do tempo fixa: fotografia em t=0; título, subtítulo, linha e rodapé
+  // entram sequencialmente. Aos 1,2 s a imagem está completa e permanece até 9 s.
+  function drawVideoFrame(timeSeconds, options) {
+    const t = Math.min(9,Math.max(0,timeSeconds));
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#07121b';ctx.fillRect(0,0,W,H);
+    drawBackground();
+    drawHeadlines({
+      title: enter(t, .16, .54),
+      subtitle: enter(t, .53, .96),
+      titleEffect: options.titleEffect
+    });
+    drawAccent(enter(t,.78,1.10));
+    drawFooter(enter(t,.97,1.20), options.footerEffect);
+  }
+
+  function setMedia(file) {
+    if (!file) return;
+    const isPhoto = file.type.startsWith('image/');
+    const isVideo = file.type === 'video/mp4' || file.type === 'video/webm';
+    if (!isPhoto && !isVideo) {
+      byId('fileStatus').textContent = 'Use uma foto (JPG/PNG/WEBP/GIF) ou vídeo (MP4/WebM).'; return;
+    }
+    if (currentRecording || postSending) {
+      byId('fileStatus').textContent = 'Conclua a gravação ou publicação antes de trocar a mídia.';return;
+    }
+    const token = ++fileSelectionId;
+    const url = URL.createObjectURL(file);
+    byId('fileStatus').textContent = 'Carregando '+file.name+'…';
+    if (isPhoto) {
+      const img = new Image();
+      img.onload = () => {
+        if (token !== fileSelectionId) {URL.revokeObjectURL(url);return;}
+        clearPreviousVideo(); image = img; originalPhotoFile = file;
+        offsetX = 0; offsetY = 0;
+        byId('vertical').value = 0;byId('zoom').value = 100;
+        byId('fileStatus').textContent = '✓ Foto: '+file.name;
+        document.querySelector('input[name="publishKind"][value="photo"]').checked = true;
+        URL.revokeObjectURL(url);refreshPublishOptions();updateAndDraw();
+      };
+      img.onerror = () => {URL.revokeObjectURL(url);byId('fileStatus').textContent = 'Não foi possível abrir a foto.';};
+      img.src = url;
+      return;
+    }
+    const video = document.createElement('video');
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = 'auto';
+    video.onloadeddata = async () => {
+      if (token !== fileSelectionId) {video.removeAttribute('src');video.load();URL.revokeObjectURL(url);return;}
+      clearPreviousVideo(); image = null; originalPhotoFile = null;
+      sourceVideo = video;sourceVideoFile = file;sourceVideoUrl = url;
+      offsetX=0;offsetY=0;byId('vertical').value=0;byId('zoom').value=100;
+      byId('videoPreviewControls').hidden = false;
+      byId('fileStatus').textContent = '✓ Vídeo: '+file.name+' ('+Math.round(video.duration||0)+' s)';
+      document.querySelector('input[name="publishKind"][value="video"]').checked = true;
+      byId('publishOriginalVideo').checked = file.type === 'video/mp4';
+      refreshPublishOptions();updateAndDraw();
+      try {await video.play(); startPreviewFrames();} catch {/* botão de reprodução disponível */}
+      byId('toggleVideoPlayback').textContent = video.paused ? '▶ Reproduzir vídeo' : '❚❚ Pausar vídeo';
+    };
+    video.onerror = () => {
+      if (token === fileSelectionId) byId('fileStatus').textContent = 'O navegador não conseguiu abrir esse vídeo. Tente MP4/H.264.';
+      URL.revokeObjectURL(url);
+    };
+    video.src = url;
+    video.load();
+  }
+
+  byId('photoInput').addEventListener('change', e => {setMedia(e.target.files[0]);e.target.value='';});
+  const zone = byId('dropzone');
+  zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();byId('photoInput').click();}});
+  ['dragenter','dragover'].forEach(event=>zone.addEventListener(event,e=>{e.preventDefault();zone.classList.add('dragover');}));
+  ['dragleave','drop'].forEach(event=>zone.addEventListener(event,e=>{e.preventDefault();zone.classList.remove('dragover');}));
+  zone.addEventListener('drop', e=>setMedia(e.dataTransfer.files[0]));
+  // Também permite soltar a foto ou vídeo diretamente na prévia.
+  canvas.addEventListener('dragover',e=>e.preventDefault());
+  canvas.addEventListener('drop',e=>{e.preventDefault();setMedia(e.dataTransfer.files[0]);});
+
+  // Reposicionamento opcional da fotografia, arrastando dentro da prévia.
+  canvas.addEventListener('pointerdown',e=>{if(!hasMedia())return;dragging=true;lastPointer={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{
+    if(!dragging||!lastPointer)return;
+    const bounds=canvas.getBoundingClientRect(),factor=W/bounds.width;
+    offsetX+=(e.clientX-lastPointer.x)*factor;offsetY+=(e.clientY-lastPointer.y)*factor;
+    lastPointer={x:e.clientX,y:e.clientY};draw();
+  });
+  const stop=()=>{dragging=false;lastPointer=null;};
+  canvas.addEventListener('pointerup',stop);canvas.addEventListener('pointercancel',stop);
+
+  ['titleText','subtitleText','titleFont','subtitleFont','titleColor','subtitleColor','lineColor','darkness','zoom','vertical','captionText','titleVertical','subtitleVertical','bothVertical','titleHorizontal','subtitleHorizontal','bothHorizontal'].forEach(id=>byId(id).addEventListener('input',updateAndDraw));
+  // Controles de tamanho e N / I / S, independentes para cada campo.
+  for (const part of ['title','subtitle']) {
+    const style = typeStyles[part];
+    const bounds = part === 'title' ? [20, 120] : [14, 70];
+    const changeSize = delta => {
+      style.size = Math.max(bounds[0], Math.min(bounds[1], style.size + delta));
+      updateAndDraw();
+    };
+    byId(part+'SizeDown').addEventListener('click', () => changeSize(-2));
+    byId(part+'SizeUp').addEventListener('click', () => changeSize(2));
+    for (const [id, key] of [['Bold','bold'], ['Italic','italic'], ['Underline','underline']]) {
+      byId(part+id).addEventListener('click', () => {
+        style[key] = !style[key];
+        updateAndDraw();
+      });
+    }
+  }
+
+  byId('resetPositions').addEventListener('click', () => {
+    ['titleVertical','subtitleVertical','bothVertical','titleHorizontal','subtitleHorizontal','bothHorizontal'].forEach(id => byId(id).value = '0');
+    updateAndDraw();
+  });
+  function saveBlob(blob,filename) {
+    const url=URL.createObjectURL(blob), a=document.createElement('a');
+    a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),30000);
+  }
+
+  let currentRecording = null;
+  byId('downloadBtn').addEventListener('click',()=>{
+    if (currentRecording) return;
+    photoExportCanvas().toBlob(blob=>{
+      if(!blob){alert('Não foi possível exportar o PNG.');return;}
+      saveBlob(blob,'TRIN-postagem-1080x'+H+'.png');
+    },'image/png');
+  });
+
+  // Grava diretamente o próprio canvas, sem serviços externos ou bibliotecas.
+  function chooseMimeType() {
+    const types=[
+      'video/mp4;codecs=avc1.42E01E', 'video/mp4',
+      'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'
+    ];
+    return types.find(type=>MediaRecorder.isTypeSupported(type)) || '';
+  }
+
+  function videoStatus(message) {byId('videoStatus').textContent=message;}
+  function setVideoProgress(t) {
+    byId('videoProgressFill').style.width=(clamp01(t/9)*100).toFixed(1)+'%';
+    byId('videoProgressText').textContent='Gravando vídeo · '+Math.min(9,t).toFixed(1)+' / 9,0 s';
+  }
+  function changeRecordingUI(active) {
+    byId('downloadBtn').disabled=active;
+    const videoButton=byId('downloadVideoBtn');
+    videoButton.textContent=active ? '×  Cancelar gravação' : '▶  Baixar vídeo · 9 s';
+    videoButton.classList.toggle('recording',active);
+    byId('publishBtn').disabled=active || postSending;
+    byId('ratioToggle').disabled=active;
+    if (active) {cancelAnimationFrame(previewFrameId);if(sourceVideo){sourceVideo.currentTime=0;sourceVideo.play().catch(()=>{});}}
+    else startPreviewFrames();
+    document.querySelectorAll('.controls input,.controls textarea,.controls select,#videoSettings select').forEach(el=>el.disabled=active);
+    document.querySelectorAll('.art-type-button').forEach(el=>el.disabled=active);
+    byId('videoProgress').setAttribute('aria-hidden',active?'false':'true');
+  }
+
+  function cancelRecording() {
+    const session=currentRecording;
+    if (!session) return;
+    session.cancelled=true;
+    clearTimeout(session.endTimer);
+    cancelAnimationFrame(session.raf);
+    if (session.recorder.state!=='inactive') session.recorder.stop();
+    videoStatus('Gravação cancelada.');
+  }
+
+  function downloadVideo(onReady = null, onFail = null) {
+    if (currentRecording) {cancelRecording();return;}
+    if (!window.MediaRecorder || !canvas.captureStream || !window.requestAnimationFrame) {
+      videoStatus('Este navegador não oferece gravação de canvas. Experimente Chrome ou Edge atualizado.');
+      onFail?.('Este navegador não suporta gravação de canvas.'); return;
+    }
+    const mimeType=chooseMimeType();
+    if (!mimeType) {
+      videoStatus('Não há codificador de vídeo compatível neste navegador.');
+      onFail?.('Não há codificador de vídeo compatível.'); return;
+    }
+    const extension=mimeType.startsWith('video/mp4')?'mp4':'webm';
+    const options={titleEffect:byId('titleEntrance').value,footerEffect:byId('footerEntrance').value};
+    const stream=canvas.captureStream(30);
+    let recorder;
+    try {recorder=new MediaRecorder(stream,{mimeType,videoBitsPerSecond:5000000});}
+    catch(err) {stream.getTracks().forEach(t=>t.stop());videoStatus('Não foi possível iniciar a gravação: '+err.message);onFail?.(err.message);return;}
+    const session={recorder,stream,options,extension,parts:[],cancelled:false,raf:0,endTimer:0,onReady,onFail};
+    currentRecording=session;
+    changeRecordingUI(true);
+    videoStatus('Gravando diretamente no navegador. Mantenha esta aba aberta.');
+    setVideoProgress(0);
+    recorder.ondataavailable=e=>{if(e.data && e.data.size>0) session.parts.push(e.data);};
+    recorder.onerror=e=>{session.cancelled=true;videoStatus('Ocorreu um erro na gravação do vídeo.');};
+    recorder.onstop=()=>{
+      clearTimeout(session.endTimer);cancelAnimationFrame(session.raf);
+      session.stream.getTracks().forEach(track=>track.stop());
+      currentRecording=null;
+      changeRecordingUI(false);
+      draw();startPreviewFrames();
+      if (!session.cancelled && session.parts.length) {
+        const type=session.parts[0].type || mimeType;
+        const blob=new Blob(session.parts,{type});
+        if (session.onReady) session.onReady(blob);
+        else saveBlob(blob,'TRIN-postagem-9s.'+session.extension);
+        videoStatus(session.onReady ? 'Vídeo gerado. Enviando ao servidor…' : 'Vídeo gerado! Arquivo '+session.extension.toUpperCase()+' · duração de aproximadamente 9 s.');
+      } else if (!session.cancelled) {
+        videoStatus('O navegador não retornou quadros de vídeo. Tente novamente no Chrome ou Edge.');
+        session.onFail?.('O navegador não retornou vídeo.');
+      } else {
+        session.onFail?.('Gravação cancelada.');
+      }
+    };
+
+    drawVideoFrame(0,options); // Primeiro quadro: somente foto
+    try {recorder.start(200);}
+    catch(err) {
+      session.cancelled=true;
+      stream.getTracks().forEach(track=>track.stop());
+      currentRecording=null;changeRecordingUI(false);draw();
+      videoStatus('Falha ao iniciar codificador: '+err.message);
+      onFail?.(err.message); return;
+    }
+    const start=performance.now();
+    function frame(now) {
+      if (session.cancelled || recorder.state==='inactive') return;
+      const t=Math.min(9,(now-start)/1000);
+      drawVideoFrame(t,options);setVideoProgress(t);
+      if (t<9) session.raf=requestAnimationFrame(frame);
+    }
+    session.raf=requestAnimationFrame(frame);
+    session.endTimer=setTimeout(()=>{
+      if (session.cancelled || recorder.state==='inactive') return;
+      cancelAnimationFrame(session.raf);
+      drawVideoFrame(9,options);setVideoProgress(9);
+      recorder.stop();
+    },9000);
+  }
+  byId('downloadVideoBtn').addEventListener('click', () => downloadVideo());
+
+  // Publicação via /api/publicar. O token da Meta nunca aparece neste HTML.
+  let postSending = false;
+  const publishStatus = byId('publishStatus');
+  function statusPublish(message, kind='') {
+    publishStatus.className='publish-status'+(kind?' '+kind:'');
+    publishStatus.textContent=message;
+  }
+  function setPostSending(active) {
+    postSending=active;
+    byId('publishBtn').disabled=active || !!currentRecording;
+    byId('verifyBtn').disabled=active;
+    byId('publishBtn').textContent=active?'Publicando…':'Publicar no Instagram';
+  }
+  // Não tenta interpretar páginas HTML/mensagens de erro da Vercel como JSON.
+  async function readApiResponse(response, route) {
+    const raw = await response.text();
+    let result;
+    try { result = JSON.parse(raw); }
+    catch {
+      throw new Error(`Falha HTTP ${response.status} em ${route}. O servidor retornou texto, não JSON. Consulte Vercel → Logs e filtre por ${route}.`);
+    }
+    if (!response.ok) throw new Error(result.error || `Falha HTTP ${response.status} em ${route}.`);
+    return result;
+  }
+  async function connectionStatus() {
+    try {
+      const response=await fetch('/api/status', {cache:'no-store'});
+      const result=await readApiResponse(response, '/api/status');
+      statusPublish(result.ready ? 'Vercel conectada. Selecione foto ou vídeo MP4 nativo e clique em Publicar.'
+        : 'API encontrada, mas faltam variáveis no painel da Vercel: token, senha, ID ou Vercel Blob.',
+        result.ready?'':'error');
+    } catch {
+      statusPublish('Abra o site implantado na Vercel e verifique se as funções /api estão disponíveis.', 'error');
+    }
+  }
+  byId('verifyBtn').addEventListener('click', async () => {
+    const password=byId('postPassword').value;
+    if (!password) return statusPublish('Digite a senha configurada nas variáveis de ambiente da Vercel.', 'error');
+    statusPublish('Verificando o token com a Meta…');
+    try {
+      const resp=await fetch('/api/verificar', {method:'POST',headers:{'X-TRIN-Password':password}});
+      const payload=await readApiResponse(resp, '/api/verificar');
+      statusPublish(`Conta confirmada pela Meta: @${payload.username || 'trinbrasil'}.`, 'success');
+    } catch (err) {statusPublish(err.message,'error');}
+  });
+  function canvasAsJpeg() {
+    return new Promise((resolve,reject) => {
+      photoExportCanvas().toBlob(b=>b?resolve(b):reject(new Error('Falha ao gerar JPG.')), 'image/jpeg', .90);
+    });
+  }
+  // Na Vercel os arquivos vão direto do navegador para Vercel Blob.
+  // Não enviamos arquivos grandes à função (limite de requisição 4,5 MB).
+  async function sendMedia(blob, type, password, caption) {
+    try {
+      if (type === 'video' && blob.type !== 'video/mp4') {
+        throw new Error('Seu navegador gerou WebM. Para publicar vídeos nessa versão sem FFmpeg, é necessário MP4/H.264 nativo. A exportação WebM ainda pode ser baixada.');
+      }
+      if (!window.trinDirectBlobUpload) {
+        throw new Error('O módulo de upload não carregou. Abra o endereço implantado na Vercel, não o HTML direto do disco.');
+      }
+      statusPublish('Preparando upload para o Vercel Blob…');
+      const uploaded = await window.trinDirectBlobUpload(blob, type, password, progress => {
+        statusPublish(`Enviando mídia diretamente ao armazenamento… ${progress}%`);
+      });
+      statusPublish('Mídia enviada. Aguardando confirmação da publicação pela Meta…');
+      const resp = await fetch('/api/publicar', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','X-TRIN-Password': password},
+        body: JSON.stringify({type, caption, mediaUrl: uploaded.url})
+      });
+      const result = await readApiResponse(resp, '/api/publicar');
+      if (!result.ok) throw new Error(result.error || 'Não foi possível publicar.');
+      statusPublish('Publicação confirmada no @trinbrasil!', 'success');
+      if (result.permalink && /^https:\/\/(www\.)?instagram\.com\//.test(result.permalink)) {
+        publishStatus.appendChild(document.createTextNode(' '));
+        const a=document.createElement('a'); a.href=result.permalink;
+        a.target='_blank'; a.rel='noopener noreferrer';
+        a.textContent='Abrir postagem'; publishStatus.appendChild(a);
+      }
+    } catch (err) {
+      statusPublish('Não foi publicado: '+err.message, 'error');
+    } finally { setPostSending(false); }
+  }
+  byId('publishBtn').addEventListener('click', async () => {
+    if (postSending || currentRecording) return;
+    const password=byId('postPassword').value;
+    if (!password) return statusPublish('Primeiro digite a senha de publicação configurada na Vercel.', 'error');
+    const caption=byId('captionText').value.trim();
+    if (caption.length>2200) return statusPublish('A legenda ultrapassa o limite de 2.200 caracteres.', 'error');
+    const type=document.querySelector('input[name="publishKind"]:checked').value;
+    if (!hasMedia()) return statusPublish('Adicione uma foto ou um vídeo antes de publicar.', 'error');
+    if (type==='photo' && isPortrait()) return statusPublish('O Instagram não aceita foto 9:16 como publicação normal pelo endpoint de imagem. Escolha 1:1 ou publique como vídeo.', 'error');
+    setPostSending(true);
+    if (type==='photo') {
+      try {const blob=await canvasAsJpeg(); await sendMedia(blob,type,password,caption);}
+      catch(err) {setPostSending(false);statusPublish(err.message,'error');}
+    } else {
+      if (sourceVideo && byId('publishOriginalVideo').checked) {
+        if (sourceVideoFile.type !== 'video/mp4') {setPostSending(false);return statusPublish('Para publicar o vídeo original é necessário MP4. Envie MP4 ou desmarque Vídeo original para gerar uma edição.', 'error');}
+        if (sourceVideoFile.size > 50*1024*1024) {setPostSending(false);return statusPublish('Vídeo original acima de 50 MB. Use outro arquivo ou gere a edição de 9 segundos.', 'error');}
+        await sendMedia(sourceVideoFile,'video',password,caption);return;
+      }
+      statusPublish('Gerando edição de vídeo de 9 segundos com arte (sem áudio)…');
+      downloadVideo(blob=>{void sendMedia(blob,type,password,caption);},
+        error=>{setPostSending(false);statusPublish('Não foi publicado: '+error,'error');});
+    }
+  });
+  // Integração do site: upload independente para que a Meta não apague a mídia do portal.
+  const siteButton=byId('publishSiteBtn');
+  const siteStatus=byId('publishSiteStatus');
+  let sendingToSite=false;
+  function setSiteStatus(message,error=false,success=false){
+    siteStatus.className='site-publish-status'+(error?' is-error':success?' is-success':'');
+    siteStatus.replaceChildren(document.createTextNode(message));
+  }
+  // Publicação do PORTAL: imagem vai para o Apps Script/Drive, nunca ao Vercel Blob.
+  // O upload do Instagram (sendMedia) acima permanece exatamente como estava.
+  async function jpegParaBase64(blob) {
+    if (blob.type !== 'image/jpeg') throw new Error('A imagem do portal deve ser JPG.');
+    if (blob.size > 2.8 * 1024 * 1024) throw new Error('A imagem ultrapassou 2,8 MB. Escolha outra fotografia.');
+    return await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result).split(',')[1]);
+      reader.onerror=()=>reject(new Error('Não foi possível ler a imagem.'));
+      reader.readAsDataURL(blob);
+    });
+  }
+  // JPEG integral da foto de entrada, sem títulos, cortes, zoom ou escurecimento.
+  async function fotoOriginalParaSite(file){
+    if(!file)throw new Error('Selecione uma fotografia antes de publicar no site.');
+    if(file.type==='image/jpeg' && file.size<=2.8*1024*1024)return file;
+    const bitmap=await createImageBitmap(file);
+    try{
+      let maxEdge=Math.max(bitmap.width,bitmap.height);
+      const supported=[Math.min(1,2400/maxEdge),Math.min(1,1800/maxEdge),Math.min(1,1400/maxEdge),Math.min(1,1000/maxEdge)];
+      for(const factor of supported){
+        const c=document.createElement('canvas');
+        c.width=Math.max(1,Math.round(bitmap.width*factor));
+        c.height=Math.max(1,Math.round(bitmap.height*factor));
+        const ctx=c.getContext('2d',{alpha:false});
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+        ctx.drawImage(bitmap,0,0,c.width,c.height);
+        for(const quality of [.89,.78,.65]){
+          const blob=await new Promise((resolve,reject)=>c.toBlob(x=>x?resolve(x):reject(new Error('Falha ao converter a fotografia original.')),'image/jpeg',quality));
+          if(blob.size<=2.8*1024*1024)return blob;
+        }
+      }
+    }finally{bitmap.close();}
+    throw new Error('Imagem original muito grande para o Google Drive. Escolha uma foto menor.');
+  }
+  async function createSitePost(blob,type,password){
+    if (type!=='photo') {
+      throw new Error('O armazenamento do portal via Apps Script aceita fotos JPG. Para vídeo, o botão Publicar no Instagram continua inalterado.');
+    }
+    setSiteStatus('Enviando a imagem para o Google Drive...');
+    const imagem={mime:'image/jpeg',base64:await jpegParaBase64(blob)};
+    setSiteStatus('Salvando a imagem no Drive e a notícia no Google Planilhas...');
+    const fields={
+      action:'createPost',image:imagem,type:'photo',
+      title:byId('titleText').value.trim(),subtitle:byId('subtitleText').value.trim(),
+      content:byId('captionText').value.trim(),article:byId('siteArticle').value.trim(),category:byId('siteCategory').selectedOptions[0].textContent.trim(),
+      author:byId('siteAuthor').value.trim()||'Equipe TRIN',tags:byId('siteTags').value.trim(),
+      featured:byId('siteFeatured').checked,
+    };
+    const resp=await fetch('/api/site',{method:'POST',headers:{'Content-Type':'application/json','X-TRIN-Password':password},body:JSON.stringify(fields)});
+    const data=await readApiResponse(resp,'/api/site');
+    setSiteStatus('Publicado no site com sucesso!',false,true);
+    const link=document.createElement('a');
+    link.href='/#/materia/'+encodeURIComponent(data.post.id);link.target='_blank';link.rel='noopener';link.textContent=' Abrir matéria';
+    siteStatus.appendChild(link);
+    window.dispatchEvent(new Event('trin:post-created'));
+  }
+  siteButton.addEventListener('click',async()=>{
+    if(sendingToSite||currentRecording)return;
+    const password=byId('postPassword').value;
+    if(!password)return setSiteStatus('Digite a senha de publicação no painel do Instagram.',true);
+    if(!hasMedia())return setSiteStatus('Selecione uma foto ou vídeo.',true);
+    if(sourceVideo)return setSiteStatus('A publicação no site aceita apenas fotos no Google Drive. Para vídeo, use Publicar no Instagram.',true);
+    if(!byId('titleText').value.trim())return setSiteStatus('Escreva um título.',true);
+    sendingToSite=true;siteButton.disabled=true;siteButton.textContent='Publicando...';
+    const finish=()=>{sendingToSite=false;siteButton.disabled=false;siteButton.textContent='Postar no site';};
+    const type=document.querySelector('input[name="publishKind"]:checked')?.value||'photo';
+    try{
+      if(type==='photo'){
+        setSiteStatus('Preparando fotografia original para o portal...');
+        const blob=await fotoOriginalParaSite(originalPhotoFile);
+        await createSitePost(blob,'photo',password);finish();
+      }else{
+        setSiteStatus('A integração Google Drive do portal aceita somente fotos. O envio de vídeos ao Instagram continua disponível.',true);
+        finish();
+      }
+    }catch(e){setSiteStatus('Não foi publicado: '+e.message,true);finish();}
+  });
+  refreshPublishOptions();
+  updateAndDraw();
+  void connectionStatus();
+})();
+</script>
+
+<script>
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id);
+  let posts=[],menus=[],demo=false,editingId=null;
+  const examples=[
+    {id:'ex-01',category:'Tecnologia',author:'Equipe TRIN',featured:true,title:'Como os metadados organizam a informação digital',subtitle:'Conceitos introdutórios',content:'Metadados descrevem características dos conteúdos e ajudam sistemas a encontrar, classificar e apresentar informações.',image:'',createdAt:'2026-01-01'},
+    {id:'ex-02',category:'Ciência',author:'Redação TRIN',featured:true,title:'O que muda com a expansão do IPv6?',subtitle:'Uma visão geral',content:'O IPv6 amplia o espaço de endereçamento da internet e traz novas possibilidades para conectar dispositivos.',image:'',createdAt:'2026-01-01'},
+    {id:'ex-03',category:'Sociedade',author:'Equipe TRIN',featured:false,title:'A importância de verificar informações na internet',subtitle:'Leitura crítica',content:'Antes de compartilhar uma publicação, é útil conferir sua origem, comparar fontes e verificar a data.',image:'',createdAt:'2026-01-01'}
+  ];
+  const demoStorage='trin-demo-posts-v1';
+  function readDemo(){try {const stored=JSON.parse(localStorage.getItem(demoStorage));return Array.isArray(stored)?stored:structuredClone(examples);}catch{return structuredClone(examples);}}
+  let demos=readDemo();
+  const saveDemos=()=>{try{localStorage.setItem(demoStorage,JSON.stringify(demos))}catch{}};
+  const element=(tag,className,content)=>{const n=document.createElement(tag);if(className)n.className=className;if(content!==undefined)n.textContent=content;return n;};
+  function password(){
+    // Senha única do editor principal, reutilizada nas subpáginas.
+    const value=$('postPassword').value.trim();
+    if(!value)throw new Error('Digite a senha no editor principal antes de realizar esta operação.');
+    return value;
+  }
+  function setFeedback(el,message,kind=''){
+    if(!el)return;
+    el.className=(el.id==='menuPanelStatus'||el.id==='newMenuStatus'||el.id==='appearanceStatus'?'page-panel-message':'subpage-status')+
+      (kind==='error'?' is-error site-panel-error':kind==='success'?' is-success site-panel-success':'');
+    el.textContent=message;
+  }
+  function notifyPosts(message,kind=''){setFeedback($('postsPanelStatus'),message,kind);}
+  function notifyDialog(message,kind=''){setFeedback($('postDialogStatus'),message,kind);}
+  function notifyLocal(el,message,kind=''){setFeedback(el,message,kind);}
+
+  async function api(method='GET',body=null,resource=''){
+    const opt={method,headers:{},cache:'no-store'};
+    if(body){opt.headers['X-TRIN-Password']=password();opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body);}
+    const resp=await fetch('/api/site'+(resource?'?resource='+resource:''),opt);
+    const raw=await resp.text();let value;
+    try{value=JSON.parse(raw)}catch{throw new Error('A API do site retornou um erro não-JSON. Verifique Vercel → Logs.');}
+    if(!resp.ok||!value.ok)throw new Error(value.error||'Falha na API do site.');
+    return value;
+  }
+  function notify(message,isError=false){setFeedback($('menuPanelStatus'),message,isError?'error':'success');}
+  function safeSlug(name){return String(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,48);}
+  function setDialogFields(post){
+    $('editPostTitle').value=post.title||'';
+    $('editPostSubtitle').value=post.subtitle||'';
+    $('editPostContent').value=post.article ?? post.content ?? '';
+    $('editPostCaption').value=post.caption||'';
+    $('editPostCategory').value=post.category||'';
+    $('editPostAuthor').value=post.author||'';
+    $('editPostTags').value=post.tags||'';
+  }
+  function renderPosts(){
+    const grid=$('postsGrid');grid.replaceChildren();
+    const source=demo?demos:posts;
+    $('postsCount').textContent=source.length+' '+(source.length===1?'postagem':'postagens')+(demo?' de exemplo':' publicadas');
+    if(!source.length){grid.appendChild(element('p','posts-empty','Ainda não existem postagens no site. Use o botão Postar no site do editor.'));return;}
+    for(const post of source){
+      const card=element('article','post-card'),cover=element('div','post-cover');
+      if(post.image){
+        const media=element(post.type==='video'?'video':'img');
+        if(post.type==='video'){media.muted=true;media.playsInline=true;media.preload='metadata';}else{media.alt=post.title;media.loading='lazy';}
+        media.src=post.image;media.style.cssText='width:100%;height:100%;object-fit:cover;position:absolute;inset:0';cover.appendChild(media);
+      }else{cover.appendChild(element('span','post-cover-label','TRIN'));}
+      const top=element('div','post-cover-top');
+      top.appendChild(element('span','post-featured-badge',post.featured?'★ Destaque':(demo?'Demonstração':'Postagem')));
+      const star=element('button','post-featured-toggle'+(post.featured?' is-active':''),post.featured?'★':'☆');
+      star.type='button';star.title=post.featured?'Remover destaque':'Destacar no site';star.setAttribute('aria-pressed',String(!!post.featured));
+      star.setAttribute('aria-label',(post.featured?'Remover destaque de ':'Destacar ')+post.title);
+      star.addEventListener('click',async()=>{
+        if(!post.featured&&source.filter(p=>p.featured).length>=2){notifyPosts('Só é possível destacar duas postagens. Desmarque outra estrela primeiro.','error');return;}
+        const old=post.featured;post.featured=!old;
+        notifyPosts('Atualizando destaque...');
+        try{if(demo){saveDemos()}else{await api('PUT',{...post})}renderPosts();notifyPosts('Destaque atualizado.','success');}
+        catch(e){post.featured=old;renderPosts();notifyPosts('Não foi possível atualizar: '+e.message,'error');}
+      });
+      top.appendChild(star);cover.appendChild(top);card.appendChild(cover);
+      const body=element('div','post-card-body'),meta=element('div','post-meta');
+      meta.append(element('strong','',post.category||'Notícias'),document.createTextNode(' · '+(post.author||'Equipe TRIN')+(demo?' · Exemplo':'')));
+      // Exibe apenas um resumo padronizado no card; a matéria inteira permanece no editor.
+      const originalPreview=String(post.subtitle||post.content||post.article||'').replace(/\s+/g,' ').trim();
+      const preview=originalPreview.length>160?originalPreview.slice(0,160).replace(/\s+\S*$/,'')+'…':originalPreview;
+      body.append(meta,element('h2','',post.title),element('p','post-text',preview));
+      const actions=element('div','post-actions');
+      const edit=element('button','post-edit','Editar');edit.type='button';
+      edit.addEventListener('click',()=>{editingId=post.id;setDialogFields(post);notifyDialog('');$('postEditorDialog').showModal();});
+      const remove=element('button','post-delete','Excluir');remove.type='button';
+      remove.addEventListener('click',async()=>{
+        if(!confirm('Enviar a postagem "'+post.title+'" para a lixeira do Google Planilhas?'))return;
+        notifyPosts('Excluindo postagem e enviando para Trash...');
+        try{if(demo){demos=demos.filter(p=>p.id!==post.id);saveDemos();}else{await api('DELETE',{id:post.id});await loadPosts();}renderPosts();notifyPosts('Postagem enviada para a lixeira.','success');}
+        catch(e){notifyPosts('Falha ao excluir: '+e.message,'error');}
+      });
+      actions.append(edit,remove);body.appendChild(actions);card.appendChild(body);grid.appendChild(card);
+    }
+  }
+  async function loadPosts(){
+    const data=await api('GET');
+    posts=Array.isArray(data.posts)?data.posts:[];
+    demo=false; // Banco vazio significa ausência de publicações, não dados de demonstração.
+    renderPosts();
+  }
+  async function loadMenus(){
+    const data=await api('GET',null,'menus');
+    menus=Array.isArray(data.menus)?data.menus:[];
+    renderMenus();renderCarousel();
+  }
+  function inputField(id,label,value,multi=false,max=500){
+    const wrapper=element('div'),lbl=element('label','',label);
+    lbl.htmlFor=id;
+    const field=element(multi?'textarea':'input');
+    field.id=id;field.maxLength=max;
+    field.value=value||'';
+    if(!multi)field.type='text';
+    wrapper.append(lbl,field);return wrapper;
+  }
+  async function menuImagemArquivo(file) {
+    if (!file) return null;
+    if (!['image/jpeg','image/png','image/webp'].includes(file.type)) throw new Error('Escolha uma imagem JPG, PNG ou WEBP.');
+    const bitmap=await createImageBitmap(file);
+    try {
+      const ratio=Math.min(1,1600/Math.max(bitmap.width,bitmap.height));
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.max(1,Math.round(bitmap.width*ratio));
+      canvas.height=Math.max(1,Math.round(bitmap.height*ratio));
+      canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
+      const jpeg=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Falha ao converter imagem.')),'image/jpeg',.82));
+      return {mime:'image/jpeg',base64:await jpegParaMenu(jpeg)};
+    }finally{bitmap.close();}
+  }
+  async function jpegParaMenu(file) {
+    if(file.size>2.8*1024*1024)throw new Error('Imagem de menu maior que 2,8 MB.');
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result).split(',')[1]);
+      reader.onerror=()=>reject(new Error('Falha ao ler a imagem.'));
+      reader.readAsDataURL(file);
+    });
+  }
+  async function uploadMenuImage(id,file) {
+    const image=await menuImagemArquivo(file);
+    if(!image)return;
+    await api('POST',{action:'uploadMenuImage',id,image});
+  }
+  const DEFAULT_ACCENT='#89CFF0';
+  const validHex=v=>/^#[0-9A-Fa-f]{6}$/.test(String(v||'').trim());
+  const themeColor=()=>String($('siteAccentHex').value||'').trim().toUpperCase();
+  function updateAppearancePreview(hex){
+    if(!validHex(hex))return;
+    $('siteAccentPicker').value=hex;
+    $('siteAccentHex').value=hex.toUpperCase();
+    $('accentLineExample').style.backgroundColor=hex;
+    $('accentButtonExample').style.backgroundColor=hex;
+    const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+    $('accentButtonExample').style.color=(r*.299+g*.587+b*.114)>155?'#192d37':'#ffffff';
+  }
+  async function loadAppearance(){
+    const data=await api('GET',null,'theme');
+    updateAppearancePreview(validHex(data.theme?.accent)?data.theme.accent:DEFAULT_ACCENT);
+  }
+  $('siteAccentPicker').addEventListener('input',e=>{
+    updateAppearancePreview(e.target.value);notifyLocal($('appearanceStatus'),'Prévia atualizada. Clique em Salvar cor para publicar.');
+  });
+  $('siteAccentHex').addEventListener('input',e=>{
+    const hex=e.target.value.trim();
+    if(validHex(hex))updateAppearancePreview(hex);
+  });
+  async function saveAppearance(hex){
+    if(!validHex(hex)){notifyLocal($('appearanceStatus'),'Informe uma cor válida no formato #RRGGBB.','error');return;}
+    const save=$('saveSiteAccent'),reset=$('resetSiteAccent');
+    save.disabled=true;reset.disabled=true;
+    notifyLocal($('appearanceStatus'),'Salvando paleta de cores...');
+    try{
+      const data=await api('POST',{action:'setTheme',accent:hex.toUpperCase()});
+      updateAppearancePreview(data.theme.accent);
+      notifyLocal($('appearanceStatus'),'Cor salva. O site público utilizará esta paleta.','success');
+      notify('Cor do portal atualizada.');
+    }catch(e){notifyLocal($('appearanceStatus'),'Não foi possível salvar: '+e.message,'error');notify('Não foi possível salvar a paleta: '+e.message,true);}
+    finally{save.disabled=false;reset.disabled=false;}
+  }
+  $('saveSiteAccent').addEventListener('click',()=>saveAppearance(themeColor()));
+  $('resetSiteAccent').addEventListener('click',()=>{
+    updateAppearancePreview(DEFAULT_ACCENT);
+    void saveAppearance(DEFAULT_ACCENT);
+  });
+  const CAROUSEL_PREFIX='carrossel-';
+  const isCarouselMenu=m=>String(m?.id||'').startsWith(CAROUSEL_PREFIX);
+  function carouselData(m){
+    let data={};try{data=JSON.parse(m.text||'{}')}catch{}
+    return {
+      link:String(data.link||'#/recursos'),button:String(data.button||'Conheça como apoiar'),
+      layout:data.layout==='text'?'text':'full',
+      background:/^#[\da-fA-F]{6}$/.test(data.background||'')?data.background:'#1b1c23',
+      time:Math.max(3000,Math.min(20000,Number(data.time)||6500))
+    };
+  }
+  function carouselValidLink(link){
+    return /^#\/[a-zA-Z0-9_/%?=&-]+$/.test(link)||/^https?:\/\/[^\s]+$/i.test(link);
+  }
+  function getCarouselSettings(container){
+    const $f=id=>container.querySelector('[data-carousel-field="'+id+'"]');
+    const link=$f('link').value.trim();
+    if(!carouselValidLink(link))throw new Error('Informe um link #/pagina ou https:// válido.');
+    return {link,button:$f('button').value.trim()||'Acessar',layout:$f('layout').value,
+      background:$f('background').value,time:Number($f('time').value)};
+  }
+  function createTimePicker(time,allowId=''){
+    const wrap=element('div','carousel-time-control');wrap.dataset.carouselTime='';
+    const less=element('button','','−'),more=element('button','','+'),out=element('output');
+    less.type=more.type='button';less.dataset.step='-1000';more.dataset.step='1000';
+    const inp=element('input');inp.type='hidden';inp.dataset.carouselField='time';if(allowId)inp.id=allowId;inp.value=String(time);
+    wrap.append(less,out,more,inp);attachTimePicker(wrap);return wrap;
+  }
+  function attachTimePicker(wrap){
+    const inp=wrap.querySelector('input'),out=wrap.querySelector('output');
+    const update=()=>{out.textContent=(Number(inp.value)/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' s';};
+    wrap.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{
+      inp.value=String(Math.max(3000,Math.min(20000,Number(inp.value)+Number(b.dataset.step))));update();
+    }));update();
+  }
+  function renderCarousel(){
+    const list=$('carouselPanelList');list.replaceChildren();
+    const slides=menus.filter(isCarouselMenu);
+    if(!slides.length)list.appendChild(element('p','carousel-preview-note','O banner original continuará visível até você adicionar o primeiro slide.'));
+    slides.forEach((m,i)=>{
+      const config=carouselData(m),details=element('details'),summary=element('summary','',String(i+1).padStart(2,'0')+' · '+m.title);
+      summary.append(element('span','collapsible-chevron'));details.append(summary);
+      const body=element('div','carousel-edit');
+      const fld=(name,label,value,max=1000)=>{
+        const box=element('div'),l=element('label','',label),input=element('input');
+        l.textContent=label;input.type='text';input.maxLength=max;input.value=value;input.dataset.carouselField=name;
+        box.append(l,input);return box;
+      };
+      body.append(fld('title','Título',m.title,160),fld('subtitle','Subtítulo',m.subtitle,380),fld('link','Link do botão',config.link,1000),fld('button','Texto do botão',config.button,100));
+      const layoutBox=element('div'),layoutLabel=element('label','','Modelo'),select=element('select');select.dataset.carouselField='layout';
+      [['full','Imagem inteira'],['text','Texto + imagem lateral']].forEach(([value,label])=>{const opt=element('option','',label);opt.value=value;select.append(opt)});
+      select.value=config.layout;layoutBox.append(layoutLabel,select);body.append(layoutBox);
+      const colorBox=element('div'),colorLabel=element('label','','Fundo do modelo Texto'),color=element('input');color.type='color';color.value=config.background;color.dataset.carouselField='background';colorBox.append(colorLabel,color);body.append(colorBox);
+      const imgBox=element('div'),imgLabel=element('label','','Substituir imagem'),imgInput=element('input');imgInput.type='file';imgInput.accept='image/jpeg,image/png,image/webp';imgBox.append(imgLabel,imgInput);
+      if(m.image){const img=element('img');img.src=m.image;img.alt='Imagem do slide';img.loading='lazy';imgBox.append(img);}body.append(imgBox);
+      const timingBox=element('div'),timingLabel=element('label','','Tempo deste slide');timingBox.append(timingLabel,createTimePicker(config.time));body.append(timingBox);
+      const action=element('div','page-panel-actions'),save=element('button','page-save','Salvar slide'),remove=element('button','page-delete','Excluir slide');
+      save.type=remove.type='button';action.append(save,remove);body.append(action);
+      const status=element('p','page-panel-message');body.append(status);details.append(body);list.append(details);
+      save.addEventListener('click',async()=>{
+        try{
+          const data=getCarouselSettings(body),title=body.querySelector('[data-carousel-field="title"]').value.trim();
+          const subtitle=body.querySelector('[data-carousel-field="subtitle"]').value.trim();
+          if(!title)throw new Error('O título é obrigatório.');
+          save.disabled=true;notifyLocal(status,'Salvando slide...');
+          const next=menus.map(x=>x.id===m.id?{...x,title,subtitle,text:JSON.stringify(data)}:x);
+          const response=await api('POST',{action:'saveMenus',menus:next});menus=response.menus;
+          if(imgInput.files[0]){notifyLocal(status,'Enviando nova imagem ao Drive...');await uploadMenuImage(m.id,imgInput.files[0]);await loadMenus();}
+          else{renderCarousel();renderMenus();}
+          notify('Slide salvo com sucesso.');
+        }catch(err){notifyLocal(status,'Falha ao salvar slide: '+err.message,'error');}
+        finally{save.disabled=false;}
+      });
+      remove.addEventListener('click',async()=>{
+        if(!confirm('Excluir o slide "'+m.title+'" do carrossel?'))return;
+        try{remove.disabled=true;notifyLocal(status,'Excluindo slide...');const response=await api('POST',{action:'saveMenus',menus:menus.filter(x=>x.id!==m.id)});menus=response.menus;renderMenus();renderCarousel();notify('Slide excluído.');}
+        catch(err){notifyLocal(status,'Falha ao excluir slide: '+err.message,'error');}
+        finally{remove.disabled=false;}
+      });
+    });
+  }
+  attachTimePicker($('addCarouselForm').querySelector('[data-carousel-time]'));
+  $('addCarouselForm').addEventListener('submit',async e=>{
+    e.preventDefault();const button=$('carouselAddButton');
+    try{
+      const file=$('carouselNewImage').files[0];if(!file)throw new Error('Selecione uma imagem para o slide.');
+      const data={link:$('carouselNewLink').value.trim(),button:$('carouselNewButton').value.trim()||'Acessar',layout:$('carouselNewLayout').value,
+        background:$('carouselNewBackground').value,time:Number($('carouselNewTime').value)};
+      if(!carouselValidLink(data.link))throw new Error('Link inválido. Use #/recursos ou https://...');
+      if(menus.length>=30)throw new Error('A API limita a aba Menu a 30 registros.');
+      const id=CAROUSEL_PREFIX+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6);
+      const title=$('carouselNewTitle').value.trim(),subtitle=$('carouselNewSubtitle').value.trim();
+      button.disabled=true;notifyLocal($('carouselAddStatus'),'Criando slide...');
+      const result=await api('POST',{action:'saveMenus',menus:[...menus,{id,name:'Slide do carrossel',title,subtitle,text:JSON.stringify(data)}]});menus=result.menus;
+      notifyLocal($('carouselAddStatus'),'Enviando imagem ao Drive...');await uploadMenuImage(id,file);await loadMenus();
+      $('addCarouselForm').reset();$('carouselNewTime').value='6500';$('addCarouselForm').querySelector('[data-carousel-time] output').textContent='6,5 s';
+      notifyLocal($('carouselAddStatus'),'Slide incluído no carrossel.','success');notify('Novo slide criado.');
+    }catch(error){notifyLocal($('carouselAddStatus'),'Erro ao adicionar slide: '+error.message,'error');}
+    finally{button.disabled=false;}
+  });
+  function renderMenus(){
+    const list=$('menusPanelList');list.replaceChildren();
+    if(!menus.some(m=>!isCarouselMenu(m)))list.appendChild(element('p','posts-empty','Ainda não existem menus. Adicione um abaixo.'));
+    for(const m of menus.filter(m=>!isCarouselMenu(m))){
+      const details=element('details','page-panel-menu');
+      const menuSummary=element('summary');menuSummary.append(element('span','',m.name),element('span','collapsible-chevron'));details.appendChild(menuSummary);
+      const fields=element('div','page-panel-fields');
+      fields.append(inputField('menuName-'+m.id,'Nome do menu',m.name,false,42),inputField('menuTitle-'+m.id,'Título',m.title,false,160),inputField('menuSubtitle-'+m.id,'Subtítulo',m.subtitle,false,380),inputField('menuText-'+m.id,'Texto',m.text,true,12000));
+      const imgWrap=element('div');const imgLabel=element('label','',m.image?'Substituir imagem da página':'Adicionar imagem da página (opcional)');
+      const imgInput=element('input');imgInput.type='file';imgInput.accept='image/jpeg,image/png,image/webp';
+      imgWrap.append(imgLabel,imgInput);
+      if(m.image){const preview=element('img');preview.src=m.image;preview.alt='Imagem atual de '+m.name;preview.loading='lazy';preview.style.cssText='max-width:190px;max-height:130px;display:block;object-fit:contain;margin:8px 0';imgWrap.append(preview);}
+      fields.append(imgWrap);
+      const actions=element('div','page-panel-actions');
+      const actionStatus=element('p','page-panel-message');actionStatus.setAttribute('role','status');actionStatus.setAttribute('aria-live','polite');
+      const report=(message,error=false)=>{notifyLocal(actionStatus,message,error?'error':'success');notify(message,error);};
+      const save=element('button','page-save','Salvar alterações');save.type='button';
+      save.addEventListener('click',async()=>{
+        const next=menus.map(x=>x.id===m.id?{...x,name:$('menuName-'+m.id).value.trim(),title:$('menuTitle-'+m.id).value.trim(),subtitle:$('menuSubtitle-'+m.id).value.trim(),text:$('menuText-'+m.id).value.trim()}:x);
+        if(!next.find(x=>x.id===m.id).name||!next.find(x=>x.id===m.id).title)return report('Nome e título são obrigatórios.',true);
+        report('Salvando alterações...');
+        try{const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;
+          if(imgInput.files[0]){report('Enviando imagem para o Google Drive...');await uploadMenuImage(m.id,imgInput.files[0]);await loadMenus();}
+          else renderMenus();report('Menu salvo e atualizado no site.');}
+        catch(e){report('Não foi possível salvar: '+e.message,true);}
+      });
+      const remove=element('button','page-delete','Excluir menu');remove.type='button';
+      remove.addEventListener('click',async()=>{
+        if(!confirm('Enviar o menu "'+m.name+'" para a lixeira do Google Planilhas?'))return;
+        report('Enviando menu para a lixeira...');
+        try{const data=await api('POST',{action:'saveMenus',menus:menus.filter(x=>x.id!==m.id)});menus=data.menus;notify('Menu excluído do site.');renderMenus();}
+        catch(e){report('Não foi possível excluir: '+e.message,true);}
+      });
+      actions.append(save,remove);fields.append(actions,actionStatus);details.appendChild(fields);list.appendChild(details);
+    }
+  }
+  $('addMenuForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const name=$('newMenuName').value.trim(),id=safeSlug(name);
+    if(!id||id==='inicio'||id==='cor-portal'||id==='carrossel'||id.startsWith(CAROUSEL_PREFIX)||menus.some(m=>m.id===id))return notify('Esse menu já existe ou possui nome inválido.',true);
+    const next=[...menus,{id,name,title:$('newMenuTitle').value.trim(),subtitle:$('newMenuSubtitle').value.trim(),text:$('newMenuText').value.trim()}];
+    notifyLocal($('newMenuStatus'),'Adicionando menu...');
+    try{const file=$('newMenuImage').files[0];const data=await api('POST',{action:'saveMenus',menus:next});menus=data.menus;
+      if(file){notifyLocal($('newMenuStatus'),'Salvando imagem no Google Drive...');await uploadMenuImage(id,file);await loadMenus();}else renderMenus();
+      $('addMenuForm').reset();notify('Novo menu adicionado ao site.');notifyLocal($('newMenuStatus'),'Novo menu adicionado ao site.','success');}
+    catch(e){notify('Falha ao adicionar menu: '+e.message,true);notifyLocal($('newMenuStatus'),'Falha ao adicionar menu: '+e.message,'error');}
+  });
+  $('postEditForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const source=demo?demos:posts,post=source.find(x=>x.id===editingId);if(!post)return;
+    const payload={...post,title:$('editPostTitle').value.trim(),subtitle:$('editPostSubtitle').value.trim(),content:$('editPostContent').value.trim(),caption:$('editPostCaption').value.trim(),category:$('editPostCategory').value.trim(),author:$('editPostAuthor').value.trim(),tags:$('editPostTags').value.trim()};
+    if(!payload.title)return $('postEditForm').reportValidity();
+    notifyDialog('Salvando alterações...');
+    try{
+      if(demo){Object.assign(post,payload);saveDemos();}
+      else{await api('PUT',payload);await loadPosts();}
+      $('postEditorDialog').close();renderPosts();notifyPosts('Postagem atualizada.','success');
+    }catch(error){notifyDialog('Não foi possível salvar: '+error.message,'error');notifyPosts('Não foi possível salvar: '+error.message,'error');}
+  });
+  $('cancelPostEdit').addEventListener('click',()=>{$('postEditorDialog').close()});
+  function syncView(){
+    const page=location.hash==='#painel'?'painel':location.hash==='#postagens'?'postagens':location.hash==='#editorial'?'editorial':'editor';
+    $('editorView').hidden=page!=='editor';
+    $('postsView').hidden=page!=='postagens';
+    $('pagePanelView').hidden=page!=='painel';
+    $('editorialView').hidden=page!=='editorial';
+    $('openPostsBtn').setAttribute('aria-expanded',String(page==='postagens'));
+    $('openPagePanelBtn').setAttribute('aria-expanded',String(page==='painel'));
+    $('openEditorialBtn').setAttribute('aria-expanded',String(page==='editorial'));
+    if(page==='postagens'){
+      notifyPosts('Carregando publicações...');
+      loadPosts().then(()=>notifyPosts('Publicações carregadas.','success')).catch(e=>{
+        $('postsGrid').replaceChildren(element('p','posts-empty','Erro ao carregar postagens: '+e.message));
+        notifyPosts('Erro ao carregar postagens: '+e.message,'error');
+      });
+    }
+    if(page==='painel'){
+      notify('Carregando menus...');
+      Promise.all([loadMenus(),loadAppearance()]).then(()=>notify('Painel carregado.')).catch(e=>notify('Erro ao carregar painel: '+e.message,true));
+    }
+    window.scrollTo(0,0);
+  }
+  $('openPostsBtn').addEventListener('click',()=>{location.hash='postagens';syncView()});
+  $('openPagePanelBtn').addEventListener('click',()=>{location.hash='painel';syncView()});
+  $('openEditorialBtn').addEventListener('click',()=>{location.hash='editorial';syncView()});
+  $('backFromEditorialBtn').addEventListener('click',()=>{location.hash='editor';syncView()});
+  $('backToEditorBtn').addEventListener('click',()=>{location.hash='editor';syncView()});
+  $('backFromPagePanelBtn').addEventListener('click',()=>{location.hash='editor';syncView()});
+  window.addEventListener('hashchange',syncView);
+  window.addEventListener('trin:post-created',()=>{if(location.hash==='#postagens')void loadPosts();});
+  syncView();
+})();
+
+</script>
+<script>
+(() => {
+  'use strict';
+// API do Editorial: chave armazenada somente na Vercel (GEMINI_API_KEY).
+
+    const formulario = document.getElementById('editorialForm');
+    const botao = document.getElementById('editorialGerar');
+    const resultado = document.getElementById('editorialResultado');
+    const erro = document.getElementById('editorialErro');
+    const estadoVazio = document.getElementById('editorialEstadoVazio');
+    let opcoes = null;
+    let materia = '';
+    let fontesMateria = [];
+    const statusMateria = document.getElementById('editorialStatusMateria');
+    const conteudoMateria = document.getElementById('editorialConteudoMateria');
+    const textoMateria = document.getElementById('editorialTextoMateria');
+    const listaFontes = document.getElementById('editorialListaFontes');
+    const avisoFontes = document.getElementById('editorialAvisoFontes');
+    const tentarMateria = document.getElementById('editorialTentarMateria');
+
+    // Regras do Gemma: altere aqui o comportamento das três categorias.
+    const REGRAS = [
+      'Sua tarefa é criar EXATAMENTE 3 TÍTULOS, 3 SUBTÍTULOS e 3 LEGENDAS a partir do MESMO texto abaixo, sempre em português do Brasil.',
+      'As três opções de cada categoria precisam ser realmente diferentes em abordagem e linguagem. Faça apenas uma chamada e entregue as nove opções.',
+      '',
+      'REGRAS DOS TÍTULOS:',
+      'Cada título deve representar bem a ideia central e ser claro, interessante, crítico e direto.',
+      'O título não pode possuir partes do texto enviado e sim ser criado com sua lógica.',
+      'Mesmo se o texto for uma pergunta, NÃO a responda: crie títulos relacionados a ela.',
+      '',
+      'REGRAS DOS SUBTÍTULOS:',
+      'Crie subtítulos que complementem a ideia central e acrescentem uma perspectiva crítica, cultural (cult), conceitual e filosófica.',
+      'Os subtítulos devem provocar reflexão, apresentar ideias originais e ter profundidade sem serem incompreensíveis.',
+      'Evite clichês, frases genéricas, sensacionalismo e a repetição literal dos títulos. Cada subtítulo deve ter no máximo uma frase.',
+      'Cada subtítulo deve funcionar com qualquer um dos três títulos, para permitir combinação livre.',
+      '',
+      'REGRAS DAS LEGENDAS:',
+      'Escreva três legendas diferentes, cada uma com 3 a 5 frases, revoltantes, diretas e contundentes, com inconformismo, transformação e contestação de estruturas de poder.',
+      'A legenda não pode citar o texto sendo apenas algo pra gerar revolta no interlocutor.',
+      'A legenda precisa só pegar a ideia do texto e falar de maneira revolucionária e crítica, mas não sobre o texto.',
+      'O texto deve ter força crítica, provocar reflexão e despertar interesse, sem soar como propaganda vazia ou empilhar adjetivos.',
+      'A legenda não pode possuir partes do texto enviado e sim ser criada com sua lógica.',
+      'Fale do assunto de forma concreta: identifique os fatos, mecanismos, instituições, órgãos, empresas ou atores citados e explique o que está em jogo.',
+      'Não invente fatos, nomes, ações, culpados ou acusações. Não atribua responsabilidade ou intenção sem base no texto fornecido.',
+      'Quando a informação não sustentar uma acusação, formule a crítica como pergunta ou análise, sem tratar suspeitas como fatos.',
+      'Ao final de CADA legenda, em uma nova linha, inclua de 3 a 6 hashtags relevantes.',
+      'Nas hashtags, priorize o concreto: nomes de instituições, órgãos públicos, empresas, organizações e entidades efetivamente presentes no texto.',
+      'Depois, se couber, use hashtags de leis, projetos, tecnologias, lugares ou assuntos específicos.',
+      'Não invente nomes de organizações nem crie hashtags com nomes que não aparecem no texto. Se não houver entidades nomeadas, use hashtags temáticas específicas.',
+      'Cada legenda deve funcionar com qualquer um dos títulos e subtítulos, para permitir combinação livre.',
+      '',
+      'FORMATO OBRIGATÓRIO:',
+      'Retorne APENAS um objeto JSON válido, sem Markdown, sem bloco de código e sem comentário, com esta estrutura exata:',
+      '{"titulos":["Título 1","Título 2","Título 3"],"subtitulos":["Subtítulo 1","Subtítulo 2","Subtítulo 3"],"legendas":["Legenda 1\\n#Hashtag1 #Hashtag2 #Hashtag3","Legenda 2\\n#Hashtag1 #Hashtag2 #Hashtag3","Legenda 3\\n#Hashtag1 #Hashtag2 #Hashtag3"]}',
+      'Cada uma das três propriedades deve ser um array com EXATAMENTE 3 strings. Use escapes JSON válidos para quebras de linha.',
+      'Não inclua introdução, justificativa ou texto fora do JSON. Não responda à pergunta do usuário fora das nove opções.',
+      '',
+      'TEXTO DO USUÁRIO:'
+    ].join('\n');
+
+    function interpretarJSON(texto) {
+      const limpo = texto.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+      try {
+        return JSON.parse(limpo);
+      } catch {
+        const inicio = limpo.indexOf('{');
+        const fim = limpo.lastIndexOf('}');
+        if (inicio === -1 || fim <= inicio) {
+          throw new Error('A IA não retornou as nove opções no formato esperado. Tente novamente.');
+        }
+        try {
+          return JSON.parse(limpo.slice(inicio, fim + 1));
+        } catch {
+          throw new Error('A resposta veio incompleta ou fora do formato esperado. Tente gerar novamente.');
+        }
+      }
+    }
+
+    function validarOpcoes(dados) {
+      const campos = ['titulos', 'subtitulos', 'legendas'];
+      for (const campo of campos) {
+        if (!Array.isArray(dados?.[campo]) || dados[campo].length !== 3 ||
+            dados[campo].some(item => typeof item !== 'string' || !item.trim())) {
+          throw new Error('A IA não retornou três opções válidas de ' + campo + '. Tente novamente.');
+        }
+        dados[campo] = dados[campo].map(item => item.trim());
+      }
+      return dados;
+    }
+
+    function renderizarGrupo(campo, idAlvo) {
+      const alvo = document.getElementById(idAlvo);
+      alvo.replaceChildren();
+      opcoes[campo].forEach((texto, indice) => {
+        const cartao = document.createElement('div');
+        cartao.className = 'editorial-option' + (indice === 0 ? ' selected' : '');
+
+        const cabecalho = document.createElement('div');
+        cabecalho.className = 'editorial-option-top';
+        const rotulo = document.createElement('label');
+        rotulo.className = 'editorial-option-label';
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = campo;
+        radio.value = String(indice);
+        radio.checked = indice === 0;
+        radio.addEventListener('change', () => {
+          alvo.querySelectorAll('.editorial-option').forEach(el => el.classList.remove('selected'));
+          cartao.classList.add('selected');
+        });
+        const identificacao = document.createElement('span');
+        identificacao.textContent = 'Opção ' + (indice + 1);
+        rotulo.append(radio, identificacao);
+
+        const enviar = document.createElement('button');
+        enviar.type = 'button';
+        enviar.className = 'editorial-send-option';
+        enviar.textContent = 'Enviar';
+        enviar.setAttribute('aria-label', 'Enviar opção ' + (indice + 1) + ' de ' + campo + ' para postagem');
+        enviar.addEventListener('click', () => {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change', { bubbles: true }));
+          enviarParaPostagem();
+        });
+
+        cabecalho.append(rotulo, enviar);
+        const conteudo = document.createElement('p');
+        conteudo.className = 'editorial-option-text';
+        conteudo.textContent = texto;
+        cartao.append(cabecalho, conteudo);
+        alvo.appendChild(cartao);
+      });
+    }
+
+    // A matéria tem pesquisa Google separada para preservar o formato JSON das nove opções.
+    // O resultado da pesquisa também devolve os endereços reais das fontes consultadas.
+    const REGRAS_MATERIA = [
+      'Você é um jornalista investigativo e analista social. Escreva em português brasileiro.',
+      'PESQUISA OBRIGATÓRIA: utilize a ferramenta Google Search disponibilizada nesta solicitação.',
+      'Busque fontes atuais e verificáveis sobre o assunto, preferencialmente documentos oficiais,',
+      'estudos científicos, dados públicos e veículos jornalísticos de credibilidade. Priorize as',
+      'publicações mais recentes pertinentes e, quando possível, cruze duas fontes independentes.',
+      'Considere as datas de publicação e dos acontecimentos; jamais chame dados antigos de atuais.',
+      '',
+      'ESTILO DA MATÉRIA:',
+      'Produza aproximadamente UMA LAUDA (400 a 550 palavras) distribuída em parágrafos jornalísticos.',
+      'O texto deve ser extremamente crítico, incisivo, questionador e instigante, com indignação',
+      'embasada em fatos, em linguagem clara, direta, interessante e sem adjetivação vazia.',
+      'Dê atenção especial aos efeitos sobre a classe trabalhadora, famílias de baixa renda e pessoas',
+      'vulneráveis SEMPRE QUE o tema sustentar essa conexão. Investigue desigualdades, custos, incentivos,',
+      'concentração de poder e quem suporta as consequências, mas não presuma culpados.',
+      'Seja imparcial na apuração: aplique o mesmo rigor crítico a empresas, governos e grupos de qualquer',
+      'orientação. Dê espaço a explicações alternativas relevantes e diferencie fato, alegação e avaliação.',
+      'Questione mecanismos e responsabilidades com perguntas pertinentes, nunca com acusações infundadas.',
+      'Não invente estudos, pesquisas, fontes, números, datas, citações nem declarações de entrevistados.',
+      'Não incentive violência nem faça propaganda de partidos ou candidatos.',
+      'Se a pesquisa não sustentar determinada afirmação, omita-a ou informe claramente a incerteza.',
+      'Use dados científicos quando pertinentes, identificando instituição, ano e contexto no corpo do texto.',
+      'Não copie textos jornalísticos de outras fontes. Faça redação original.',
+      'Entregue APENAS o corpo da matéria, sem títulos extras, hashtags, links ou bibliografia.',
+      'Os links efetivos das fontes serão exibidos separadamente pela página, a partir da resposta da API.',
+      '',
+      'DATA ATUAL: ' + new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Fortaleza' }),
+      'ASSUNTO OU TEXTO DE PARTIDA:'
+    ].join('\n');
+
+    function fontesDaResposta(dados) {
+      const itens = dados.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      const vistos = new Set();
+      return itens.flatMap(item => {
+        const nome = item.web?.title?.trim() || 'Fonte consultada';
+        const endereco = item.web?.uri;
+        if (!endereco) return [];
+        try {
+          const url = new URL(endereco);
+          if (!['http:', 'https:'].includes(url.protocol) || vistos.has(url.href)) return [];
+          vistos.add(url.href);
+          return [{ titulo: nome, url: url.href }];
+        } catch { return []; }
+      });
+    }
+
+    function textoDaResposta(dados) {
+      return (dados.candidates?.[0]?.content?.parts || [])
+        .filter(parte => !parte.thought && typeof parte.text === 'string')
+        .map(parte => parte.text).join('\n').trim();
+    }
+
+    function renderizarFontes() {
+      listaFontes.replaceChildren();
+      fontesMateria.forEach(({ titulo, url }) => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = titulo;
+        li.appendChild(link);
+        listaFontes.appendChild(li);
+      });
+      avisoFontes.hidden = fontesMateria.length > 0;
+      avisoFontes.textContent = fontesMateria.length ? '' :
+        'A API não devolveu links verificáveis nesta pesquisa. Confira manualmente as afirmações antes de publicar.';
+    }
+
+    // Uma segunda estratégia entra em ação se a pesquisa direta do Gemma falhar
+    // ou não fornecer fontes. A redação final continua sendo feita pelo Gemma.
+    async function requisitarModelo(modelo, prompt, configuracao = {}) {
+      const senha = document.getElementById('editorialSenha').value;
+      if (!senha) throw new Error('Informe a senha de publicação para usar o Editorial.');
+      const resposta = await fetch('/api/editorial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-trin-password': senha },
+        body: JSON.stringify({ modelo, prompt, configuracao })
+      });
+      const dados = await resposta.json();
+      if (!resposta.ok) {
+        throw new Error(dados.error?.message || 'Erro da API (' + resposta.status + ').');
+      }
+      return dados;
+    }
+
+    async function gerarMateria(assunto) {
+      materia = '';
+      fontesMateria = [];
+      conteudoMateria.hidden = true;
+      tentarMateria.hidden = true;
+      statusMateria.textContent = 'Pesquisando fontes recentes e escrevendo a matéria...';
+      try {
+        let dadosDiretos;
+        let erroDireto = null;
+        try {
+          dadosDiretos = await requisitarModelo('gemma-4-26b-a4b-it', REGRAS_MATERIA + '\n' + assunto, {
+            tools: [{ googleSearch: {} }],
+            generationConfig: { temperature: 0.65, maxOutputTokens: 3200 }
+          });
+          materia = textoDaResposta(dadosDiretos);
+          fontesMateria = fontesDaResposta(dadosDiretos);
+        } catch (falha) {
+          erroDireto = falha;
+        }
+
+        if (!materia || !fontesMateria.length) {
+          statusMateria.textContent = 'Buscando fontes em uma pesquisa alternativa...';
+          try {
+            const pesquisa = await requisitarModelo('gemini-2.5-flash-lite', [
+              'Pesquise no Google informações atuais e verificáveis para apuração jornalística.',
+              'Priorize dados oficiais, estudos científicos, fontes primárias e veículos confiáveis.',
+              'Forneça um resumo factual com datas, nomes, números sustentados por fontes e',
+              'controvérsias relevantes. Não invente informações. Este resumo será usado por',
+              'outro modelo para escrever uma matéria original.',
+              'Tema: ' + assunto
+            ].join('\n'), {
+              tools: [{ googleSearch: {} }],
+              generationConfig: { temperature: 0.2, maxOutputTokens: 1600 }
+            });
+            const apuracao = textoDaResposta(pesquisa);
+            const fontesPesquisa = fontesDaResposta(pesquisa);
+            if (!apuracao) throw new Error('A pesquisa alternativa não retornou informações.');
+            statusMateria.textContent = 'Fontes pesquisadas. Redigindo a matéria com Gemma...';
+            const textoFontes = fontesPesquisa.length
+              ? fontesPesquisa.map((item, i) => (i + 1) + '. ' + item.titulo + ' — ' + item.url).join('\n')
+              : 'Nenhuma referência verificável foi disponibilizada; evite alegações não comprovadas.';
+            const redacao = await requisitarModelo('gemma-4-26b-a4b-it',
+              REGRAS_MATERIA + '\n' + assunto +
+              '\n\nAPURAÇÃO RECENTE (use como contexto; não invente fatos):\n' + apuracao +
+              '\n\nREFERÊNCIAS DISPONÍVEIS:\n' + textoFontes +
+              '\nNão trate dados sem fonte verificável como fatos confirmados.', {
+                generationConfig: { temperature: 0.65, maxOutputTokens: 3200 }
+              });
+            const textoFinal = textoDaResposta(redacao);
+            if (!textoFinal) throw new Error('O Gemma não retornou a matéria.');
+            materia = textoFinal;
+            fontesMateria = fontesPesquisa;
+          } catch (falhaAlternativa) {
+            // Se a pesquisa direta já produziu texto, preserve-o, com alerta explícito.
+            if (!materia) {
+              throw new Error('A pesquisa direta falhou (' +
+                (erroDireto?.message || 'sem dados suficientes') +
+                '). Pesquisa alternativa: ' + falhaAlternativa.message);
+            }
+          }
+        }
+
+        if (!materia) throw new Error('A API não retornou uma matéria.');
+        textoMateria.textContent = materia;
+        renderizarFontes();
+        conteudoMateria.hidden = false;
+        statusMateria.textContent = fontesMateria.length
+          ? 'Matéria gerada com ' + fontesMateria.length + ' fonte(s) retornada(s) pela Pesquisa Google. Revise antes de publicar.'
+          : 'Matéria gerada, mas sem referências verificáveis retornadas pela pesquisa. Confira os fatos antes de publicar.';
+      } catch (falha) {
+        statusMateria.textContent = 'Não foi possível concluir a pesquisa e a matéria: ' + falha.message;
+        tentarMateria.hidden = false;
+      }
+    }
+
+    function materiaComFontes() {
+      const referencia = fontesMateria.length
+        ? '\n\nFontes consultadas:\n' + fontesMateria.map(({ titulo, url }) => titulo + ' — ' + url).join('\n')
+        : '\n\n[Referências não disponibilizadas pela API; verificar antes da publicação.]';
+      return materia + referencia;
+    }
+
+
+    tentarMateria.addEventListener('click', () => {
+      const assunto = document.getElementById('editorialAssunto').value.trim();
+      if (assunto) gerarMateria(assunto);
+    });
+
+    formulario.addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      const assunto = document.getElementById('editorialAssunto').value.trim();
+      if (!assunto) return;
+
+      botao.disabled = true;
+      botao.textContent = 'Gerando 9 opções...';
+      erro.hidden = true;
+      resultado.hidden = true;
+      estadoVazio.hidden = false;
+      estadoVazio.querySelector('p').textContent = 'Gerando as opções de conteúdo...';
+      conteudoMateria.hidden = true;
+
+      try {
+        const dados = await requisitarModelo('gemma-4-26b-a4b-it', REGRAS + '\n' + assunto, {
+          generationConfig: {
+            temperature: 0.85,
+            maxOutputTokens: 3500,
+            thinkingConfig: { thinkingLevel: 'minimal' }
+          }
+        });
+        const texto = (dados.candidates?.[0]?.content?.parts || [])
+          .filter(parte => !parte.thought && typeof parte.text === 'string')
+          .map(parte => parte.text).join('\n');
+        if (!texto.trim()) throw new Error('A IA não retornou conteúdo. Tente novamente.');
+
+        opcoes = validarOpcoes(interpretarJSON(texto));
+        renderizarGrupo('titulos', 'editorialOpcoesTitulos');
+        renderizarGrupo('subtitulos', 'editorialOpcoesSubtitulos');
+        renderizarGrupo('legendas', 'editorialOpcoesLegendas');
+        resultado.hidden = false;
+        estadoVazio.hidden = true;
+        botao.textContent = 'Pesquisando e escrevendo matéria...';
+        await gerarMateria(assunto);
+      } catch (falha) {
+        erro.textContent = 'Não foi possível gerar o conteúdo: ' + falha.message;
+        erro.hidden = false;
+        estadoVazio.querySelector('p').textContent = 'Não foi possível gerar as opções. Revise o texto e tente novamente.';
+      } finally {
+        botao.disabled = false;
+        botao.textContent = 'Gerar conteúdo e matéria';
+      }
+    });
+
+    // Transfere os quatro campos para o Estúdio de postagens, sem publicar automaticamente.
+    function escolhido(campo) {
+      if (!opcoes) return '';
+      const marcado = document.querySelector('#editorialView input[name="' + campo + '"]:checked');
+      return opcoes[campo][marcado ? Number(marcado.value) : 0] || '';
+    }
+
+    function enviarParaPostagem(textoCompleto = materia) {
+      if (!opcoes) return;
+      const campos = {
+        titleText: escolhido('titulos'),
+        subtitleText: escolhido('subtitulos'),
+        captionText: escolhido('legendas'),
+        siteArticle: textoCompleto || ''
+      };
+      Object.entries(campos).forEach(([id, valor]) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.value = valor;
+        // Atualiza prévia, contador de caracteres e ouvintes existentes.
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      // Mostra os campos preenchidos, mas mantém todas as operações de publicação manuais.
+      ['artSection', 'captionSection', 'siteSection'].forEach(id => {
+        const secao = document.getElementById(id);
+        if (secao && 'open' in secao) secao.open = true;
+      });
+      window.location.hash = 'editor';
+    }
+
+    document.getElementById('editorialEnviarEscolhidos').addEventListener('click', () => enviarParaPostagem());
+    document.getElementById('editorialEnviarMateria').addEventListener('click', () => enviarParaPostagem(materia));
+    document.getElementById('editorialEnviarMateriaFontes').addEventListener('click', () => enviarParaPostagem(materiaComFontes()));
+
+})();
+</script>
+</body>
+</html>
