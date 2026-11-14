@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TRIN Studio v5 — Editor de postagens</title>
+<title>TRID Studio v5 — Editor de postagens</title>
 <style>
 :root{--ink:#172029;--muted:#6b7480;--line:#e9edf0;--surface:#fff;--page:#f7f9fa;--radius:18px}
 *{box-sizing:border-box}
@@ -276,7 +276,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
 .carousel-timeline{font-size:12px;color:#62717b;padding:8px 0}
 @media(max-width:900px){.page-management-grid{grid-template-columns:1fr}}
 
-/* Editorial integrado: segue a tipografia, painéis e paleta TRIN existentes. */
+/* Editorial integrado: segue a tipografia, painéis e paleta TRID existentes. */
 .top-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 .editorial-view{max-width:1270px}
 .editorial-workspace{display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.14fr);gap:20px;align-items:start}
@@ -611,7 +611,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   </div>
 </section>
 
-<!-- Editorial: terceira opção da navegação do próprio painel TRIN. -->
+<!-- Editorial: terceira opção da navegação do próprio painel TRID. -->
 <section class="shell editorial-view" id="editorialView" aria-label="Editorial" hidden>
   <div class="posts-navigation">
     <button class="posts-back" id="backFromEditorialBtn" type="button">← Voltar ao Estúdio de postagens</button>
@@ -983,7 +983,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if (effect === 'up') ctx.translate(0, 36 * (1 - progress));
     if (effect === 'right') ctx.translate(80 * (1 - progress), 0);
     ctx.fillStyle = '#000';ctx.fillRect(0,FOOTER_Y,W,H-FOOTER_Y);
-    const word = 'TRIN', brand = 'TARGETED INDIVIDUALS BRASIL';
+    const word = 'TRID', brand = 'TARGETED INDIVIDUALS BRASIL';
     ctx.textBaseline = 'alphabetic';
     ctx.font = 'bold 42px Georgia,serif';const nameW=ctx.measureText(word).width;
     ctx.font = '17px Arial,sans-serif';const brandW=trackWidth(brand,2.1);
@@ -1141,7 +1141,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
     if (currentRecording) return;
     photoExportCanvas().toBlob(blob=>{
       if(!blob){alert('Não foi possível exportar o PNG.');return;}
-      saveBlob(blob,'TRIN-postagem-1080x'+H+'.png');
+      saveBlob(blob,'TRID-postagem-1080x'+H+'.png');
     },'image/png');
   });
 
@@ -1217,7 +1217,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         const type=session.parts[0].type || mimeType;
         const blob=new Blob(session.parts,{type});
         if (session.onReady) session.onReady(blob);
-        else saveBlob(blob,'TRIN-postagem-9s.'+session.extension);
+        else saveBlob(blob,'TRID-postagem-9s.'+session.extension);
         videoStatus(session.onReady ? 'Vídeo gerado. Enviando ao servidor…' : 'Vídeo gerado! Arquivo '+session.extension.toUpperCase()+' · duração de aproximadamente 9 s.');
       } else if (!session.cancelled) {
         videoStatus('O navegador não retornou quadros de vídeo. Tente novamente no Chrome ou Edge.');
@@ -1414,7 +1414,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       action:'createPost',image:imagem,type:'photo',
       title:byId('titleText').value.trim(),subtitle:byId('subtitleText').value.trim(),
       content:byId('captionText').value.trim(),article:byId('siteArticle').value.trim(),category:byId('siteCategory').selectedOptions[0].textContent.trim(),
-      author:byId('siteAuthor').value.trim()||'Equipe TRIN',tags:byId('siteTags').value.trim(),
+      author:byId('siteAuthor').value.trim()||'Equipe TRID',tags:byId('siteTags').value.trim(),
       featured:byId('siteFeatured').checked,
     };
     const resp=await fetch('/api/site',{method:'POST',headers:{'Content-Type':'application/json','X-TRIN-Password':password},body:JSON.stringify(fields)});
@@ -1458,9 +1458,9 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
   const $=id=>document.getElementById(id);
   let posts=[],menus=[],demo=false,editingId=null;
   const examples=[
-    {id:'ex-01',category:'Tecnologia',author:'Equipe TRIN',featured:true,title:'Como os metadados organizam a informação digital',subtitle:'Conceitos introdutórios',content:'Metadados descrevem características dos conteúdos e ajudam sistemas a encontrar, classificar e apresentar informações.',image:'',createdAt:'2026-01-01'},
-    {id:'ex-02',category:'Ciência',author:'Redação TRIN',featured:true,title:'O que muda com a expansão do IPv6?',subtitle:'Uma visão geral',content:'O IPv6 amplia o espaço de endereçamento da internet e traz novas possibilidades para conectar dispositivos.',image:'',createdAt:'2026-01-01'},
-    {id:'ex-03',category:'Sociedade',author:'Equipe TRIN',featured:false,title:'A importância de verificar informações na internet',subtitle:'Leitura crítica',content:'Antes de compartilhar uma publicação, é útil conferir sua origem, comparar fontes e verificar a data.',image:'',createdAt:'2026-01-01'}
+    {id:'ex-01',category:'Tecnologia',author:'Equipe TRID',featured:true,title:'Como os metadados organizam a informação digital',subtitle:'Conceitos introdutórios',content:'Metadados descrevem características dos conteúdos e ajudam sistemas a encontrar, classificar e apresentar informações.',image:'',createdAt:'2026-01-01'},
+    {id:'ex-02',category:'Ciência',author:'Redação TRID',featured:true,title:'O que muda com a expansão do IPv6?',subtitle:'Uma visão geral',content:'O IPv6 amplia o espaço de endereçamento da internet e traz novas possibilidades para conectar dispositivos.',image:'',createdAt:'2026-01-01'},
+    {id:'ex-03',category:'Sociedade',author:'Equipe TRID',featured:false,title:'A importância de verificar informações na internet',subtitle:'Leitura crítica',content:'Antes de compartilhar uma publicação, é útil conferir sua origem, comparar fontes e verificar a data.',image:'',createdAt:'2026-01-01'}
   ];
   const demoStorage='trin-demo-posts-v1';
   function readDemo(){try {const stored=JSON.parse(localStorage.getItem(demoStorage));return Array.isArray(stored)?stored:structuredClone(examples);}catch{return structuredClone(examples);}}
@@ -1514,7 +1514,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
         const media=element(post.type==='video'?'video':'img');
         if(post.type==='video'){media.muted=true;media.playsInline=true;media.preload='metadata';}else{media.alt=post.title;media.loading='lazy';}
         media.src=post.image;media.style.cssText='width:100%;height:100%;object-fit:cover;position:absolute;inset:0';cover.appendChild(media);
-      }else{cover.appendChild(element('span','post-cover-label','TRIN'));}
+      }else{cover.appendChild(element('span','post-cover-label','TRID'));}
       const top=element('div','post-cover-top');
       top.appendChild(element('span','post-featured-badge',post.featured?'★ Destaque':(demo?'Demonstração':'Postagem')));
       const star=element('button','post-featured-toggle'+(post.featured?' is-active':''),post.featured?'★':'☆');
@@ -1529,7 +1529,7 @@ textarea,select{width:100%;color:#27313b;background:#fff;border:1px solid #e0e5e
       });
       top.appendChild(star);cover.appendChild(top);card.appendChild(cover);
       const body=element('div','post-card-body'),meta=element('div','post-meta');
-      meta.append(element('strong','',post.category||'Notícias'),document.createTextNode(' · '+(post.author||'Equipe TRIN')+(demo?' · Exemplo':'')));
+      meta.append(element('strong','',post.category||'Notícias'),document.createTextNode(' · '+(post.author||'Equipe TRID')+(demo?' · Exemplo':'')));
       // Exibe apenas um resumo padronizado no card; a matéria inteira permanece no editor.
       const originalPreview=String(post.subtitle||post.content||post.article||'').replace(/\s+/g,' ').trim();
       const preview=originalPreview.length>160?originalPreview.slice(0,160).replace(/\s+\S*$/,'')+'…':originalPreview;

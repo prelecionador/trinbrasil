@@ -1,4 +1,4 @@
-// Portal TRIN: Planilhas e Drive. O Instagram permanece na sua API separada.
+// Portal TRID: Planilhas e Drive. O Instagram permanece na sua API separada.
 import { auth, noStore, responseError } from '../lib/common.js';
 import { loadPosts,loadMenus,createPost,savePost,removePost,saveMenus,saveMenuImage,loadTheme,saveTheme,storageReady } from '../lib/site-store.js';
 const clean=(v,max)=>String(v??'').trim().slice(0,max);
@@ -26,7 +26,7 @@ function parsePost(payload,previous={}) {
     content,article,
     caption:clean(payload.caption??previous.caption??'',2200),
     category:clean(payload.category,60)||'Notícias',
-    author:clean(payload.author,100)||'Equipe TRIN',
+    author:clean(payload.author,100)||'Equipe TRID',
     tags:clean(payload.tags,350),featured:Boolean(payload.featured),
     updatedAt:new Date().toISOString(),
   };
